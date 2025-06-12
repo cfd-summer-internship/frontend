@@ -1,13 +1,13 @@
 "use client";
 import { z } from "zod";
 import StudyRetrievalInput from "./StudyRetrievalInput";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent } from "react";
 
 const codeFormModel = z.object({
     studyCode: z.string().nonempty("Code Required").length(6)
 })
 
-type CodeFormT = z.infer<typeof codeFormModel>
+//type CodeFormT = z.infer<typeof codeFormModel>
 
 export default function StudyRetrieval() {
 
