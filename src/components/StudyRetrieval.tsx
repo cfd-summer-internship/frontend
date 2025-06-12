@@ -16,8 +16,6 @@ export default function StudyRetrieval() {
 
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
-        const rawCode = formData.get("code");
-        console.log("rawCode", rawCode, typeof rawCode);
 
         const result = codeFormModel.safeParse({
             studyCode: formData.get("code"),
