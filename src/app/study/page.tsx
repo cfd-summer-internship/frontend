@@ -1,6 +1,6 @@
 "use client";
 
-import { configurationSchema, ConfigSettings } from "@/schemas/studyConfigSchemas";
+import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent } from "react";
 
 
@@ -27,7 +27,7 @@ export default function StudyConfigPage() {
         return {
             uploadedFiles: mapUploadedFiles(formData),
             learningPhase: mapLearning(formData),
-        }
+        };
     }
 
     function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
@@ -38,6 +38,10 @@ export default function StudyConfigPage() {
 
         //Parse Config File
         const result = configurationSchema.safeParse(mapConfig(formData));
+
+        if (result.success){
+            console.log(result.data)
+        }
     }
 
         return (
