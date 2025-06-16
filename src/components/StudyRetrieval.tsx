@@ -22,7 +22,7 @@ export default function StudyRetrieval() {
         const result = codeFormModel.safeParse({
             studyCode: formData.get("code"),
         })
-        
+
         if (result.success) {
             console.log(result.data)
         }
