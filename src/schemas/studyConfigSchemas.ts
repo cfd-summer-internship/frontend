@@ -8,6 +8,9 @@ export const uploadedFilesSchema = z.object({
     consentForm: z.instanceof(File).refine(file => file.size > 0, {
         message: "File must not be empty",
     }),
+    studyInstructions: z.instanceof(File).refine(file => file.size > 0, {
+        message: "File must not be empty",
+    }),
 });
 
 //Learning Phase Settings
