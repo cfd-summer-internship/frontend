@@ -1,15 +1,20 @@
 import { ConfigSettings } from "@/schemas/studyConfigSchemas";
 
-//Flattens data and maps it to FastAPI Parameters
+//Flattens data and maps it to FastAPI Aliases
 function appendToFormData(formData:FormData,config:ConfigSettings){
-    formData.append("learning_displayDuration", config.learningPhase.displayDuration.toString());
-    formData.append("learning_pauseDuration", config.learningPhase.pauseDuration.toString());
-    formData.append("learning_displayMethod",config.learningPhase.displayMethod);
+    //Here we're explicitly mapping each value of the multipart/form-data
+    //This ensures that each value is mapped correctly to the corresponding key
+    //These keys will be the alias which we use when retrieving them on the backend
 
-    formData.append("configFiles_consentForm",config.uploadedFiles.consentForm);
+    //LEARNING PHASE
+    formData.append("learning.displayDuration", config.learningPhase.displayDuration.toString());
+    formData.append("learning.pauseDuration", config.learningPhase.pauseDuration.toString());
+    formData.append("learning.displayMethod",config.learningPhase.displayMethod);
 
-};
-
+    //UPLOAD FILES
+    formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);
+    formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);
+}
 //Fetch Request to API endpoint
 export const uploadConfig = (async (config:ConfigSettings) => {
     const formData = new FormData();
