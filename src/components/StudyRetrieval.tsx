@@ -7,7 +7,7 @@ const codeFormModel = z.object({
     studyCode: z.string().nonempty("Code Required").length(6)
 })
 
-type CodeForm = z.infer<typeof codeFormModel>
+//type CodeForm = z.infer<typeof codeFormModel>
 
 export default function StudyRetrieval() {
 
