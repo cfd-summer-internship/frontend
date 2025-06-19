@@ -5,6 +5,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 Installation:
 ```bash
 npm install -g pnpm@latest-10
+
+pnpm i
 ```
 
 
