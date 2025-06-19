@@ -16,6 +16,7 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);
 }
 //Fetch Request to API endpoint
+//Sends as multipart/form-data
 export const uploadConfig = (async (config:ConfigSettings) => {
     const formData = new FormData();
     appendToFormData(formData,config);
