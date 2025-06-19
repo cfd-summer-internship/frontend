@@ -1,0 +1,20 @@
+name: Lint
+on: [ push, pull_request ]
+jobs:
+  pnpm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'pnpm'
+
+      - run: pnpm i
+      - run: pnpm lint
+      - run: pnpm tsc
