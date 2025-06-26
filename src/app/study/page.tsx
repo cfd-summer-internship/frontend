@@ -5,6 +5,7 @@ import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
+import ExperimentPhaseConfig from "@/components/ExperimentPhaseConfig";
 
 
 export default function StudyConfigPage() {
@@ -24,6 +25,16 @@ export default function StudyConfigPage() {
         }
     }
 
+    //Map Experiment Phase Settings
+    function mapExperiment(formData: FormData) {
+        return {
+            displayDuration: Number(formData.get("experiment.displayDuration")), //Convert to number
+            pauseDuration: Number(formData.get("experiment.pauseDuration")), //Convert to Number
+            displayMethod: formData.get("experiment.displayMethod"),
+            scoringMethod: formData.get("experiment.scoringMethod")
+        }
+    }
+
     //Map Uploaded Files
     function mapUploadedFiles(formData: FormData) {
         return {
@@ -37,6 +48,7 @@ export default function StudyConfigPage() {
         return {
             uploadedFiles: mapUploadedFiles(formData),
             learningPhase: mapLearning(formData),
+            experimentPhase: mapExperiment(formData)
         };
     }
 
@@ -92,13 +104,15 @@ export default function StudyConfigPage() {
                         </div>
                         <div className="flex flex-row items-center mb-4">
                             <span className="text-md text-stone-300 mr-4">Display Method: </span>
-                            <label htmlFor="learning.displayMethod" className="text-stone-300 text-md mr-2">Sequential</label>
                             <input type="radio" value="sequential" name="learning.displayMethod"></input>
-                            <label htmlFor="learning.displayMethod" className="text-stone-300 text-md mx-2">Random</label>
+                            <label htmlFor="learning.displayMethod" className="text-stone-300 text-md mx-2">Sequential</label>
                             <input type="radio" value="random" name="learning.displayMethod"></input>
+                            <label htmlFor="learning.displayMethod" className="text-stone-300 text-md mx-2">Random</label>
                         </div>
-                        {isError && <span className="text-md text-red-500 italic">Some fields are missing. Please fill them out before saving.</span>}
                     </div>
+                    
+                    <ExperimentPhaseConfig />
+
                     <div className="flex flex-row justify-end w-full">
                         <button onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
                         <button type="submit" className="bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Save</button>

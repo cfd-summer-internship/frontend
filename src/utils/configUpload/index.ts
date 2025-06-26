@@ -11,6 +11,12 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("learning.pauseDuration", config.learningPhase.pauseDuration.toString());
     formData.append("learning.displayMethod",config.learningPhase.displayMethod);
 
+    //EXPERIMENT PHASE
+    formData.append("experiment.displayDuration", config.experimentPhase.displayDuration.toString());
+    formData.append("experiment.pauseDuration", config.experimentPhase.pauseDuration.toString());
+    formData.append("experiment.displayMethod",config.experimentPhase.displayMethod);
+    formData.append("experiment.scoringMethod",config.experimentPhase.scoringMethod);
+
     //UPLOAD FILES
     formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);
     formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);

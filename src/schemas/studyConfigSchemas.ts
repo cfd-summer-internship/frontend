@@ -20,14 +20,24 @@ export const learningSchema = z.object({
     displayMethod: z.string()
 });
 
+//Experiment Phase Settings
+export const experimentSchema = z.object({
+    displayDuration: z.number(),
+    pauseDuration: z.number(),
+    displayMethod: z.string(),
+    scoringMethod: z.string()
+});
+
 //Configuration Settings Wrapper
 //Will contain a reference for each section
 export const configurationSchema = z.object({
     uploadedFiles: uploadedFilesSchema,
-    learningPhase: learningSchema
+    learningPhase: learningSchema,
+    experimentPhase: experimentSchema
 })
 
 //Exported Types
 export type Uploaded = z.infer<typeof uploadedFilesSchema>;
 export type Learning = z.infer<typeof learningSchema>;
+export type Experiment = z.infer<typeof experimentSchema>;
 export type ConfigSettings = z.infer<typeof configurationSchema>
