@@ -20,14 +20,21 @@ export const learningSchema = z.object({
     displayMethod: z.string()
 });
 
+//Wait Phase Settings
+export const waitSchema = z.object({
+    duration: z.number(),
+});
+
 //Configuration Settings Wrapper
 //Will contain a reference for each section
 export const configurationSchema = z.object({
     uploadedFiles: uploadedFilesSchema,
-    learningPhase: learningSchema
+    learningPhase: learningSchema,
+    waitPhase: waitSchema,
 })
 
 //Exported Types
 export type Uploaded = z.infer<typeof uploadedFilesSchema>;
 export type Learning = z.infer<typeof learningSchema>;
+export type Wait = z.infer<typeof waitSchema>;
 export type ConfigSettings = z.infer<typeof configurationSchema>

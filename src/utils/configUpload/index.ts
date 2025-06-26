@@ -11,6 +11,9 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("learning.pauseDuration", config.learningPhase.pauseDuration.toString());
     formData.append("learning.displayMethod",config.learningPhase.displayMethod);
 
+    //WAIT PHASE
+    formData.append("wait.duration", config.waitPhase.duration.toString());
+
     //UPLOAD FILES
     formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);
     formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);
