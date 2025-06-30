@@ -1,8 +1,10 @@
 "use client";
 
-interface LearningPhaseProps {header: string}
-
-export default function LearningPhaseConfig({ header }: LearningPhaseProps) {
+export default function LearningPhaseConfig({header}:
+    {
+        header: string;
+    }
+) {
   return (
     <div className="flex flex-col items-start w-full px-10">
       <h2 className="text-lg font-bold py-4 text-stone-300">{header}</h2>
