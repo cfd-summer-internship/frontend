@@ -13,10 +13,12 @@ export default function StudyRetrieval() {
 
     function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
         e.preventDefault();
-
+        
+        //Take in Form Data
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
 
+        //Parse it safely using Zod
         const result = codeFormModel.safeParse({
             studyCode: formData.get("code"),
         })
