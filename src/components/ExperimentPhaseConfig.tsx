@@ -1,8 +1,7 @@
+interface ExperimentPhaseProps {header: string}
 
-
-export default function ExperimentPhaseConfig(){
+export default function ExperimentPhaseConfig({ header }: ExperimentPhaseProps){
  
-
   return(
     <div className="flex flex-col items-start w-full px-10">
       <h2 className="text-lg font-bold py-4 text-stone-300">Experiment Phase Configuration</h2>

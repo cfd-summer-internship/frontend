@@ -111,7 +111,8 @@ export default function StudyConfigPage() {
                         </div>
                     </div>
                     
-                    <ExperimentPhaseConfig />
+                    {/* Experiment Phase */}
+                    <ExperimentPhaseConfig header="Experiment Phase Configuration" />
 
                     <div className="flex flex-row justify-end w-full">
                         <button onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
