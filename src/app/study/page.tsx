@@ -87,33 +87,18 @@ export default function StudyConfigPage() {
             <div className="flex flex-col items-center">
                 <div className="flex flex-col min-h-screen items-center">
                     <h1 className="text-xl text-center font-bold py-4 text-stone-300">Configure Study</h1>
+
+                    {/* Upload Section */}
                     <div className="flex flex-col items-start w-full px-10">
                         <h2 className="text-lg font-bold py-4 text-stone-300">Upload Files</h2>
                         <FileInput desc="Consent Form" name="files.consentForm"></FileInput>
                         <FileInput desc="Study Instructions" name="files.studyInstructions"></FileInput>
                     </div>
-                    <div className="flex flex-col items-start w-full px-10">
-                        <h2 className="text-lg font-bold py-4 text-stone-300">Learning Phase Configuration</h2>
-                        <div className="flex flex-row items-center mb-4">
-                            <span className="text-md text-stone-300 mr-4">Display Duration (seconds): </span>
-                            <input className="bg-stone-800 w-12 pl-2 text-stone-300 rounded-sm" type="number" min="1" placeholder="1" name="learning.displayDuration"></input>
-                        </div>
-                        <div className="flex flex-row items-center mb-4">
-                            <span className="text-md text-stone-300 mr-4">Pause Duration (seconds): </span>
-                            <input className="bg-stone-800 w-12 pl-2 text-stone-300 rounded-sm" type="number" min="1" placeholder="1" name="learning.pauseDuration"></input>
-                        </div>
-                        <div className="flex flex-row items-center mb-4">
-                            <span className="text-md text-stone-300 mr-4">Display Method: </span>
-                            <input type="radio" value="sequential" name="learning.displayMethod"></input>
-                            <label htmlFor="learning.displayMethod" className="text-stone-300 text-md mx-2">Sequential</label>
-                            <input type="radio" value="random" name="learning.displayMethod"></input>
-                            <label htmlFor="learning.displayMethod" className="text-stone-300 text-md mx-2">Random</label>
-                        </div>
-                    </div>
                     
                     {/* Experiment Phase */}
                     <ExperimentPhaseConfig header="Experiment Phase Configuration" />
 
+                    {/* Action Buttons */}
                     <div className="flex flex-row justify-end w-full">
                         <button onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
                         <button type="submit" className="bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Save</button>
