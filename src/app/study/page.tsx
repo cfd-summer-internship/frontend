@@ -57,7 +57,7 @@ export default function StudyConfigPage() {
         return {
             uploadedFiles: mapUploadedFiles(formData),
             learningPhase: mapLearning(formData),
-            waitPhase: mapWait(formData)
+            waitPhase: mapWait(formData),
             experimentPhase: mapExperiment(formData)
         };
     }
