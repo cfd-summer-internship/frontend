@@ -22,7 +22,15 @@ export const learningSchema = z.object({
 
 //Wait Phase Settings
 export const waitSchema = z.object({
-    duration: z.number(),
+    duration: z.number()
+});
+
+//Experiment Phase Settings
+export const experimentSchema = z.object({
+    displayDuration: z.number(),
+    pauseDuration: z.number(),
+    displayMethod: z.string(),
+    scoringMethod: z.string()
 });
 
 //Configuration Settings Wrapper
@@ -31,10 +39,12 @@ export const configurationSchema = z.object({
     uploadedFiles: uploadedFilesSchema,
     learningPhase: learningSchema,
     waitPhase: waitSchema,
+    experimentPhase: experimentSchema
 })
 
 //Exported Types
 export type Uploaded = z.infer<typeof uploadedFilesSchema>;
 export type Learning = z.infer<typeof learningSchema>;
 export type Wait = z.infer<typeof waitSchema>;
+export type Experiment = z.infer<typeof experimentSchema>;
 export type ConfigSettings = z.infer<typeof configurationSchema>

@@ -8,6 +8,7 @@ import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
+import ExperimentPhaseConfig from "@/components/ExperimentPhaseConfig";
 
 
 export default function StudyConfigPage() {
@@ -26,12 +27,22 @@ export default function StudyConfigPage() {
             displayMethod: formData.get("learning.displayMethod")
         }
     }
-
+  
     //Map Wait Phase Settings
     function mapWait(formData: FormData) {
         return {
             duration: Number(formData.get("wait.duration"))
         };
+    }
+      
+    //Map Experiment Phase Settings
+    function mapExperiment(formData: FormData) {
+        return {
+            displayDuration: Number(formData.get("experiment.displayDuration")), //Convert to number
+            pauseDuration: Number(formData.get("experiment.pauseDuration")), //Convert to Number
+            displayMethod: formData.get("experiment.displayMethod"),
+            scoringMethod: formData.get("experiment.scoringMethod")
+        }
     }
 
     //Map Uploaded Files
@@ -47,7 +58,8 @@ export default function StudyConfigPage() {
         return {
             uploadedFiles: mapUploadedFiles(formData),
             learningPhase: mapLearning(formData),
-            waitPhase: mapWait(formData)
+            waitPhase: mapWait(formData),
+            experimentPhase: mapExperiment(formData)
         };
     }
 
@@ -99,6 +111,9 @@ export default function StudyConfigPage() {
 
                     {/* Wait Phase */}
                     <WaitPhaseConfig header="Wait Phase Configuration" />
+                    
+                    {/* Experiment Phase */}
+                    <ExperimentPhaseConfig header="Experiment Phase Configuration" />
 
                     {/* Error Message */}
                     {isError && <span className="text-md text-red-500 italic">Some fields are missing. Please fill them out before saving.</span>}
