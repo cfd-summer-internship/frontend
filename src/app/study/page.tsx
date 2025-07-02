@@ -33,6 +33,7 @@ export default function StudyConfigPage() {
         return {
             duration: Number(formData.get("wait.duration"))
         };
+    }
       
     //Map Experiment Phase Settings
     function mapExperiment(formData: FormData) {
