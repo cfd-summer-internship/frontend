@@ -20,6 +20,11 @@ export const learningSchema = z.object({
     displayMethod: z.string()
 });
 
+//Wait Phase Settings
+export const waitSchema = z.object({
+    duration: z.number()
+});
+
 //Experiment Phase Settings
 export const experimentSchema = z.object({
     displayDuration: z.number(),
@@ -33,11 +38,13 @@ export const experimentSchema = z.object({
 export const configurationSchema = z.object({
     uploadedFiles: uploadedFilesSchema,
     learningPhase: learningSchema,
+    waitPhase: waitSchema,
     experimentPhase: experimentSchema
 })
 
 //Exported Types
 export type Uploaded = z.infer<typeof uploadedFilesSchema>;
 export type Learning = z.infer<typeof learningSchema>;
+export type Wait = z.infer<typeof waitSchema>;
 export type Experiment = z.infer<typeof experimentSchema>;
 export type ConfigSettings = z.infer<typeof configurationSchema>

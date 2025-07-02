@@ -1,6 +1,9 @@
 "use client";
 
 import FileInput from "@/components/FileInput";
+import LearningPhaseConfig from "@/components/LearningPhaseConfig";
+import WaitPhaseConfig from "@/components/WaitPhaseConfig";
+
 import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -24,7 +27,13 @@ export default function StudyConfigPage() {
             displayMethod: formData.get("learning.displayMethod")
         }
     }
-
+  
+    //Map Wait Phase Settings
+    function mapWait(formData: FormData) {
+        return {
+            duration: Number(formData.get("wait.duration"))
+        };
+      
     //Map Experiment Phase Settings
     function mapExperiment(formData: FormData) {
         return {
@@ -48,6 +57,7 @@ export default function StudyConfigPage() {
         return {
             uploadedFiles: mapUploadedFiles(formData),
             learningPhase: mapLearning(formData),
+            waitPhase: mapWait(formData)
             experimentPhase: mapExperiment(formData)
         };
     }
@@ -94,9 +104,18 @@ export default function StudyConfigPage() {
                         <FileInput desc="Consent Form" name="files.consentForm"></FileInput>
                         <FileInput desc="Study Instructions" name="files.studyInstructions"></FileInput>
                     </div>
+
+                    {/* Learning Phase */}
+                    <LearningPhaseConfig header="Learning Phase Configuration" />
+
+                    {/* Wait Phase */}
+                    <WaitPhaseConfig header="Wait Phase Configuration" />
                     
                     {/* Experiment Phase */}
                     <ExperimentPhaseConfig header="Experiment Phase Configuration" />
+
+                    {/* Error Message */}
+                    {isError && <span className="text-md text-red-500 italic">Some fields are missing. Please fill them out before saving.</span>}
 
                     {/* Action Buttons */}
                     <div className="flex flex-row justify-end w-full">

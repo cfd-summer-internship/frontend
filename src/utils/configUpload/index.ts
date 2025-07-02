@@ -10,6 +10,9 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("learning.displayDuration", config.learningPhase.displayDuration.toString());
     formData.append("learning.pauseDuration", config.learningPhase.pauseDuration.toString());
     formData.append("learning.displayMethod",config.learningPhase.displayMethod);
+  
+    //WAIT PHASE
+    formData.append("wait.duration", config.waitPhase.duration.toString());
 
     //EXPERIMENT PHASE
     formData.append("experiment.displayDuration", config.experimentPhase.displayDuration.toString());
