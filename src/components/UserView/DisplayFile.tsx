@@ -1,8 +1,8 @@
 "use client";
 
-import { useRetrieveFile, useStudyID } from "@/utils/consentForm/hooks";
+import { useRetrieveFile, useStudyID } from "@/utils/fileRetrieval/hooks";
 
-export default function ConsentForm({fileRequest} : {fileRequest:string}) {
+export default function DisplayFile({fileRequest} : {fileRequest:string}) {
     const studyID = useStudyID();
     const { data: formURL } = useRetrieveFile(studyID, fileRequest);
     return (
