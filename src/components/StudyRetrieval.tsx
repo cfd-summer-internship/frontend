@@ -26,6 +26,7 @@ export default function StudyRetrieval() {
             studyCode: formData.get("code"),
         })
 
+        //If Succesfully Parsed
         if (result.success) {
             const res = await fetch(`/api/study/study_id/${result.data.studyCode}`, { method: "GET" });
             if (!res.ok)
