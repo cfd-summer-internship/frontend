@@ -1,11 +1,8 @@
 "use client";
 
 import { useRetrieveFile, useStudyID } from "@/utils/consentForm/hooks";
-import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 
 export default function ConsentForm() {
-    const queryClient = useQueryClient();
     const studyID = useStudyID();
     const { data: formURL } = useRetrieveFile(studyID,"consent_form");
     return (
