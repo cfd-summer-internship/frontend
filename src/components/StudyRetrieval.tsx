@@ -12,6 +12,7 @@ const codeFormModel = z.object({
 export default function StudyRetrieval() {
     const router = useRouter();
     const queryClient = useQueryClient();
+    if (localStorage.getItem("localStudyID")) localStorage.removeItem("localStudyID")
 
     async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
         e.preventDefault();
