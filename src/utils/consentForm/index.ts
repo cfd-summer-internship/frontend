@@ -1,6 +1,6 @@
 //GET CONSENT FORM
-export const getConsentForm = (async (study_id:string) => {
-    const res = await fetch(`/api/study/consent_form/${study_id}`, {
+export const getFile = (async (studyID:string, file:string) => {
+    const res = await fetch(`/api/study/${file}/${studyID}`, {
         method: "GET"
 });
 

@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getConsentForm } from ".";
+import { getFile } from ".";
 import { useEffect, useState } from "react";
 
 export const useStudyID = (): string => {
@@ -17,13 +17,21 @@ export const useStudyID = (): string => {
   return studyID;
 }
 
-export const useConsentForm = (study_id: string) => {
+function enforceFormatting(str:string){
+  return str
+    .replace(/([a-z])([A-Z])/g, "$1_$2") //Pascal case
+    .replace(/\s+/g, "_") //Spaces
+    .toLowerCase() 
+}
+
+export const useRetrieveFile = (studyID: string, fileRequest: string) => {
+  const filename = enforceFormatting(fileRequest);
   const query = useQuery({
-    queryKey: ["consentForm", study_id],
+    queryKey: ["displayFile", filename],
     queryFn: async () => {
-      return getConsentForm(study_id);
+      return getFile(studyID, filename);
     },
-    enabled: !!study_id
+    enabled: !!studyID
   });;
   return query;
 };
