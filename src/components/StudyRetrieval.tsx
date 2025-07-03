@@ -26,7 +26,7 @@ export default function StudyRetrieval() {
         })
 
         if (result.success) {
-            const res = await fetch(`/api/study/study_id/${result.data.studyCode}`, {method: "GET"});
+            const res = await fetch(`/api/study/study_id/${result.data.studyCode}`, { method: "GET" });
             if (!res.ok)
                 throw new Error("Unable to Find Study")
 
@@ -35,8 +35,11 @@ export default function StudyRetrieval() {
             const uuidSchema = z.string().uuid();
             const validatedID = uuidSchema.safeParse(data);
 
-            queryClient.setQueryData(["studyID"], validatedID);
-            router.push("/study")
+            if (validatedID.success) {
+                queryClient.setQueryData(["studyID"], validatedID.data);
+                localStorage.setItem("localStudyID", validatedID.data);
+                router.push("/study")
+            }
         }
 
     }
