@@ -1,19 +1,21 @@
 "use client";
 import { z } from "zod";
 import StudyRetrievalInput from "./StudyRetrievalInput";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const codeFormModel = z.object({
     studyCode: z.string().nonempty("Code Required").length(6)
 })
 
-//type CodeForm = z.infer<typeof codeFormModel>
-
 export default function StudyRetrieval() {
+    const router = useRouter()
+    const queryClient = useQueryClient();
 
-    function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
+    async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
         e.preventDefault();
-        
+
         //Take in Form Data
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
@@ -24,7 +26,17 @@ export default function StudyRetrieval() {
         })
 
         if (result.success) {
-            console.log(result.data)
+            const res = await fetch(`/api/study/study_id/${result.data.studyCode}`, {method: "GET"});
+            if (!res.ok)
+                throw new Error("Unable to Find Study")
+
+            const data = await res.json();
+
+            const uuidSchema = z.string().uuid();
+            const validatedID = uuidSchema.safeParse(data);
+
+            queryClient.setQueryData(["studyID"], validatedID);
+            router.push("/study")
         }
 
     }
