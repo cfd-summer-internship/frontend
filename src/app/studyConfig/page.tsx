@@ -10,6 +10,7 @@ import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
+import * as parser from "./formParser";
 
 
 export default function StudyConfigPage() {
@@ -21,49 +22,14 @@ export default function StudyConfigPage() {
     //Reference to custom config upload hook
     const uploadConfig = useConfigUploadMutation();
 
-    //Map Learning Phase Settings
-    function mapLearning(formData: FormData) {
-        return {
-            displayDuration: Number(formData.get("learning.displayDuration")), //Convert to number
-            pauseDuration: Number(formData.get("learning.pauseDuration")), //Convert to Number
-            displayMethod: formData.get("learning.displayMethod")
-        }
-    }
-  
-    //Map Wait Phase Settings
-    function mapWait(formData: FormData) {
-        return {
-            duration: Number(formData.get("wait.duration"))
-        };
-    } 
-      
-    //Map Experiment Phase Settings
-    function mapExperiment(formData: FormData) {
-        return {
-            displayDuration: Number(formData.get("experiment.displayDuration")), //Convert to number
-            pauseDuration: Number(formData.get("experiment.pauseDuration")), //Convert to Number
-            displayMethod: formData.get("experiment.displayMethod"),
-            scoringMethod: formData.get("experiment.scoringMethod"),
-            hasSurvey: Boolean(formData.get("experiment.survey")),
-            surveyQuestions:formData.getAll("survey.question")
-        }
-    }
-
-    //Map Uploaded Files
-    function mapUploadedFiles(formData: FormData) {
-        return {
-            consentForm: formData.get("files.consentForm"),
-            studyInstructions: formData.get("files.studyInstructions")
-        }
-    }
-
     //Map Configuration Settings
     function mapConfig(formData: FormData) {
         return {
-            uploadedFiles: mapUploadedFiles(formData),
-            learningPhase: mapLearning(formData),
-            waitPhase: mapWait(formData),
-            experimentPhase: mapExperiment(formData)
+            uploadedFiles: parser.mapUploadedFiles(formData),
+            learningPhase: parser.mapLearning(formData),
+            waitPhase: parser.mapWait(formData),
+            experimentPhase: parser.mapExperiment(formData),
+            conclusionPhase: parser.mapConclusion(formData)
         };
     }
 

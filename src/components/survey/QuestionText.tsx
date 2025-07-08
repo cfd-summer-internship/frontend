@@ -1,7 +1,6 @@
-import { useId } from "react";
 import { CircleX } from "lucide-react";
 
-export default function QuestionText({id,index,onRemove}) {
+export default function QuestionText({id,onRemove}) {
     return (
         <div className="flex flex-row items-center">
             <label htmlFor="question" className="text-stone-300 text-md mr-4">Question: </label>

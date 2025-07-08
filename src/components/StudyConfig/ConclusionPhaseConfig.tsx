@@ -10,7 +10,7 @@ export default function ConclusionPhaseConfig({ header }: { header: string; }) {
             <p className="italic text-stone-400 mb-4 text-sm">Set optional post-experiment parameters.</p>
             <div className='flex items-center w-full mb-4'>
                 <label className='text-stone-300'>Show Results:</label>
-                <input type="checkbox" className='mx-4 bg-stone-700' name="experiment.results"></input>
+                <input type="checkbox" className='mx-4 bg-stone-700' name="conclusion.results"></input>
             </div>
             <FileInput desc="Study Debrief" name="files.studyDebrief"></FileInput>
             <SurveyQuestion />

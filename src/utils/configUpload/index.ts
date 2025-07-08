@@ -20,15 +20,18 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("experiment.pauseDuration", config.experimentPhase.pauseDuration.toString());
     formData.append("experiment.displayMethod",config.experimentPhase.displayMethod);
     formData.append("experiment.scoringMethod",config.experimentPhase.scoringMethod);
-    formData.append("experiment.survey",config.experimentPhase.hasSurvey.toString());
-    config.experimentPhase.surveyQuestions?.forEach(question => {
+
+    //CONCLUSION PHASE
+    formData.append("conclusion.results",config.conclusionPhase.results.toString());
+    formData.append("conclusion.survey",config.conclusionPhase.survey.toString());
+    config.conclusionPhase.surveyQuestions?.forEach(question => {
         formData.append("survey.questions",question);
-    });
-    
+    });   
 
     //UPLOAD FILES
     formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);
     formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);
+    formData.append("configFiles.studyDebrief", config.uploadedFiles.studyDebrief);
 }
 //Fetch Request to API endpoint
 //Sends as multipart/form-data
