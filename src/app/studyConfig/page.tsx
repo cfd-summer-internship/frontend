@@ -9,11 +9,13 @@ import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
+import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
 
 
 export default function StudyConfigPage() {
     //Tracks if there is an error
-    const [isError, setError] = useState<boolean>(false);
+    const [isIncomplete, setIncomplete] = useState<boolean>(false);
+    const [isSaved,setSaved] = useState<boolean>(false);
     //Page Routing
     const router = useRouter()
     //Reference to custom config upload hook
@@ -33,7 +35,7 @@ export default function StudyConfigPage() {
         return {
             duration: Number(formData.get("wait.duration"))
         };
-    }
+    } 
       
     //Map Experiment Phase Settings
     function mapExperiment(formData: FormData) {
@@ -41,7 +43,9 @@ export default function StudyConfigPage() {
             displayDuration: Number(formData.get("experiment.displayDuration")), //Convert to number
             pauseDuration: Number(formData.get("experiment.pauseDuration")), //Convert to Number
             displayMethod: formData.get("experiment.displayMethod"),
-            scoringMethod: formData.get("experiment.scoringMethod")
+            scoringMethod: formData.get("experiment.scoringMethod"),
+            hasSurvey: Boolean(formData.get("experiment.survey")),
+            surveyQuestions:formData.getAll("survey.question")
         }
     }
 
@@ -76,18 +80,18 @@ export default function StudyConfigPage() {
 
         //If there is an error display an error message
         if (!result.success) {
-            setError(true);
+            setIncomplete(true);
             console.log(result.error.issues);
         }
 
         //If succesfully mapped
         if (result.success) {
-            if (isError) setError(false);
+            if (isIncomplete) setIncomplete(false);
             //Send the data to the backend
             uploadConfig.mutate(result.data, {
                 onSuccess() {
                     //Use this to display a success message
-                    console.log("SUCCESS!")
+                    setSaved(true);
                 }
             })
         }
@@ -97,11 +101,12 @@ export default function StudyConfigPage() {
         <form onSubmit={handleSubmit}>
             <div className="flex flex-col items-center">
                 <div className="flex flex-col min-h-screen items-center">
-                    <h1 className="text-xl text-center font-bold py-4 text-stone-300">Configure Study</h1>
+                    <h1 className="text-xl text-center font-bold py-4 text-stone-300">Study Configuration</h1>
 
                     {/* Upload Section */}
                     <div className="flex flex-col items-start w-full px-10">
-                        <h2 className="text-lg font-bold py-4 text-stone-300">Upload Files</h2>
+                        <h2 className="text-lg font-bold py-4 text-stone-300">Instructional Files</h2>
+                        <p className="italic text-stone-400 mb-4 text-sm">Upload instructional files for the study.</p>
                         <FileInput desc="Consent Form" name="files.consentForm"></FileInput>
                         <FileInput desc="Study Instructions" name="files.studyInstructions"></FileInput>
                     </div>
@@ -115,11 +120,14 @@ export default function StudyConfigPage() {
                     {/* Experiment Phase */}
                     <ExperimentPhaseConfig header="Experiment Phase Configuration" />
 
-                    {/* Error Message */}
-                    {isError && <span className="text-md text-red-500 italic">Some fields are missing. Please fill them out before saving.</span>}
+                    {/* Conclusion Phase */}
+                    <ConclusionPhaseConfig header="Conclusion" />
 
+                    {/* Incomplete Values Message */}
+                    {isIncomplete && <span className="text-md text-red-500 italic my-4">Some fields are missing. Please fill them out before saving.</span>}
+                    {isSaved && <span className="text-md text-emerald-500 italic my-4">Study Configuration Saved Succesfully!</span>}
                     {/* Action Buttons */}
-                    <div className="flex flex-row justify-end w-full">
+                    <div className="flex flex-row justify-end w-full mb-4">
                         <button onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
                         <button type="submit" className="bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Save</button>
                     </div>

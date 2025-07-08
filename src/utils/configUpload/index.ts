@@ -2,6 +2,7 @@ import { ConfigSettings } from "@/schemas/studyConfigSchemas";
 
 //Flattens data and maps it to FastAPI Aliases
 function appendToFormData(formData:FormData,config:ConfigSettings){
+    console.log(formData)
     //Here we're explicitly mapping each value of the multipart/form-data
     //This ensures that each value is mapped correctly to the corresponding key
     //These keys will be the alias which we use when retrieving them on the backend
@@ -19,6 +20,11 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("experiment.pauseDuration", config.experimentPhase.pauseDuration.toString());
     formData.append("experiment.displayMethod",config.experimentPhase.displayMethod);
     formData.append("experiment.scoringMethod",config.experimentPhase.scoringMethod);
+    formData.append("experiment.survey",config.experimentPhase.hasSurvey.toString());
+    config.experimentPhase.surveyQuestions?.forEach(question => {
+        formData.append("survey.questions",question);
+    });
+    
 
     //UPLOAD FILES
     formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);

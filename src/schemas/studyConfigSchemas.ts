@@ -30,7 +30,9 @@ export const experimentSchema = z.object({
     displayDuration: z.number(),
     pauseDuration: z.number(),
     displayMethod: z.string(),
-    scoringMethod: z.string()
+    scoringMethod: z.string(),
+    hasSurvey: z.boolean(),
+    surveyQuestions: z.array(z.string()).optional()
 });
 
 //Configuration Settings Wrapper
