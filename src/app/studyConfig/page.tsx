@@ -1,14 +1,14 @@
 "use client";
 
-import FileInput from "@/components/FileInput";
-import LearningPhaseConfig from "@/components/LearningPhaseConfig";
-import WaitPhaseConfig from "@/components/WaitPhaseConfig";
+import FileInput from "@/components/StudyConfig/FileInput";
+import LearningPhaseConfig from "@/components/StudyConfig/LearningPhaseConfig";
+import WaitPhaseConfig from "@/components/StudyConfig/WaitPhaseConfig";
+import ExperimentPhaseConfig from "@/components/StudyConfig/ExperimentPhaseConfig";
 
 import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
-import ExperimentPhaseConfig from "@/components/ExperimentPhaseConfig";
 
 
 export default function StudyConfigPage() {
