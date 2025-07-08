@@ -8,9 +8,9 @@ export default function Acknowledgement({route, children}:{route:string, childre
     const router = useRouter();
     return (
         <div>
-            <div className="flex flex-row items-center justify-center">
+            <div className="flex flex-row items-center justify-center align-center">
                 <input type="checkbox" checked={acknowledged} onChange={(e) => setAcknowledged(e.target.checked)} className="mr-4"></input>
-                <span className="text-stone-300">{children}</span>
+                <span className="text-stone-300 text-center">{children}</span>
             </div>
             <div className="flex flex-row items-center justify-center my-4">
                 <button disabled={!acknowledged} className={`text-stone-300 py-2 px-4 mx-3 rounded-lg 
