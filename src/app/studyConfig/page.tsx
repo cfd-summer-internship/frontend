@@ -4,7 +4,6 @@ import FileInput from "@/components/StudyConfig/FileInput";
 import LearningPhaseConfig from "@/components/StudyConfig/LearningPhaseConfig";
 import WaitPhaseConfig from "@/components/StudyConfig/WaitPhaseConfig";
 import ExperimentPhaseConfig from "@/components/StudyConfig/ExperimentPhaseConfig";
-
 import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -56,6 +55,7 @@ export default function StudyConfigPage() {
             //Send the data to the backend
             uploadConfig.mutate(result.data, {
                 onSuccess() {
+                    router.push("/study/learningPhase");
                     //Use this to display a success message
                     setSaved(true);
                 }
