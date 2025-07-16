@@ -4,7 +4,7 @@ export function useLearningPhaseConfig(studyID: string) {
     return useQuery({
         queryKey: ["learningPhaseConfig", studyID],
         queryFn: async () => {
-            const res = await fetch(`/study/learning_phase/${studyID}`);
+            const res = await fetch(`/api/study/learning_phase/${studyID}`);
             if (!res.ok) throw new Error("Failed to fetch learning phase config");
             return res.json(); // { display_duration, pause_duration, display_method }
         },
@@ -17,7 +17,7 @@ export function useLearningImageList(studyID: string) {
         queryKey: ["learningImageList", studyID],
         queryFn: async () => {
             // TODO: Change the fetch endpoint below once the a definite endpoint is defined
-            const res = await fetch(`/study/learning_phase_images/${studyID}`); //Assuming the endpoint for now
+            const res = await fetch(`/api/study/learning_phase_images/${studyID}`); //Assuming the endpoint for now
             if (!res.ok) throw new Error("Failed to fetch image list");
             const text = await res.text(); // text instead of json because we are getting the results as Stream of downloaded CSV
             return text
