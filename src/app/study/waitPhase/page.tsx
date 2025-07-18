@@ -13,9 +13,9 @@ export default function WaitPhasePage() {
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
     useEffect(() => {
-        if (!data?.pause_duration) return;
+        if (!data?.display_duration) return;
 
-        const initialTime = Math.floor(data.pause_duration / 1000); // convert ms → sec
+        const initialTime = Math.floor(data.display_duration / 1000); // convert ms → sec
         setTimeLeft(initialTime);
 
         const interval = setInterval(() => {
@@ -29,7 +29,7 @@ export default function WaitPhasePage() {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [data?.pause_duration]);
+    }, [data?.display_duration]);
 
     if (isLoading || timeLeft === null) {
         return (
