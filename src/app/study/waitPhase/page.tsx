@@ -15,7 +15,7 @@ export default function WaitPhasePage() {
     useEffect(() => {
         if (!data?.display_duration) return;
 
-        const initialTime = Math.floor(data.display_duration / 1000); // convert ms → sec
+        const initialTime = Math.floor(data.display_duration);
         setTimeLeft(initialTime);
 
         const interval = setInterval(() => {
