@@ -38,6 +38,8 @@ export function mapUploadedFiles(formData: FormData) {
     return {
         consentForm: formData.get("files.consentForm"),
         studyInstructions: formData.get("files.studyInstructions"),
+        learningList: formData.get("files.learningList"),
+        experimentList: formData.get("files.experimentList"),
         studyDebrief: formData.get("files.studyDebrief")
     }
 }

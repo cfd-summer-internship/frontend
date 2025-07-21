@@ -12,7 +12,7 @@ export default function ConclusionPhaseConfig({ header }: { header: string; }) {
                 <label className='text-stone-300'>Show Results:</label>
                 <input type="checkbox" className='mx-4 bg-stone-700' name="conclusion.results"></input>
             </div>
-            <FileInput desc="Study Debrief" name="files.studyDebrief"></FileInput>
+            <FileInput desc="Study Debrief" name="files.studyDebrief" acceptedFileTypes=".pdf"></FileInput>
             <SurveyQuestion />
         </div>
     )

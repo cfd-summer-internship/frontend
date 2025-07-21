@@ -73,8 +73,8 @@ export default function StudyConfigPage() {
                     <div className="flex flex-col items-start w-full px-10">
                         <h2 className="text-lg font-bold py-4 text-stone-300">Instructional Files</h2>
                         <p className="italic text-stone-400 mb-4 text-sm">Upload instructional files for the study.</p>
-                        <FileInput desc="Consent Form" name="files.consentForm"></FileInput>
-                        <FileInput desc="Study Instructions" name="files.studyInstructions"></FileInput>
+                        <FileInput desc="Consent Form" name="files.consentForm" acceptedFileTypes=".pdf"></FileInput>
+                        <FileInput desc="Study Instructions" name="files.studyInstructions" acceptedFileTypes=".pdf"></FileInput>
                     </div>
 
                     {/* Learning Phase */}

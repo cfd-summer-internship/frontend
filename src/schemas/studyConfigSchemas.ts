@@ -14,6 +14,12 @@ export const uploadedFilesSchema = z.object({
     studyDebrief: z.instanceof(File).refine(file => file.size > 0, {
         message: "File must not be empty",
     }),
+    learningList: z.instanceof(File).refine(file => file.size > 0, {
+        message: "File must not be empty",
+    }),
+    experimentList: z.instanceof(File).refine(file => file.size > 0, {
+        message: "File must not be empty",
+    }),
 });
 
 //Learning Phase Settings

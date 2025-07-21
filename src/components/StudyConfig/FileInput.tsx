@@ -4,10 +4,12 @@ import { CircleX } from 'lucide-react';
 
 export default function FileUpload({
     desc,
-    name }:
+    name,
+    acceptedFileTypes }:
     {
         desc: string;
         name: string;
+        acceptedFileTypes: string
     }
 ) {
     const id = useId();
@@ -21,6 +23,7 @@ export default function FileUpload({
         if (file) {
             setFile(file);
             setFilename(file.name)
+            console.log(file instanceof File)
         }
         else {
             setFile(null);
@@ -39,7 +42,7 @@ export default function FileUpload({
             <span className="text-md text-stone-300 pr-4">{desc}:</span>
             <label className="text-md text-stone-300 px-4 bg-stone-700 py-2">{filename}</label>
             <label htmlFor={id} className="px-4 py-2 bg-stone-800 text-stone-300">Upload</label>
-            <input ref={fileRef} id={id} name={name} type="file" className="hidden" accept=".pdf" onChange={handleChange}></input>
+            <input ref={fileRef} id={id} name={name} type="file" className="hidden" accept={acceptedFileTypes} onChange={handleChange}></input>
             {file && <button onClick={clearFile}><CircleX className="mx-2 text-stone-300" /> </button>}
         </div>
     )
