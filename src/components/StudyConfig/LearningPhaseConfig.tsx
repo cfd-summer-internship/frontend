@@ -1,5 +1,7 @@
 "use client";
 
+import FileInput from "./FileInput";
+
 export default function LearningPhaseConfig({header}:
     {
         header: string;
@@ -45,6 +47,7 @@ export default function LearningPhaseConfig({header}:
           </div>
         </div>
       </div>
+      <FileInput desc="Image List" name="files.learningList" acceptedFileTypes=".csv"></FileInput>
     </div>
   );
 }

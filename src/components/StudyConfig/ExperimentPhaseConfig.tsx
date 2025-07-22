@@ -1,5 +1,7 @@
 "use client";
 
+import FileInput from "./FileInput";
+
 export default function ExperimentPhaseConfig({ header }: { header: string; }) {
 
   return (
@@ -56,6 +58,7 @@ export default function ExperimentPhaseConfig({ header }: { header: string; }) {
           </div>
         </div>
       </div>
+      <FileInput desc="Image List" name="files.experimentList" acceptedFileTypes=".csv"></FileInput>
     </div>
   )
 }

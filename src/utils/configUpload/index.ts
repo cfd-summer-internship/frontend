@@ -31,6 +31,8 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     //UPLOAD FILES
     formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);
     formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);
+    formData.append("configFiles.learningList",config.uploadedFiles.learningList);
+    formData.append("configFiles.experimentList",config.uploadedFiles.experimentList);   
     formData.append("configFiles.studyDebrief", config.uploadedFiles.studyDebrief);
 }
 //Fetch Request to API endpoint
