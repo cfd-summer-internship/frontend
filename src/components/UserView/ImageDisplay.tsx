@@ -1,11 +1,11 @@
 "use client";
 
-import { useLearningPhaseSequence } from "@/utils/learningPhase/hooks"
+import { usePhaseSequence } from "@/utils/learningPhase/hooks"
 import ReusableButton from "@/components/ReusableButton";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function LearningPhaseComponent({ config }: {
+export default function ImageDisplayComponent({ config }: {
     config: {
         display_duration: number;
         pause_duration: number;
@@ -13,7 +13,7 @@ export default function LearningPhaseComponent({ config }: {
         image_urls: string[]
     };
 }) {
-    const sequenceData = useLearningPhaseSequence(config?.image_urls, config);
+    const sequenceData = usePhaseSequence(config?.image_urls, config);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
 
     if (!config?.image_urls || !config) return (

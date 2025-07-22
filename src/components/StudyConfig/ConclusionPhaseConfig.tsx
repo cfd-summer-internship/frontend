@@ -1,6 +1,6 @@
 "use client";
 import FileInput from "@/components/StudyConfig/FileInput";
-import SurveyQuestion from "../survey/SurveyQuestion";
+import SurveyQuestion from "../Survey/SurveyQuestion";
 
 export default function ConclusionPhaseConfig({ header }: { header: string; }) {
 
