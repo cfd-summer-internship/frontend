@@ -11,7 +11,7 @@ import React from 'react'
         return (
             <div
                 onClick={onClick}
-                className="bg-black text-white hover:bg-gray-50 hover:text-black hover:cursor-pointer px-20 py-3 rounded-lg transition-colors duration-300"
+                className="bg-emerald-700 text-white hover:bg-emerald-600 hover:cursor-pointer px-20 py-3 rounded-lg transition-colors duration-300"
             >
                 {title}
             </div>
