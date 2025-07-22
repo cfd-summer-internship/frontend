@@ -13,16 +13,16 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     formData.append("learning.displayMethod",config.learningPhase.displayMethod);
   
     //WAIT PHASE
-    formData.append("wait.duration", config.waitPhase.duration.toString());
+    formData.append("waiting.displayDuration", config.waitPhase.duration.toString());
 
     //EXPERIMENT PHASE
     formData.append("experiment.displayDuration", config.experimentPhase.displayDuration.toString());
     formData.append("experiment.pauseDuration", config.experimentPhase.pauseDuration.toString());
     formData.append("experiment.displayMethod",config.experimentPhase.displayMethod);
-    formData.append("experiment.scoringMethod",config.experimentPhase.scoringMethod);
+    formData.append("experiment.responseMethod",config.experimentPhase.scoringMethod);
 
     //CONCLUSION PHASE
-    formData.append("conclusion.results",config.conclusionPhase.results.toString());
+    formData.append("conclusion.showResults",config.conclusionPhase.results.toString());
     formData.append("conclusion.survey",config.conclusionPhase.survey.toString());
     config.conclusionPhase.surveyQuestions?.forEach(question => {
         formData.append("survey.questions",question);
