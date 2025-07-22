@@ -1,7 +1,7 @@
 "use client";
 
 import { usePhaseSequence } from "@/utils/learningPhase/hooks"
-import ReusableButton from "@/components/ReusableButton";
+import ReusableButton from "@/components/UI/Button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 

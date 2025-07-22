@@ -9,13 +9,15 @@ import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
+import { DialogButton } from "@/components/StudyConfig/ShareDialog";
 import * as parser from "./formParser";
 
 
 export default function StudyConfigPage() {
     //Tracks if there is an error
     const [isIncomplete, setIncomplete] = useState<boolean>(false);
-    const [isSaved,setSaved] = useState<boolean>(false);
+    const [isSaved, setSaved] = useState<boolean>(false);
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
     //Page Routing
     const router = useRouter()
     //Reference to custom config upload hook
@@ -58,6 +60,7 @@ export default function StudyConfigPage() {
                     router.push("/study/learningPhase");
                     //Use this to display a success message
                     setSaved(true);
+                    setOpenDialog(true);
                 }
             })
         }
@@ -82,7 +85,7 @@ export default function StudyConfigPage() {
 
                     {/* Wait Phase */}
                     <WaitPhaseConfig header="Wait Phase Configuration" />
-                    
+
                     {/* Experiment Phase */}
                     <ExperimentPhaseConfig header="Experiment Phase Configuration" />
 
@@ -99,6 +102,7 @@ export default function StudyConfigPage() {
                     </div>
                 </div>
             </div>
+            <DialogButton open={openDialog} setOpen={setOpenDialog} />
         </form>
     )
 }
