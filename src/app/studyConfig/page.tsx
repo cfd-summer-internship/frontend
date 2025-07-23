@@ -1,6 +1,5 @@
 "use client";
 
-import FileInput from "@/components/StudyConfig/FileInput";
 import LearningPhaseConfig from "@/components/StudyConfig/LearningPhaseConfig";
 import WaitPhaseConfig from "@/components/StudyConfig/WaitPhaseConfig";
 import ExperimentPhaseConfig from "@/components/StudyConfig/ExperimentPhaseConfig";
@@ -11,7 +10,7 @@ import { useConfigUploadMutation, useExportConfig } from "@/utils/configUpload/h
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
 import { DialogButton } from "@/components/StudyConfig/ShareDialog";
 import * as parser from "./formParser";
-import { useStudyCodeForID } from "@/utils/studyRetrieval/hooks";
+import InstructionPhaseConfig from "@/components/StudyConfig/InstructionPhase";
 
 
 export default function StudyConfigPage() {
@@ -77,14 +76,8 @@ export default function StudyConfigPage() {
                 <div className="flex flex-col min-h-screen items-center">
                     <h1 className="text-xl text-center font-bold py-4 text-stone-300">Study Configuration</h1>
 
-                    {/* Upload Section */}
-                    <div className="flex flex-col items-start w-full px-10">
-                        <h2 className="text-lg font-bold py-4 text-stone-300">Instructional Files</h2>
-                        <p className="italic text-stone-400 mb-4 text-sm">Upload instructional files for the study.</p>
-                        <FileInput desc="Consent Form" name="files.consentForm" acceptedFileTypes=".pdf"></FileInput>
-                        <FileInput desc="Study Instructions" name="files.studyInstructions" acceptedFileTypes=".pdf"></FileInput>
-                    </div>
-
+                    {/* Instruction Phase*/}
+                    <InstructionPhaseConfig header="Instruction Files" />
                     {/* Learning Phase */}
                     <LearningPhaseConfig header="Learning Phase Configuration" />
 
