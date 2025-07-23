@@ -7,13 +7,15 @@ import ExperimentPhaseConfig from "@/components/StudyConfig/ExperimentPhaseConfi
 import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
+import { useConfigUploadMutation, useExportConfig } from "@/utils/configUpload/hooks";
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
 import { DialogButton } from "@/components/StudyConfig/ShareDialog";
 import * as parser from "./formParser";
+import { useStudyCodeForID } from "@/utils/studyRetrieval/hooks";
 
 
 export default function StudyConfigPage() {
+
     //Tracks if there is an error
     const [isIncomplete, setIncomplete] = useState<boolean>(false);
     const [isSaved, setSaved] = useState<boolean>(false);
@@ -62,7 +64,7 @@ export default function StudyConfigPage() {
                     //Use this to display a success message
                     setSaved(true);
                     setOpenDialog(true);
-                    setStudyCode(responseData["study_code"])
+                    setStudyCode(responseData["study_code"]);
                     //setStudyCode(responseData)
                 }
             })

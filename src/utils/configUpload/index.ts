@@ -54,3 +54,13 @@ export const uploadConfig = (async (config: ConfigSettings) => {
 
     return res.json()
 });
+
+export const getStudyConfig = (async (studyID: string) => {
+    const res = await fetch(`/api/study/export/${studyID}`, {
+        method: "GET",
+    });
+    if (!res.ok) {
+        throw new Error("Unable to Find Configruation")
+    }
+    return res.json()
+});

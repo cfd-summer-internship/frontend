@@ -10,13 +10,13 @@ export default function ImageDisplayComponent({ config }: {
         display_duration: number;
         pause_duration: number;
         display_method: string;
-        image_urls: string[]
+        images: string[]
     };
 }) {
-    const sequenceData = usePhaseSequence(config?.image_urls, config);
+    const sequenceData = usePhaseSequence(config?.images, config);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
 
-    if (!config?.image_urls || !config) return (
+    if (!config?.images || !config) return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-white px-4">
             <span className="loader"></span>
         </div>
