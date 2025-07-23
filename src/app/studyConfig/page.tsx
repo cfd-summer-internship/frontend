@@ -18,6 +18,7 @@ export default function StudyConfigPage() {
     const [isIncomplete, setIncomplete] = useState<boolean>(false);
     const [isSaved, setSaved] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [studyCode, setStudyCode] = useState<string>("");
     //Page Routing
     const router = useRouter()
     //Reference to custom config upload hook
@@ -56,11 +57,13 @@ export default function StudyConfigPage() {
             if (isIncomplete) setIncomplete(false);
             //Send the data to the backend
             uploadConfig.mutate(result.data, {
-                onSuccess() {
-                    router.push("/study/learningPhase");
+                onSuccess(responseData) {
+                    //router.push("/study/learningPhase");
                     //Use this to display a success message
                     setSaved(true);
                     setOpenDialog(true);
+                    setStudyCode(responseData["study_code"])
+                    //setStudyCode(responseData)
                 }
             })
         }
@@ -102,7 +105,7 @@ export default function StudyConfigPage() {
                     </div>
                 </div>
             </div>
-            <DialogButton open={openDialog} setOpen={setOpenDialog} />
+            <DialogButton open={openDialog} setOpen={setOpenDialog} studyCode={studyCode} />
         </form>
     )
 }

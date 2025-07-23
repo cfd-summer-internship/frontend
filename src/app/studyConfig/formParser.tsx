@@ -35,11 +35,18 @@ export function mapConclusion(formData: FormData) {
 
 //Map Uploaded Files
 export function mapUploadedFiles(formData: FormData) {
+    const validateFile = (key:string) =>{
+        //FILTERS OUT DUMMY FILES
+        const file = formData.get(key);
+        return file instanceof File && file.type !== "application/octet-stream"
+        ? file
+        : undefined;
+}
     return {
-        consentForm: formData.get("files.consentForm"),
-        studyInstructions: formData.get("files.studyInstructions"),
-        learningList: formData.get("files.learningList"),
-        experimentList: formData.get("files.experimentList"),
-        studyDebrief: formData.get("files.studyDebrief")
+        consentForm: validateFile("files.consentForm"),
+        studyInstructions: validateFile("files.studyInstructions"),
+        learningList: validateFile("files.learningList"),
+        experimentList: validateFile("files.experimentList"),
+        studyDebrief: validateFile("files.studyDebrief")
     }
 }

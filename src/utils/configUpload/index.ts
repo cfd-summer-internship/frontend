@@ -1,7 +1,7 @@
 import { ConfigSettings } from "@/schemas/studyConfigSchemas";
 
 //Flattens data and maps it to FastAPI Aliases
-function appendToFormData(formData:FormData,config:ConfigSettings){
+function appendToFormData(formData: FormData, config: ConfigSettings) {
     console.log(formData)
     //Here we're explicitly mapping each value of the multipart/form-data
     //This ensures that each value is mapped correctly to the corresponding key
@@ -10,41 +10,43 @@ function appendToFormData(formData:FormData,config:ConfigSettings){
     //LEARNING PHASE
     formData.append("learning.displayDuration", config.learningPhase.displayDuration.toString());
     formData.append("learning.pauseDuration", config.learningPhase.pauseDuration.toString());
-    formData.append("learning.displayMethod",config.learningPhase.displayMethod);
-  
+    formData.append("learning.displayMethod", config.learningPhase.displayMethod);
+
     //WAIT PHASE
     formData.append("waiting.displayDuration", config.waitPhase.duration.toString());
 
     //EXPERIMENT PHASE
     formData.append("experiment.displayDuration", config.experimentPhase.displayDuration.toString());
     formData.append("experiment.pauseDuration", config.experimentPhase.pauseDuration.toString());
-    formData.append("experiment.displayMethod",config.experimentPhase.displayMethod);
-    formData.append("experiment.responseMethod",config.experimentPhase.scoringMethod);
+    formData.append("experiment.displayMethod", config.experimentPhase.displayMethod);
+    formData.append("experiment.responseMethod", config.experimentPhase.scoringMethod);
 
     //CONCLUSION PHASE
-    formData.append("conclusion.showResults",config.conclusionPhase.results.toString());
-    formData.append("conclusion.survey",config.conclusionPhase.survey.toString());
+    formData.append("conclusion.showResults", config.conclusionPhase.results.toString());
+    formData.append("conclusion.survey", config.conclusionPhase.survey.toString());
     config.conclusionPhase.surveyQuestions?.forEach(question => {
-        formData.append("survey.questions",question);
-    });   
+        formData.append("survey.questions", question);
+    });
 
     //UPLOAD FILES
-    formData.append("configFiles.consentForm",config.uploadedFiles.consentForm);
-    formData.append("configFiles.studyInstructions",config.uploadedFiles.studyInstructions);
-    formData.append("configFiles.learningList",config.uploadedFiles.learningList);
-    formData.append("configFiles.experimentList",config.uploadedFiles.experimentList);   
-    formData.append("configFiles.studyDebrief", config.uploadedFiles.studyDebrief);
+    formData.append("configFiles.consentForm", config.uploadedFiles.consentForm);
+    formData.append("configFiles.studyInstructions", config.uploadedFiles.studyInstructions);
+    formData.append("configFiles.learningList", config.uploadedFiles.learningList);
+    formData.append("configFiles.experimentList", config.uploadedFiles.experimentList);
+    if (config.uploadedFiles.studyDebrief) {
+        formData.append("configFiles.studyDebrief", config.uploadedFiles.studyDebrief);
+    }
 }
 //Fetch Request to API endpoint
 //Sends as multipart/form-data
-export const uploadConfig = (async (config:ConfigSettings) => {
+export const uploadConfig = (async (config: ConfigSettings) => {
     const formData = new FormData();
-    appendToFormData(formData,config);
+    appendToFormData(formData, config);
 
     const res = await fetch(`/api/config/save`, {
         method: "POST",
         body: formData
-});
+    });
 
     if (!res.ok) {
         throw new Error("Unable to Save Configuration")

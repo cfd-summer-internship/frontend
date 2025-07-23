@@ -8,19 +8,16 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/UI/dialog"
 import { CopyButton } from "../UI/CopyButton";
 
-export function DialogButton({ open, setOpen }: {
+export function DialogButton({ open, setOpen, studyCode }: {
     open: boolean;
     setOpen: (open: boolean) => void;
+    studyCode:string;
 }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            {/* <DialogTrigger asChild>
-                <button className="text-stone-400">Share</button>
-            </DialogTrigger> */}
             <DialogContent className="sm:max-w-md text-stone-400">
                 <DialogHeader className="text-stone-400">
                     <DialogTitle className="text-stone-400">Study Code</DialogTitle>
@@ -37,10 +34,10 @@ export function DialogButton({ open, setOpen }: {
                         <input
                             className="text-center w-40 font-semibold text-2xl text-stone-400"
                             id="link"
-                            defaultValue="cd7680"
+                            defaultValue={studyCode}
                             readOnly
                         />
-                        <CopyButton text="cd7680" />
+                        <CopyButton text={studyCode} />
                     </div>
                 </div>
                 <DialogFooter className="sm:justify-center">
