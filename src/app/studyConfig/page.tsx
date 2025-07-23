@@ -6,7 +6,7 @@ import ExperimentPhaseConfig from "@/components/StudyConfig/ExperimentPhaseConfi
 import { configurationSchema } from "@/schemas/studyConfigSchemas";
 import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useConfigUploadMutation, useExportConfig } from "@/utils/configUpload/hooks";
+import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
 import { DialogButton } from "@/components/StudyConfig/ShareDialog";
 import * as parser from "./formParser";
