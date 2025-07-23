@@ -1,5 +1,7 @@
 "use client";
 
+import FileInput from "./FileInput";
+
 export default function LearningPhaseConfig({header}:
     {
         header: string;
@@ -15,8 +17,8 @@ export default function LearningPhaseConfig({header}:
         <input
           className="bg-stone-800 w-16 pl-2 text-stone-300 rounded-sm"
           type= "number"
-          min="1"
-          placeholder="1"
+          min="0"
+          placeholder="0"
           name="learning.displayDuration"
         />
       </div>
@@ -26,8 +28,8 @@ export default function LearningPhaseConfig({header}:
         <input
           className="bg-stone-800 w-16 pl-2 text-stone-300 rounded-sm"
           type="number"
-          min="1"
-          placeholder="1"
+          min="0"
+          placeholder="0"
           name="learning.pauseDuration"
         />
       </div>
@@ -45,6 +47,7 @@ export default function LearningPhaseConfig({header}:
           </div>
         </div>
       </div>
+      <FileInput desc="Image List" name="files.learningList" acceptedFileTypes=".csv"></FileInput>
     </div>
   );
 }

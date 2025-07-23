@@ -1,5 +1,7 @@
 "use client";
 
+import FileInput from "./FileInput";
+
 export default function ExperimentPhaseConfig({ header }: { header: string; }) {
 
   return (
@@ -12,8 +14,8 @@ export default function ExperimentPhaseConfig({ header }: { header: string; }) {
         <input
           className="bg-stone-800 w-16 pl-2 text-stone-300 rounded-sm"
           type="number"
-          min="1"
-          placeholder="1"
+          min="0"
+          placeholder="0"
           name="experiment.displayDuration"
         />
       </div>
@@ -23,8 +25,8 @@ export default function ExperimentPhaseConfig({ header }: { header: string; }) {
         <input
           className="bg-stone-800 w-16 pl-2 text-stone-300 rounded-sm"
           type="number"
-          min="1"
-          placeholder="1"
+          min="0"
+          placeholder="0"
           name="experiment.pauseDuration"
         />
       </div>
@@ -56,6 +58,7 @@ export default function ExperimentPhaseConfig({ header }: { header: string; }) {
           </div>
         </div>
       </div>
+      <FileInput desc="Image List" name="files.experimentList" acceptedFileTypes=".csv"></FileInput>
     </div>
   )
 }

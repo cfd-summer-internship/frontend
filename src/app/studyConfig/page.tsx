@@ -9,13 +9,16 @@ import { SyntheticEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
+import { DialogButton } from "@/components/StudyConfig/ShareDialog";
 import * as parser from "./formParser";
 
 
 export default function StudyConfigPage() {
     //Tracks if there is an error
     const [isIncomplete, setIncomplete] = useState<boolean>(false);
-    const [isSaved,setSaved] = useState<boolean>(false);
+    const [isSaved, setSaved] = useState<boolean>(false);
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [studyCode, setStudyCode] = useState<string>("");
     //Page Routing
     const router = useRouter()
     //Reference to custom config upload hook
@@ -54,10 +57,13 @@ export default function StudyConfigPage() {
             if (isIncomplete) setIncomplete(false);
             //Send the data to the backend
             uploadConfig.mutate(result.data, {
-                onSuccess() {
-                    router.push("/study/learningPhase");
+                onSuccess(responseData) {
+                    //router.push("/study/learningPhase");
                     //Use this to display a success message
                     setSaved(true);
+                    setOpenDialog(true);
+                    setStudyCode(responseData["study_code"])
+                    //setStudyCode(responseData)
                 }
             })
         }
@@ -73,8 +79,8 @@ export default function StudyConfigPage() {
                     <div className="flex flex-col items-start w-full px-10">
                         <h2 className="text-lg font-bold py-4 text-stone-300">Instructional Files</h2>
                         <p className="italic text-stone-400 mb-4 text-sm">Upload instructional files for the study.</p>
-                        <FileInput desc="Consent Form" name="files.consentForm"></FileInput>
-                        <FileInput desc="Study Instructions" name="files.studyInstructions"></FileInput>
+                        <FileInput desc="Consent Form" name="files.consentForm" acceptedFileTypes=".pdf"></FileInput>
+                        <FileInput desc="Study Instructions" name="files.studyInstructions" acceptedFileTypes=".pdf"></FileInput>
                     </div>
 
                     {/* Learning Phase */}
@@ -82,7 +88,7 @@ export default function StudyConfigPage() {
 
                     {/* Wait Phase */}
                     <WaitPhaseConfig header="Wait Phase Configuration" />
-                    
+
                     {/* Experiment Phase */}
                     <ExperimentPhaseConfig header="Experiment Phase Configuration" />
 
@@ -99,6 +105,7 @@ export default function StudyConfigPage() {
                     </div>
                 </div>
             </div>
+            <DialogButton open={openDialog} setOpen={setOpenDialog} studyCode={studyCode} />
         </form>
     )
 }

@@ -15,8 +15,8 @@ export default function WaitPhaseConfig({header}:
         <input
           className="bg-stone-800 w-16 pl-2 text-stone-300 rounded-sm"
           type= "number"
-          min="1"
-          placeholder= "1"
+          min="0"
+          placeholder= "0"
           name="wait.duration"
         />
       </div>

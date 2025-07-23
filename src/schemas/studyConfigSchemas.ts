@@ -5,15 +5,50 @@ import { z } from "zod";
 //Uploaded Files
 export const uploadedFilesSchema = z.object({
     //Must not be an empty file
-    consentForm: z.instanceof(File).refine(file => file.size > 0, {
-        message: "File must not be empty",
-    }),
-    studyInstructions: z.instanceof(File).refine(file => file.size > 0, {
-        message: "File must not be empty",
-    }),
-    studyDebrief: z.instanceof(File).refine(file => file.size > 0, {
-        message: "File must not be empty",
-    }),
+    consentForm: z.instanceof(File)
+        .refine(file => file.size > 0, {
+            message: "File must not be empty",
+        })
+        .refine(file => ["application/pdf"]
+            .includes(file.type), {
+            message: "Only PDF file are allowed"
+        }),
+    studyInstructions: z.instanceof(File)
+        .refine(file => file.size > 0, {
+            message: "File must not be empty",
+        })
+        .refine(file => ["application/pdf"]
+            .includes(file.type), {
+            message: "Only PDF file are allowed"
+        }),
+    learningList: z.instanceof(File)
+        .refine(file => file.size > 0, {
+            message: "File must not be empty",
+        })
+        .refine(file => ["text/csv"]
+            .includes(file.type), {
+            message: "Only CSV files are allowed"
+        }),
+    experimentList: z.instanceof(File)
+        .refine(file => file.size > 0, {
+            message: "File must not be empty",
+        })
+        .refine(file => ["text/csv"]
+            .includes(file.type), {
+            message: "Only CSV files are allowed"
+        }),
+    studyDebrief: z
+        .union([
+            z.instanceof(File)
+                .refine(file => file.size > 0, {
+                    message: "File must not be empty",
+                })
+                .refine(file => ["application/pdf"]
+                    .includes(file.type), {
+                    message: "Only PDF files are allowed"
+                }),
+            z.undefined()
+        ])
 });
 
 //Learning Phase Settings
@@ -40,7 +75,7 @@ export const experimentSchema = z.object({
 export const conclusionSchema = z.object({
     results: z.boolean(),
     survey: z.boolean(),
-    surveyQuestions: z.array(z.string()).optional() ,
+    surveyQuestions: z.array(z.string()).optional(),
 });
 
 //Configuration Settings Wrapper
