@@ -23,7 +23,7 @@ export default function LearningPhaseConfig({header}:
 
       <DurationInput 
         label="Pause Duration:" 
-        name="laerning.pauseDuration" 
+        name="learning.pauseDuration" 
         unit="milliseconds" 
         infinite={true}
         min="0"
