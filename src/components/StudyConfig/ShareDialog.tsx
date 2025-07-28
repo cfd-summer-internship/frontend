@@ -10,6 +10,7 @@ import {
     DialogTitle,
 } from "@/components/UI/dialog"
 import { CopyButton } from "../UI/CopyButton";
+import ExportButton from "./ExportButton";
 
 export function DialogButton({ open, setOpen, studyCode }: {
     open: boolean;
@@ -42,10 +43,11 @@ export function DialogButton({ open, setOpen, studyCode }: {
                 </div>
                 <DialogFooter className="sm:justify-center">
                     <DialogClose asChild>
-                        <div className="flex items-center justify-center w-full">
+                        <div className="flex items-center justify-center w-full gap-2">
                             <button type="button" onClick={() => setOpen(false)} className="text-stone-400 bg-stone-800 py-2 w-1/4 rounded-md hover:bg-stone-700">
                                 Close
                             </button>
+                            <ExportButton studyCode={studyCode} />
                         </div>
                     </DialogClose>
                 </DialogFooter>
