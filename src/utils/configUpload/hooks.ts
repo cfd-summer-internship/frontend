@@ -8,6 +8,7 @@ export const useExportConfig = (studyID: string) =>{
     queryFn: async () => {
       return getStudyConfig(studyID);
     },
+    enabled:!!studyID
   });;
   return query;
 }
