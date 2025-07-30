@@ -10,7 +10,7 @@ export function usePhaseSequence(imageList: string[], config?: { display_duratio
     const [currentIndex, setCurrentIndex] = useState(0);
     const [pauseScreen, setPauseScreen] = useState(false);
 
-    const isManual = config?.pause_duration === 0;
+    const isManual = config?.display_duration === 0;
     const waitTimeMs = config?.pause_duration || 0;
 
     // Shuffle image list if display method is random
@@ -28,11 +28,14 @@ export function usePhaseSequence(imageList: string[], config?: { display_duratio
     const handleNext = () => {
         if (currentIndex < orderedImageList.length - 1) {
             setCurrentIndex(prev => prev + 1);
-        } else if (orderedImageList?.length > 1) {
+        } else  {
             goToNextPhase();
         }
     };
 
+
+
+    // Auto advance logic only for non-manual mode
     //handles both pause and display duration
     useEffect(() => {
         if (isManual) return;
@@ -72,8 +75,15 @@ export function useLearningPhaseConfig(studyID: string) {
         queryFn: async () => {
             const res = await fetch(`/api/study/learning_phase/${studyID}`);
             if (!res.ok) throw new Error("Failed to fetch learning phase config");
-            return res.json(); // { display_duration, pause_duration, display_method, image_urls }
+
+            const config = await res.json();
+            return {
+                ...config,
+                display_duration: config.display_duration > 0 ? config.display_duration * 1000 : 0,
+                pause_duration: config.pause_duration * 1000,
+            };
         },
         enabled: !!studyID,
     });
 }
+
