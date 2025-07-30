@@ -16,6 +16,7 @@ export default function LearningPhasePage() {
     return (
         <ImageDisplayComponent
             config={config}
+            nextPhaseRoute={"/study/waitPhase"}
         />
     );
 }

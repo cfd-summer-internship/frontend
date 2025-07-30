@@ -57,7 +57,7 @@ export default function WaitPhasePage() {
                 You may continue when the timer reaches 0:00
             </p>
             <button
-                onClick={() => router.push("study/experimentPhase")}
+                onClick={() => router.push("/study/experimentPhase")}
                 disabled={timeLeft !== 0}
                 className={`px-6 py-2 rounded bg-white text-black transition 
                     ${timeLeft === 0 ? 'opacity-100 cursor-pointer' : 'opacity-30 cursor-not-allowed'}

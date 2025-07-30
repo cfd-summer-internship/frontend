@@ -12,6 +12,7 @@ export default function ImageDisplayComponent({ config }: {
         display_method: string;
         images: string[]
     };
+    nextPhaseRoute: string;
 }) {
     const sequenceData = usePhaseSequence(config?.images, config);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
