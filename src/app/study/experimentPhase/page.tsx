@@ -15,6 +15,7 @@ export default function ExperimentPhasePage() {
     return (
         <ImageDisplayComponent
             config={config}
+            nextPhaseName={"Conclusion"}
             nextPhaseRoute={"/study/conclusionPhase"}
         />
     );
