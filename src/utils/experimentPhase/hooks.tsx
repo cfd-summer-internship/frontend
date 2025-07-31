@@ -10,8 +10,8 @@ export function useExperimentPhaseConfig(studyID: string) {
             const config = await res.json();
             return {
                 ...config,
-                display_duration: config.display_duration > 0 ? config.display_duration * 1000 : 0,
-                pause_duration: config.pause_duration * 1000,
+                display_duration: config.display_duration > 0 ? config.display_duration : 0,
+                pause_duration: config.pause_duration,
             };
         },
         enabled: !!studyID,

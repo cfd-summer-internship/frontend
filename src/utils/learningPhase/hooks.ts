@@ -50,6 +50,7 @@ export function usePhaseSequence(
 
         if (pauseScreen) {
             timer = setTimeout(() => setPauseScreen(false), waitTimeMs);
+            console.log(timer);
         } else {
             timer = setTimeout(() => {
                 if (currentIndex < orderedImageList?.length - 1) {
@@ -58,6 +59,7 @@ export function usePhaseSequence(
                 } else if (orderedImageList?.length > 1) {
                     goToNextPhase();
                 }
+                console.log(timer);
             }, config?.display_duration);
         }
 
@@ -85,8 +87,8 @@ export function useLearningPhaseConfig(studyID: string) {
             const config = await res.json();
             return {
                 ...config,
-                display_duration: config.display_duration > 0 ? config.display_duration * 1000 : 0,
-                pause_duration: config.pause_duration * 1000,
+                display_duration: config.display_duration > 0 ? config.display_duration : 0,
+                pause_duration: config.pause_duration,
             };
         },
         enabled: !!studyID,
