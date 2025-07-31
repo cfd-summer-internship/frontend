@@ -5,15 +5,17 @@ import ReusableButton from "@/components/UI/Button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function ImageDisplayComponent({ config }: {
+export default function ImageDisplayComponent({config,  nextPhaseName, nextPhaseRoute}: {
     config: {
         display_duration: number;
         pause_duration: number;
         display_method: string;
         images: string[]
-    };
+    },
+    nextPhaseRoute: string,
+    nextPhaseName: string
 }) {
-    const sequenceData = usePhaseSequence(config?.images, config);
+    const sequenceData = usePhaseSequence(config?.images, config, nextPhaseRoute);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
 
     if (!config?.images || !config) return (
@@ -46,7 +48,7 @@ export default function ImageDisplayComponent({ config }: {
             {sequenceData?.isManual && !sequenceData?.pauseScreen && (
                 <ReusableButton
                     onClick={sequenceData?.handleNext}
-                    title={sequenceData?.isLastImage ? "Continue to wait Phase" : "Next"}
+                    title={sequenceData?.isLastImage ? `Continue to ${nextPhaseName} phase` : "Next"}
                 />
             )}
         </div>

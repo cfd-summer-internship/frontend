@@ -2,10 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export function usePhaseSequence(imageList: string[], config?: { display_duration: number; pause_duration: number; display_method: string }) {
+export function usePhaseSequence(
+    imageList: string[],
+    config?: { display_duration: number; pause_duration: number; display_method: string },
+    nextPhaseRoute: string = "/study/waitPhase" // Default fallback
+) {
     const router = useRouter();
-    // routing variable just to make it cleaner
-    const goToNextPhase = useCallback(() => router.push("/study/waitPhase"), [router]);
+
+    const goToNextPhase = useCallback(() => router.push(nextPhaseRoute), [router, nextPhaseRoute]);
+
+
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [pauseScreen, setPauseScreen] = useState(false);
@@ -44,6 +50,7 @@ export function usePhaseSequence(imageList: string[], config?: { display_duratio
 
         if (pauseScreen) {
             timer = setTimeout(() => setPauseScreen(false), waitTimeMs);
+            console.log(timer);
         } else {
             timer = setTimeout(() => {
                 if (currentIndex < orderedImageList?.length - 1) {
@@ -52,6 +59,7 @@ export function usePhaseSequence(imageList: string[], config?: { display_duratio
                 } else if (orderedImageList?.length > 1) {
                     goToNextPhase();
                 }
+                console.log(timer);
             }, config?.display_duration);
         }
 
@@ -79,8 +87,8 @@ export function useLearningPhaseConfig(studyID: string) {
             const config = await res.json();
             return {
                 ...config,
-                display_duration: config.display_duration > 0 ? config.display_duration * 1000 : 0,
-                pause_duration: config.pause_duration * 1000,
+                display_duration: config.display_duration > 0 ? config.display_duration : 0,
+                pause_duration: config.pause_duration,
             };
         },
         enabled: !!studyID,
