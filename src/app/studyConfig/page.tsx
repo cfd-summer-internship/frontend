@@ -4,26 +4,39 @@ import LearningPhaseConfig from "@/components/StudyConfig/LearningPhaseConfig";
 import WaitPhaseConfig from "@/components/StudyConfig/WaitPhaseConfig";
 import ExperimentPhaseConfig from "@/components/StudyConfig/ExperimentPhaseConfig";
 import { configurationSchema } from "@/schemas/studyConfigSchemas";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useConfigUploadMutation } from "@/utils/configUpload/hooks";
 import ConclusionPhaseConfig from "@/components/StudyConfig/ConclusionPhaseConfig";
 import { DialogButton } from "@/components/StudyConfig/ShareDialog";
 import * as parser from "./formParser";
 import InstructionPhaseConfig from "@/components/StudyConfig/InstructionPhase";
+import { useAtomValue } from "jotai";
+import { isAuthenticatedAtom, tokenAtom } from "@/utils/auth/store";
 
 
 export default function StudyConfigPage() {
-
+    const authenticated = useAtomValue(isAuthenticatedAtom)
+    const token = useAtomValue(tokenAtom)
+    //Page Routing
+    const router = useRouter()
     //Tracks if there is an error
     const [isIncomplete, setIncomplete] = useState<boolean>(false);
     const [isSaved, setSaved] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [studyCode, setStudyCode] = useState<string>("");
-    //Page Routing
-    const router = useRouter()
     //Reference to custom config upload hook
     const uploadConfig = useConfigUploadMutation();
+
+    useEffect(() => {
+        if (!authenticated) {
+            router.replace("/login");
+        }
+    }, [authenticated, router]);
+
+    if (!authenticated) {
+        return null;
+    }
 
     //Map Configuration Settings
     function mapConfig(formData: FormData) {
@@ -57,7 +70,7 @@ export default function StudyConfigPage() {
         if (result.success) {
             if (isIncomplete) setIncomplete(false);
             //Send the data to the backend
-            uploadConfig.mutate(result.data, {
+            uploadConfig.mutate({ config: result.data, token: token }, {
                 onSuccess(responseData) {
                     //router.push("/study/learningPhase");
                     //Use this to display a success message
@@ -95,7 +108,7 @@ export default function StudyConfigPage() {
                     {isSaved && <span className="text-md text-emerald-500 italic my-4">Study Configuration Saved Succesfully!</span>}
                     {/* Action Buttons */}
                     <div className="flex flex-row justify-end w-full mb-4">
-                        <button onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
+                        <button type="button" onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
                         <button type="submit" className="bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Save</button>
                     </div>
                 </div>
