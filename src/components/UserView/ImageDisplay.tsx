@@ -4,12 +4,14 @@ import { usePhaseSequence } from "@/utils/learningPhase/hooks"
 import ReusableButton from "@/components/UI/Button";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import ScoringComponent from "./Scoring";
 
 export default function ImageDisplayComponent({config,  nextPhaseName, nextPhaseRoute}: {
     config: {
         display_duration: number;
         pause_duration: number;
         display_method: string;
+        response_method: string | null;
         images: string[]
     },
     nextPhaseRoute: string,
@@ -17,6 +19,13 @@ export default function ImageDisplayComponent({config,  nextPhaseName, nextPhase
 }) {
     const sequenceData = usePhaseSequence(config?.images, config, nextPhaseRoute);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
+    const [canContinue, setCanContinue] = useState<boolean | null>(false);
+
+    const handleClick = () => {
+        sequenceData?.handleNext?.();
+        console.log(canContinue);
+    };
+
 
     if (!config?.images || !config) return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-white px-4">
@@ -40,16 +49,19 @@ export default function ImageDisplayComponent({config,  nextPhaseName, nextPhase
                         decoding="async"
                         loading="eager"
                         transition={{ duration: 0.5 }}
-                        className="w-[70vh] h-[60vh] object-contain mb-6"
+                        className="w-[70vh] h-[60vh] object-contain"
                     />
             )}
             </AnimatePresence>
 
+            {config?.response_method && <ScoringComponent response_method={config?.response_method} setCanContinue={setCanContinue}/>}
+
             {sequenceData?.isManual && !sequenceData?.pauseScreen && (
-                <ReusableButton
-                    onClick={sequenceData?.handleNext}
-                    title={sequenceData?.isLastImage ? `Continue to ${nextPhaseName} phase` : "Next"}
-                />
+                <button
+                    type="button"
+                    onClick={handleClick}
+                    disabled={!canContinue}
+                >{sequenceData?.isLastImage ? `Continue to ${nextPhaseName} phase` : "Next"}</button>
             )}
         </div>
     );

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export function useExperimentPhaseSequence(imageList: string[], config?: { display_duration: number; pause_duration: number; display_method: string; scoring_method: string }) {
+export function useExperimentPhaseSequence(imageList: string[], config?: { display_duration: number; pause_duration: number; display_method: string; response_method: string | null }) {
     const router = useRouter();
     // routing variable just to make it cleaner
     const goToNextPhase = useCallback(() => router.push("/study/conclusionPhase"), [router]);
