@@ -1,54 +1,49 @@
 "use client";
 
-import { tokenAtom } from "@/utils/auth/store";
-import { useQuery } from "@tanstack/react-query";
-import { useAtomValue } from "jotai";
 import { z } from "zod";
 import { Trash2 } from 'lucide-react';
-
-const ImageDataSchema = z.object({
-    filename: z.string(),
-    last_modified: z.date(),
-    size: z.number(),
-    next_token: z.string().optional(),
-})
-
-const DataSchema = z.array(ImageDataSchema);
-type ImageData = z.infer<typeof ImageDataSchema>;
-
-export const getImageData = (async () => {
-    const token = useAtomValue(tokenAtom)
-    const res = await fetch(`/api/images/get_file_page`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    if (!res.ok) {
-        throw new Error("Unable to Save Configuration")
-    }
-
-    return res.json()
-});
+import { useDeleteFileMutation, useGetImageData } from "@/utils/dash/staff/hooks";
+import { ImageData } from "@/schemas/dashSchemas"
+import { useAtomValue } from "jotai";
+import { tokenAtom } from "@/utils/auth/store";
+import { useQueryClient } from "@tanstack/react-query";
+import React from "react";
 
 
 export default function StaffImageView() {
-    const { data: rows = [], isLoading, isError, error } = useQuery<ImageData[], Error>({
-        queryKey: ['images'],
-        queryFn: getImageData,
+    const { data: rows = [], isLoading, isError, error } = useGetImageData();
+    const deleteFile = useDeleteFileMutation();
+    const queryClient = useQueryClient();
+    const token = useAtomValue(tokenAtom);
+
+    const handleDelete = (async (filename: string) => {
+        deleteFile.mutate({ token: token, filename: filename }, {
+            onSuccess() {
+                queryClient.invalidateQueries({ queryKey: ['images'] })
+            }
+        });
+
     });
-    if (isLoading){
-        return(
-            <div className="flex text-center justify-center text-red-300">
-                Loading
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.currentTarget.files;
+    }
+
+    const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.currentTarget.files;
+    }
+
+    if (isLoading) {
+        return (
+            <div className="flex h-screen justify-center items-center">
+                <span className="loader"></span>
             </div>
         );
     }
     if (isError) {
         return (
             <div className="flex text-center justify-center text-red-300">
-                Error
+                {error.toString()}
             </div>
         );
     }
@@ -77,16 +72,36 @@ export default function StaffImageView() {
                         {rows.map(row => (
                             <tr key={row.filename}>
                                 <td>{row.filename}</td>
-                                <td> {row.last_modified.toString()} </td>
-                                <td>{row.size}</td>
+                                <td> {new Date(row.last_modified).toLocaleString()} </td>
+                                <td>{(row.size / 1024 / 1024).toFixed(2)} mb</td>
                                 <td>
-                                    <button><Trash2 /></button>
+                                    <button className="hover:text-red-500 hover:cursor-pointer" onClick={() => handleDelete(row.filename)}><Trash2 className="w-4" /></button>
                                 </td>
                             </tr>
                         ))
                         }
                     </tbody>
                 </table>
+                <div className="flex flex-row gap-2 pt-3 justify-end">
+                    <label
+                        className="px-4 py-2 bg-emerald-700 rounded-lg hover:cursor-pointer hover:bg-emerald-600">
+                        Upload File
+                        <input
+                            type="file"
+                            onChange={handleImageUpload}
+                            className="hidden"
+                            accept=".jpg,.jpeg,.png" />
+                    </label>
+                    <label
+                        className="px-4 py-2 bg-emerald-700 rounded-lg  hover:cursor-pointer hover:bg-emerald-600">
+                        Upload Folder
+                        <input
+                            type="file"
+                            onChange={handleFolderUpload}
+                            className="hidden"
+                            accept=".zip" />
+                    </label>
+                </div>
             </div>
         </>
     );
