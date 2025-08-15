@@ -1,7 +1,6 @@
 "use client";
 
-import { usePhaseSequence } from "@/utils/learningPhase/hooks"
-import ReusableButton from "@/components/UI/Button";
+import { usePhaseSequence } from "@/utils/learningPhase/hooks";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
@@ -17,15 +16,16 @@ export default function ImageDisplayComponent({config,  nextPhaseName, nextPhase
     nextPhaseRoute: string,
     nextPhaseName: string
 }) {
+
     const sequenceData = usePhaseSequence(config?.images, config, nextPhaseRoute);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
     const [canContinue, setCanContinue] = useState<boolean | null>(false);
 
     const handleClick = () => {
         sequenceData?.handleNext?.();
+        setCanContinue(false);
         console.log(canContinue);
     };
-
 
     if (!config?.images || !config) return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-white px-4">
@@ -58,6 +58,7 @@ export default function ImageDisplayComponent({config,  nextPhaseName, nextPhase
 
             {sequenceData?.isManual && !sequenceData?.pauseScreen && (
                 <button
+                    className="bg-emerald-700 text-white hover:bg-emerald-600 hover:cursor-pointer px-20 py-3 rounded-lg transition-colors duration-300"
                     type="button"
                     onClick={handleClick}
                     disabled={!canContinue}

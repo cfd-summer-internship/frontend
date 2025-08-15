@@ -3,7 +3,6 @@
 import { useExperimentPhaseConfig } from "@/utils/experimentPhase/hooks";
 import { useStudyID } from "@/utils/fileRetrieval/hooks";
 import ImageDisplayComponent from "@/components/UserView/ImageDisplay";
-import ScoringComponent from "@/components/UserView/Scoring";
 
 export default function ExperimentPhasePage() {
     const studyID = useStudyID();
