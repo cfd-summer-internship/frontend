@@ -2,16 +2,17 @@
 
 import { z } from "zod";
 import { Trash2 } from 'lucide-react';
-import { useDeleteFileMutation, useGetImageData } from "@/utils/dash/staff/hooks";
-import { ImageData } from "@/schemas/dashSchemas"
+import { useDeleteFileMutation, useGetImageData, useUploadImagesMutation } from "@/utils/dash/staff/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { useQueryClient } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 
 
 export default function StaffImageView() {
+    const [uploading, setUploading] = useState(false);
     const { data: rows = [], isLoading, isError, error } = useGetImageData();
+    const uploadFile = useUploadImagesMutation();
     const deleteFile = useDeleteFileMutation();
     const queryClient = useQueryClient();
     const token = useAtomValue(tokenAtom);
@@ -25,12 +26,16 @@ export default function StaffImageView() {
 
     });
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.currentTarget.files;
-    }
-
-    const handleFolderUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.currentTarget.files;
+        if (!files) return;
+        setUploading(true);
+        uploadFile.mutate({ token: token, file: files[0] }, {
+            onSuccess() {
+                setUploading(false);
+                queryClient.invalidateQueries({ queryKey: ['images'] })
+            }
+        })
     }
 
     if (isLoading) {
@@ -84,20 +89,40 @@ export default function StaffImageView() {
                 </table>
                 <div className="flex flex-row gap-2 pt-3 justify-end">
                     <label
-                        className="px-4 py-2 bg-emerald-700 rounded-lg hover:cursor-pointer hover:bg-emerald-600">
-                        Upload File
-                        <input
+                        className={`
+                            text-center
+                            w-30 py-2 
+                            bg-emerald-700 
+                            rounded-lg 
+                            cursor-pointer
+                    ${uploading ? "opacity-50 pointer-events-none" : "hover:bg-emerald-600"}`}>
+                        {uploading ?
+                            <div className="flex items-center">
+                                <span className="spinner-loader w-5 h-5 animate-spin" />
+                                Uploading...
+                            </div> : "Upload File"}
+                            <input
                             type="file"
-                            onChange={handleImageUpload}
+                            onChange={handleUpload}
                             className="hidden"
                             accept=".jpg,.jpeg,.png" />
                     </label>
                     <label
-                        className="px-4 py-2 bg-emerald-700 rounded-lg  hover:cursor-pointer hover:bg-emerald-600">
-                        Upload Folder
+                        className={`
+                            text-center
+                            w-30 py-2 
+                            bg-emerald-700 
+                            rounded-lg 
+                            cursor-pointer
+                    ${uploading ? "opacity-50 pointer-events-none" : "hover:bg-emerald-600"}`}>
+                        {uploading ?
+                            <div className="flex items-center">
+                                <span className="spinner-loader w-5 h-5 animate-spin" />
+                                Uploading...
+                            </div> : "Upload Folder"}
                         <input
                             type="file"
-                            onChange={handleFolderUpload}
+                            onChange={handleUpload}
                             className="hidden"
                             accept=".zip" />
                     </label>

@@ -34,9 +34,9 @@ export const deleteImage = (async (token:string|undefined,filename:string) => {
 
 export const uploadFile = (async (token:string|undefined,file:File) => {
     const formData = new FormData();
-    formData.append('files', file[0]);;
+    formData.append('file', file);;
 
-    const res = await fetch(`/api/images/delete_file`, {
+    const res = await fetch(`/api/images/upload`, {
         method: "POST",
         headers: {
             Authorization: `Bearer ${token}`
