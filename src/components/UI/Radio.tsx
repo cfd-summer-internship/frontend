@@ -1,13 +1,18 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { RadioContext } from '../UserView/Scoring';
 
 // Reusable Radio Button component with props
-const Radio = ({name, id, value, onChange, text}: {
+const Radio = ({name, id, value, text}: {
     name: string;
     id: string;
     value: string;
-    onChange: () => void;
+    checked: boolean;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     text: string;
 }) => {
+
+  const onChange = useContext(RadioContext);
+
   return (
     <label htmlFor={id} className="radio-label">
       <input
