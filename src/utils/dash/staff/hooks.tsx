@@ -17,12 +17,12 @@ export const useGetImageData = () => {
 
 export const useDeleteFileMutation = () => {
     return useMutation({
-        mutationFn: async ({token,filename}: {token:string|undefined,filename:string}) => await deleteImage(token,filename)
+        mutationFn: async ({ token, filename }: { token: string | undefined, filename: string }) => await deleteImage(token, filename)
     });
 };
 
 export const useUploadImagesMutation = () => {
     return useMutation({
-        mutationFn: async ({token,file}: {token:string|undefined,file:File}) => await uploadFile(token,file)
+        mutationFn: async ({ token, file }: { token: string | undefined, file: File }) => await uploadFile(token, file)
     });
 };
