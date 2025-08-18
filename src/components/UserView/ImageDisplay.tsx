@@ -1,10 +1,12 @@
 "use client";
 
-import { usePhaseSequence } from "@/utils/learningPhase/hooks";
-import { useRef, useState } from "react";
+import { usePhaseSequence } from "@/utils/imageDisplay/hooks";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
 import z from "zod";
+
+type ImageItem = { id: string; url: string };
 
 export default function ImageDisplayComponent({ config, nextPhaseName, nextPhaseRoute }: {
     config: {
@@ -12,19 +14,21 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         pause_duration: number;
         display_method: string;
         response_method: string | null;
+        image_ids: string[]
         images: string[]
     },
     nextPhaseRoute: string,
     nextPhaseName: string
 }) {
 
-    const sequenceData = usePhaseSequence(config?.images, config, nextPhaseRoute);
+    const sequenceData = usePhaseSequence(config?.images, config?.image_ids, config, nextPhaseRoute);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
 
     //Experiment Answer Properties
     const [resetKey, setResetKey] = useState(0);
     const [canContinue, setCanContinue] = useState<boolean | null>(false);
     const [answers, setAnswers] = useState<StudyResponse[]>([]);
+    const [start, setStart] = useState(0);
     const formRef = useRef<HTMLFormElement>(null);
 
 
@@ -38,14 +42,25 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     type StudyResponse = z.infer<typeof studyResponseSchema>;
     const studyReponseList = z.array(studyResponseSchema).length(config.images.length)
 
+    const handleLoad = () => {
+        setIsLoaded(sequenceData!.currentImage.url);
+        const now = performance.now();
+        setStart(now);
+    }
+
     const handleClick = () => {
         const form = formRef.current;
         if (!form) return;
         const formData = new FormData(form);
+
+        if (!start) return
+        const end = performance.now();
+        const responseTime = end - start;
+
         const data = {
-            image_id: sequenceData?.currentImage,
+            image_id: sequenceData?.currentImage.id,
             answer: Number(formData.get("experiment.scoringMethod")),
-            response_time: 0
+            response_time: responseTime
         }
         const validate = studyResponseSchema.safeParse(data);
         if (!validate.success) return;
@@ -55,7 +70,7 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
             if (sequenceData?.isLastImage) {
                 const validate = studyReponseList.safeParse(next);
                 if (!validate.success) console.error(validate.error.format())
-        }
+            }
             return next;
         });
 
@@ -78,11 +93,11 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
                     <div className="bg-black" />
                 ) : (
                     <motion.img
-                        key={sequenceData!.currentImage}
-                        src={sequenceData!.currentImage}
-                        onLoad={() => setIsLoaded(sequenceData!.currentImage)}
+                        key={sequenceData!.currentImage.id}
+                        src={sequenceData!.currentImage.url}
+                        onLoad={handleLoad}
                         initial={{ opacity: 0 }}
-                        animate={{ opacity: isLoaded === sequenceData!.currentImage ? 1 : 0 }}
+                        animate={{ opacity: isLoaded === sequenceData!.currentImage.url ? 1 : 0 }}
                         exit={{ opacity: 0 }}
                         decoding="async"
                         loading="eager"
