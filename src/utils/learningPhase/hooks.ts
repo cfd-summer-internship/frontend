@@ -11,8 +11,6 @@ export function usePhaseSequence(
 
     const goToNextPhase = useCallback(() => router.push(nextPhaseRoute), [router, nextPhaseRoute]);
 
-
-
     const [currentIndex, setCurrentIndex] = useState(0);
     const [pauseScreen, setPauseScreen] = useState(false);
 
