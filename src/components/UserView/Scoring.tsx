@@ -4,18 +4,16 @@ import { BinaryScoring } from "@/components/UI/BinaryScoring";
 import { GradientScoring } from "@/components/UI/GradientScoring";
 import { createContext } from "react";
 
-export const RadioContext = createContext<(e: React.ChangeEvent<HTMLInputElement>) => void>(() => {});
+export const RadioContext = createContext<(e: React.ChangeEvent<HTMLInputElement>) => void>(() => { });
 
-export default function ScoringComponent({response_method, setCanContinue}){
-  const handleChange= (e: React.ChangeEvent<HTMLInputElement>) => {setCanContinue(true)};
+export default function ScoringComponent({ ref, response_method, reset, setCanContinue }) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { setCanContinue(true) };
 
   return (
-    <form className="pb-4">
-      <div>
+    <form ref={ref} key={reset} id="scoring-form" className="pb-4">
         <RadioContext value={handleChange}>
-        {response_method === "binary" ? <BinaryScoring/> : <GradientScoring/>}
+            {response_method === "binary" ? <BinaryScoring /> : <GradientScoring />}
         </RadioContext>
-      </div>
-    </form>  
+    </form>
   );
 }

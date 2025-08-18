@@ -6,8 +6,6 @@ const Radio = ({name, id, value, text}: {
     name: string;
     id: string;
     value: string;
-    checked: boolean;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     text: string;
 }) => {
 
@@ -21,6 +19,7 @@ const Radio = ({name, id, value, text}: {
         name={name}
         value={value}
         onChange={onChange}
+        onClick={() => {}}
       />
       <span className="text-stone-300 text-md" />
       {text}
