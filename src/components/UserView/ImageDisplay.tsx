@@ -1,10 +1,9 @@
 "use client";
 
 import { usePhaseSequence } from "@/utils/imageDisplay/hooks";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
-import z from "zod";
 import { studyReponseListSchema, StudyResponse, studyResponseSchema } from "@/schemas/studyResponseSchemas";
 import { useSubmitExperimentAnswers } from "@/utils/experimentPhase/hooks";
 import { useQueryClient } from "@tanstack/react-query";
@@ -64,10 +63,15 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
             const next = [...prev, validate.data];
             if (sequenceData?.isLastImage) {
                 const validate = studyReponseListSchema.safeParse(next);
-                if (!validate.success) console.error(validate.error.format())
 
-                const studyID = queryClient.getQueryData(['experimentPhaseConfig'])
-                //submitAnswers.mutate(studyID, next)
+                if (!validate.success) console.error(validate.error.format());
+
+                const studyID = localStorage.getItem("localStudyID")
+                const subjectID = localStorage.getItem("subjectID");
+
+                if (!subjectID || !studyID) throw new Error("Missing Required Information");
+
+                submitAnswers.mutate({studyID:studyID, subjectID:subjectID, answers:next})
             }
             return next;
         });

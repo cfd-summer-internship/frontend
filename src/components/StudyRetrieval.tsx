@@ -41,6 +41,7 @@ export default function StudyRetrieval() {
             if (validatedID.success) {
                 queryClient.setQueryData(["studyID"], validatedID.data);
                 localStorage.setItem("localStudyID", validatedID.data);
+                
                 if (localStorage.getItem("subjectID") == null) {
                     localStorage.setItem("subjectID", uuidv4())
                 }
