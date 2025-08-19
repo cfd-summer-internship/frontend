@@ -4,6 +4,7 @@ import StudyRetrievalInput from "./StudyRetrievalInput";
 import { SyntheticEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { v4 as uuidv4 } from 'uuid';
 
 const codeFormModel = z.object({
     studyCode: z.string().nonempty("Code Required").length(6)
@@ -40,6 +41,9 @@ export default function StudyRetrieval() {
             if (validatedID.success) {
                 queryClient.setQueryData(["studyID"], validatedID.data);
                 localStorage.setItem("localStudyID", validatedID.data);
+
+                localStorage.setItem("subjectID", uuidv4())
+
                 router.push("/study/consentForm")
             }
         }

@@ -5,6 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
 import z from "zod";
+import { studyReponseListSchema, StudyResponse, studyResponseSchema } from "@/schemas/studyResponseSchemas";
+import { useSubmitExperimentAnswers } from "@/utils/experimentPhase/hooks";
+import { useQueryClient } from "@tanstack/react-query";
 
 type ImageItem = { id: string; url: string };
 
@@ -31,16 +34,8 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     const [start, setStart] = useState(0);
     const formRef = useRef<HTMLFormElement>(null);
 
-
-    const studyResponseSchema = z.object({
-        image_id: z.string(), //Current sends list of URLs with no former reference to image id oop!
-        answer: z.number(),
-        response_time: z.number()
-    }
-    );
-
-    type StudyResponse = z.infer<typeof studyResponseSchema>;
-    const studyReponseList = z.array(studyResponseSchema).length(config.images.length)
+    const submitAnswers = useSubmitExperimentAnswers();
+    const queryClient = useQueryClient();
 
     const handleLoad = () => {
         setIsLoaded(sequenceData!.currentImage.url);
@@ -68,8 +63,11 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         setAnswers(prev => {
             const next = [...prev, validate.data];
             if (sequenceData?.isLastImage) {
-                const validate = studyReponseList.safeParse(next);
+                const validate = studyReponseListSchema.safeParse(next);
                 if (!validate.success) console.error(validate.error.format())
+
+                const studyID = queryClient.getQueryData(['experimentPhaseConfig'])
+                //submitAnswers.mutate(studyID, next)
             }
             return next;
         });
