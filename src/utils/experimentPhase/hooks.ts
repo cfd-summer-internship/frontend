@@ -1,4 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { StudyResponseList } from "@/schemas/studyResponseSchemas";
+import { submitAnswers } from ".";
+
+export const useSubmitExperimentAnswers = () => {
+    return useMutation({
+        mutationFn: async ({ studyID, subjectID, answers }: { studyID: string, subjectID: string, answers: StudyResponseList }) => await submitAnswers(studyID, subjectID, answers),
+    });
+};
 
 export function useExperimentPhaseConfig(studyID: string) {
     return useQuery({

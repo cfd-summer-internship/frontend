@@ -43,9 +43,12 @@ importers:
       react-dom:
         specifier: ^19.0.0
         version: 19.1.0(react@19.1.0)
+<<<<<<< HEAD
       react-hot-toast:
         specifier: ^2.5.2
         version: 2.5.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+=======
+>>>>>>> 8caa1db (feat: answer submission hook)
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
