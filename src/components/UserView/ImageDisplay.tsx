@@ -71,15 +71,20 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
 
                 if (!subjectID || !studyID) throw new Error("Missing Required Information");
 
-                submitAnswers.mutate({studyID:studyID, subjectID:subjectID, answers:next})
+                submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next }, {
+                    onSuccess() {
+                        sequenceData?.handleNext?.();
+                    }
+                })
             }
             return next;
         });
-
-        setCanContinue(false);
-        formRef.current?.reset();
-        setResetKey(s => s + 1);
-        sequenceData?.handleNext?.();
+        if (!sequenceData?.isLastImage) {
+            setCanContinue(false);
+            formRef.current?.reset();
+            setResetKey(s => s + 1);
+            sequenceData?.handleNext?.();
+        }
     };
 
     if (!config?.images || !config) return (
@@ -87,6 +92,12 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
             <span className="loader"></span>
         </div>
     );
+
+    if (submitAnswers.isError) return(
+        <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-red-500 px-4">
+            Error Submitting Results, please contact the administrator for help.
+        </div>        
+    )
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-white px-4">
