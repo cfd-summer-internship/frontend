@@ -29,12 +29,14 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     //Experiment Answer Properties
     const [resetKey, setResetKey] = useState(0);
     const [canContinue, setCanContinue] = useState<boolean | null>(false);
-    const [answers, setAnswers] = useState<StudyResponse[]>([]);
+
+    //const [answers, setAnswers] = useState<StudyResponse[]>([]);
+    const answersRef = useRef<StudyResponse[]>([]);
+
     const [start, setStart] = useState(0);
     const formRef = useRef<HTMLFormElement>(null);
 
     const submitAnswers = useSubmitExperimentAnswers();
-    const queryClient = useQueryClient();
 
     const handleLoad = () => {
         setIsLoaded(sequenceData!.currentImage.url);
@@ -59,27 +61,26 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         const validate = studyResponseSchema.safeParse(data);
         if (!validate.success) return;
 
-        setAnswers(prev => {
-            const next = [...prev, validate.data];
-            if (sequenceData?.isLastImage) {
-                const validate = studyReponseListSchema.safeParse(next);
+        const next = [...answersRef.current, validate.data];
+        answersRef.current = next;
 
-                if (!validate.success) console.error(validate.error.format());
+        if (sequenceData?.isLastImage) {
+            const validate = studyReponseListSchema.safeParse(next);
 
-                const studyID = localStorage.getItem("localStudyID")
-                const subjectID = localStorage.getItem("subjectID");
+            if (!validate.success) console.error(validate.error.format());
 
-                if (!subjectID || !studyID) throw new Error("Missing Required Information");
+            const studyID = localStorage.getItem("localStudyID")
+            const subjectID = localStorage.getItem("subjectID");
 
-                submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next }, {
-                    onSuccess() {
-                        sequenceData?.handleNext?.();
-                    }
-                })
-            }
-            return next;
-        });
-        if (!sequenceData?.isLastImage) {
+            if (!subjectID || !studyID) throw new Error("Missing Required Information");
+
+            submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next }, {
+                onSuccess() {
+                    sequenceData?.handleNext?.();
+                }
+            })
+        }
+        else if (!sequenceData?.isLastImage) {
             setCanContinue(false);
             formRef.current?.reset();
             setResetKey(s => s + 1);
@@ -93,10 +94,10 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         </div>
     );
 
-    if (submitAnswers.isError) return(
+    if (submitAnswers.isError) return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-red-500 px-4">
             Error Submitting Results, please contact the administrator for help.
-        </div>        
+        </div>
     )
 
     return (
