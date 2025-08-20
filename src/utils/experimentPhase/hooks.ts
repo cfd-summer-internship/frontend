@@ -8,7 +8,10 @@ export const useSubmitExperimentAnswers = () => {
             studyID: string, 
             subjectID: string, 
             answers: StudyResponseList 
-        }) => await submitAnswers(studyID, subjectID, answers),
+        }) => {
+            console.log('[mutationFn] firing');
+            await submitAnswers(studyID, subjectID, answers)
+        },
         retry: 0,  
     });
 };
