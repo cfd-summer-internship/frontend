@@ -4,7 +4,12 @@ import { submitAnswers } from ".";
 
 export const useSubmitExperimentAnswers = () => {
     return useMutation({
-        mutationFn: async ({ studyID, subjectID, answers }: { studyID: string, subjectID: string, answers: StudyResponseList }) => await submitAnswers(studyID, subjectID, answers),
+        mutationFn: async ({ studyID, subjectID, answers }: { 
+            studyID: string, 
+            subjectID: string, 
+            answers: StudyResponseList 
+        }) => await submitAnswers(studyID, subjectID, answers),
+        retry: 0,  
     });
 };
 
