@@ -25,6 +25,8 @@ export function usePhaseSequence(
         [imageIDs, imageList]
     );
 
+    const fadeDuration=50//ms
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [pauseScreen, setPauseScreen] = useState(false);
     const [complete, setComplete] = useState(false);
@@ -61,7 +63,7 @@ export function usePhaseSequence(
         let timer: NodeJS.Timeout;
 
         if (pauseScreen) {
-            timer = setTimeout(() => setPauseScreen(false), waitTimeMs);
+            timer = setTimeout(() => setPauseScreen(false), waitTimeMs+fadeDuration);
         } else {
             timer = setTimeout(() => {
                 if (currentIndex < orderedImageList?.length - 1) {
