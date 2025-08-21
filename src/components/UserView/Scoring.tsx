@@ -7,7 +7,7 @@ import { createContext } from "react";
 export const RadioContext = createContext<(e: React.ChangeEvent<HTMLInputElement>) => void>(() => { });
 
 export default function ScoringComponent({ ref, response_method, reset, setCanContinue }) {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => { setCanContinue(true) };
+  const handleChange = () => { setCanContinue(true) };
 
   return (
     <form ref={ref} key={reset} id="scoring-form" className="pb-4">

@@ -6,9 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
 import { studyReponseListSchema, StudyResponse, studyResponseSchema } from "@/schemas/studyResponseSchemas";
 import { useSubmitExperimentAnswers } from "@/utils/experimentPhase/hooks";
-import { useQueryClient } from "@tanstack/react-query";
-
-type ImageItem = { id: string; url: string };
 
 export default function ImageDisplayComponent({ config, nextPhaseName, nextPhaseRoute }: {
     config: {
