@@ -20,11 +20,14 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     nextPhaseName: string
 }) {
 
+    const fadeDuration=50;//ms
+
     const sequenceData = usePhaseSequence(config?.images, config?.image_ids, config, nextPhaseRoute);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
 
     //Experiment Answer Properties
-    const [resetKey, setResetKey] = useState(0);
+    //const [resetKey, setResetKey] = useState(0);
+    const resetKey = useRef(0);
     const [canContinue, setCanContinue] = useState<boolean | null>(false);
 
     const answersRef = useRef<StudyResponse[]>([]);
@@ -48,7 +51,9 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         if (formValue) {
             submitted = Number(formData.get("experiment.scoringMethod"));
         }
-        formRef.current?.reset();
+        resetKey.current++;
+        // formRef.current?.reset();
+        // setResetKey(s => s + 1);
 
         let responseTime = 0;
 
@@ -184,7 +189,7 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
             const subjectID = localStorage.getItem("subjectID");
 
             if (!subjectID || !studyID) throw new Error("Missing Required Information");
-
+            console.log(next)
             submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next }, {
                 onSuccess() {
                     // sequenceData?.handleNext?.();
@@ -194,8 +199,9 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         }
         else if (!sequenceData?.isLastImage) {
             setCanContinue(false);
-            formRef.current?.reset();
-            setResetKey(s => s + 1);
+            resetKey.current++;
+            // formRef.current?.reset();
+            // setResetKey(s => s + 1);
             sequenceData?.handleNext?.();
         }
     };
@@ -227,21 +233,26 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
                         exit={{ opacity: 0 }}
                         decoding="async"
                         loading="eager"
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: (fadeDuration/2)/100 }}
                         className="w-[70vh] h-[60vh] object-contain"
                     />
                 )}
             </AnimatePresence>
 
             {config?.response_method &&
-                <div className={`${sequenceData?.pauseScreen ? "hidden" : ""}`}>
+            <AnimatePresence mode="wait">
+                <motion.div 
+                initial={{opacity:0}} 
+                animate={{ opacity: isLoaded === sequenceData!.currentImage.url ? 1 : 0 }}
+                >
                     <ScoringComponent
                         ref={formRef}
                         response_method={config?.response_method}
-                        reset={resetKey}
+                        reset={resetKey.current}
                         setCanContinue={setCanContinue}
                     />
-                </div>}
+                </motion.div>
+                </AnimatePresence>}
 
             {sequenceData?.isManual && !sequenceData?.pauseScreen && (
                 <button
