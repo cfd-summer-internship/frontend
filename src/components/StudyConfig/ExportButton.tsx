@@ -26,6 +26,6 @@ export default function ExportButton({ studyCode }: { studyCode: string }) {
         <button
             className="bg-emerald-700 text-stone-400 py-2 w-1/4 rounded-md hover:bg-emerald-500"
             onClick={handleExport}>
-            Export Config
+            Export Configuration
         </button>);
 }

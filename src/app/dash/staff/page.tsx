@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import ResearchImageView from "@/components/Dashboard/Researcher/ImageView";
+import StaffImageView from "@/components/Dashboard/Staff/ImageView";
 import { isAuthenticatedAtom, tokenAtom } from "@/utils/auth/store";
 import { useAtomValue } from "jotai";
 
-export default function ResearcherDashboard() {
+export default function StaffDashboard() {
     const authenticated = useAtomValue(isAuthenticatedAtom)
-    const [activeTab, setActiveTab] = useState<"images" | "data">("images");
+    const [activeTab, setActiveTab] = useState<"images" | "researchers" | "data">("images");
 
     return (
         <div className="flex h-screen">
@@ -19,6 +19,9 @@ export default function ResearcherDashboard() {
                     <button onClick={() => setActiveTab('images')} className="hover:cursor-pointer text-left">
                         Images
                     </button>
+                    <button onClick={() => setActiveTab('researchers')} className="hover:cursor-pointer text-left">
+                        Researchers
+                    </button>
                     <button onClick={() => setActiveTab('data')} className="hover:cursor-pointer text-left">
                         Data
                     </button>
@@ -26,7 +29,12 @@ export default function ResearcherDashboard() {
             </div>
             <div className="flex-1 overflow-auto">
                 {activeTab === "images" && (
-                    <ResearchImageView />
+                    <StaffImageView />
+                )}
+                {activeTab === "researchers" && (
+                    <div className="flex text-center justify-center">
+                        <span className="text-stone-300 font-bold text-2xl pt-8 pb-2">Researchers</span>
+                    </div>
                 )}
                 {activeTab === "data" && (
                     <div className="flex text-center justify-center">

@@ -1,14 +1,15 @@
 "use client";
 
+import { z } from "zod";
 import { Trash2 } from 'lucide-react';
-import { useDeleteFileMutation, useGetImageData, useUploadImagesMutation } from "@/utils/dash/researcher/hooks";
+import { useDeleteFileMutation, useGetImageData, useUploadImagesMutation } from "@/utils/dash/staff/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 
 
-export default function ResearcherImageView() {
+export default function StaffImageView() {
     const [uploading, setUploading] = useState(false);
     const { data: rows = [], isLoading, isError, error } = useGetImageData();
     const uploadFile = useUploadImagesMutation();
