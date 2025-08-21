@@ -61,7 +61,6 @@ export function usePhaseSequence(
 
         if (pauseScreen) {
             timer = setTimeout(() => setPauseScreen(false), waitTimeMs);
-            console.log(timer);
         } else {
             timer = setTimeout(() => {
                 if (currentIndex < orderedImageList?.length - 1) {
@@ -70,7 +69,6 @@ export function usePhaseSequence(
                 } else if (orderedImageList?.length > 1) {
                     goToNextPhase();
                 }
-                console.log(timer);
             }, config?.display_duration);
         }
 
