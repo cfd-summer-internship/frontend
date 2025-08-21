@@ -1,7 +1,7 @@
 "use client";
 
 import { usePhaseSequence } from "@/utils/imageDisplay/hooks";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
 import { studyReponseListSchema, StudyResponse, studyResponseSchema } from "@/schemas/studyResponseSchemas";
@@ -27,13 +27,84 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     const [resetKey, setResetKey] = useState(0);
     const [canContinue, setCanContinue] = useState<boolean | null>(false);
 
-    //const [answers, setAnswers] = useState<StudyResponse[]>([]);
     const answersRef = useRef<StudyResponse[]>([]);
 
     const [start, setStart] = useState(0);
     const formRef = useRef<HTMLFormElement>(null);
 
+    const timerRef = useRef<number[]>([]);
+
     const submitAnswers = useSubmitExperimentAnswers();
+
+    useEffect(() => {
+        if (!sequenceData?.pauseScreen) return
+        const form = formRef.current;
+        if (!form) return;
+        const formData = new FormData(form);
+
+        const formValue = formData.get("experiment.scoringMethod");
+        let submitted = -1
+        if (formValue) {
+            submitted = Number(formData.get("experiment.scoringMethod"));
+        }
+        formRef.current?.reset();
+
+        let responseTime = 0;
+
+        if (timerRef.current.length <= 0) {
+            const end = performance.now();
+            responseTime = end - start;
+        }
+        else {
+            responseTime = timerRef.current.reduce((acc, val) => acc + val, 0);
+        }
+
+        const data = {
+            image_id: sequenceData?.currentImage.id,
+            answer: submitted,
+            response_time: responseTime
+        }
+
+        const validate = studyResponseSchema.safeParse(data);
+        if (!validate.success) return;
+
+        const next = [...answersRef.current, validate.data];
+        answersRef.current = next;
+        timerRef.current = [];
+
+        if (sequenceData?.isLastImage) {
+            const validate = studyReponseListSchema.safeParse(next);
+
+            if (!validate.success) console.error(validate.error.format());
+
+            const studyID = localStorage.getItem("localStudyID")
+            const subjectID = localStorage.getItem("subjectID");
+
+            if (!subjectID || !studyID) throw new Error("Missing Required Information");
+
+            console.log("SUBMIT")
+            //submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next })
+        }
+
+    }), [sequenceData?.currentImage.id]
+
+    useEffect(() => {
+        if (sequenceData?.isManual) return
+        if (canContinue == false) return
+
+        const end = performance.now();
+        const responseTime = end - start;
+
+        const next = [...timerRef.current, responseTime];
+        timerRef.current = next;
+
+        const now = performance.now();
+        setStart(now);
+
+        console.log(timerRef.current)
+        setCanContinue(false);
+
+    }), [canContinue]
 
     const handleLoad = () => {
         setIsLoaded(sequenceData!.currentImage.url);
@@ -119,12 +190,14 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
             </AnimatePresence>
 
             {config?.response_method &&
-                <ScoringComponent
-                    ref={formRef}
-                    response_method={config?.response_method}
-                    reset={resetKey}
-                    setCanContinue={setCanContinue}
-                />}
+                <div className={`${sequenceData?.pauseScreen ? "hidden" : ""}`}>
+                    <ScoringComponent
+                        ref={formRef}
+                        response_method={config?.response_method}
+                        reset={resetKey}
+                        setCanContinue={setCanContinue}
+                    />
+                </div>}
 
             {sequenceData?.isManual && !sequenceData?.pauseScreen && (
                 <button

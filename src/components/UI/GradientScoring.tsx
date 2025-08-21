@@ -2,14 +2,13 @@
 
 import Radio from "./Radio";
 
-export function GradientScoring(handleChange){
+export function GradientScoring(){
   return(
   <div className="flex flex-row gap-2">
     <Radio 
       name={"experiment.scoringMethod"}
       id={"experiment.displayMethod"}
       value={"0"}
-      onChange={handleChange}
       text={"No"}
     />
 
@@ -17,7 +16,6 @@ export function GradientScoring(handleChange){
       name={"experiment.scoringMethod"}
       id={"experiment.displayMethod"}
       value={"1"}
-      onChange={handleChange}
       text={"Not likely"}
     />
 
@@ -25,7 +23,6 @@ export function GradientScoring(handleChange){
       name={"experiment.scoringMethod"}
       id={"experiment.displayMethod"}
       value={"2"}
-      onChange={handleChange}
       text={"Neutral"}
     />
 
@@ -33,7 +30,6 @@ export function GradientScoring(handleChange){
       name={"experiment.scoringMethod"}
       id={"experiment.displayMethod"}
       value={"3"}
-      onChange={handleChange}
       text={"Likely"}
     />
 
@@ -41,7 +37,6 @@ export function GradientScoring(handleChange){
       name={"experiment.scoringMethod"}
       id={"experiment.displayMethod"}
       value={"4"}
-      onChange={handleChange}
       text={"Yes"}
     />
 
