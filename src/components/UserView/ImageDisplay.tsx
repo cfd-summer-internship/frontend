@@ -35,6 +35,7 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     const timerRef = useRef<number[]>([]);
 
     const submitAnswers = useSubmitExperimentAnswers();
+    const hasSubmited = useRef(false);
 
     useEffect(() => {
         if (!sequenceData?.pauseScreen) return
@@ -72,20 +73,6 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         answersRef.current = next;
         timerRef.current = [];
 
-        if (sequenceData?.isLastImage) {
-            const validate = studyReponseListSchema.safeParse(next);
-
-            if (!validate.success) console.error(validate.error.format());
-
-            const studyID = localStorage.getItem("localStudyID")
-            const subjectID = localStorage.getItem("subjectID");
-
-            if (!subjectID || !studyID) throw new Error("Missing Required Information");
-
-            console.log("SUBMIT")
-            //submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next })
-        }
-
     }), [sequenceData?.currentImage.id]
 
     useEffect(() => {
@@ -111,6 +98,62 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
         const now = performance.now();
         setStart(now);
     }
+
+    useEffect(() =>{
+        if(!sequenceData?.complete) return
+        if (hasSubmited.current) return
+
+        const form = formRef.current;
+        if (!form) return;
+        const formData = new FormData(form);
+
+        const formValue = formData.get("experiment.scoringMethod");
+        let submitted = -1
+        if (formValue) {
+            submitted = Number(formData.get("experiment.scoringMethod"));
+        }
+        formRef.current?.reset();
+
+        let responseTime = 0;
+
+        if (timerRef.current.length <= 0) {
+            const end = performance.now();
+            responseTime = end - start;
+        }
+        else {
+            responseTime = timerRef.current.reduce((acc, val) => acc + val, 0);
+        }
+
+        const data = {
+            image_id: sequenceData?.currentImage.id,
+            answer: submitted,
+            response_time: responseTime
+        }
+
+        const validate = studyResponseSchema.safeParse(data);
+        if (!validate.success) return;
+
+        const next = [...answersRef.current, validate.data];
+        answersRef.current = next;
+        timerRef.current = [];
+
+        const validateList = studyReponseListSchema.safeParse(answersRef.current);
+
+        if (!validateList.success) console.error(validateList.error.format());
+
+        const studyID = localStorage.getItem("localStudyID")
+        const subjectID = localStorage.getItem("subjectID");
+
+        console.log(answersRef.current);
+
+        if (!subjectID || !studyID) throw new Error("Missing Required Information");
+        submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: answersRef.current },{
+            onSuccess(){
+                sequenceData.goToNextPhase();
+            }
+        })
+        hasSubmited.current = true;
+    }),[sequenceData?.complete]
 
     const handleClick = () => {
         const form = formRef.current;
@@ -144,7 +187,8 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
 
             submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next }, {
                 onSuccess() {
-                    sequenceData?.handleNext?.();
+                    // sequenceData?.handleNext?.();
+                    sequenceData.goToNextPhase();
                 }
             })
         }
