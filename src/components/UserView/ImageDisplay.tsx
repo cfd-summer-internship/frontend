@@ -1,11 +1,52 @@
 "use client";
 
 import { usePhaseSequence } from "@/utils/imageDisplay/hooks";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ScoringComponent from "./Scoring";
-import { studyReponseListSchema, StudyResponse, studyResponseSchema } from "@/schemas/studyResponseSchemas";
+import { StudyResponse, studyResponseSchema } from "@/schemas/studyResponseSchemas";
 import { useSubmitExperimentAnswers } from "@/utils/experimentPhase/hooks";
+import z from "zod";
+
+/**Helper function that appends values to a ref */
+function appendStudyResponse({ ref, imageID, answer, responseTime }: {
+    ref: React.RefObject<StudyResponse[]>,
+    imageID: string,
+    answer: number,
+    responseTime: number
+}) {
+    const data = {
+        image_id: imageID,
+        answer: answer,
+        response_time: responseTime
+    }
+
+    const validate = studyResponseSchema.safeParse(data);
+    if (!validate.success) return;
+
+    const next = [...ref.current, validate.data];
+    ref.current = next;
+}
+
+/**Helper function to grab form data via a ref*/
+function getFormData({ ref, formName }: {
+    ref: React.RefObject<HTMLFormElement | null>
+    formName: string
+}
+) {
+    if (!ref) return
+    const form = ref.current;
+    if (!form) return;
+    const formData = new FormData(form);
+    const formValue = formData.get(formName);
+    return formValue
+};
+
+/**Helper function that ends the current timer and returns the time elapsed */
+function endTimer(start: number) {
+    const end = performance.now();
+    return end - start;
+}
 
 export default function ImageDisplayComponent({ config, nextPhaseName, nextPhaseRoute }: {
     config: {
@@ -20,13 +61,12 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     nextPhaseName: string
 }) {
 
-    const fadeDuration=50;//ms
+    const fadeDuration = 50;//ms
 
     const sequenceData = usePhaseSequence(config?.images, config?.image_ids, config, nextPhaseRoute);
     const [isLoaded, setIsLoaded] = useState<string | null>(null);
 
     //Experiment Answer Properties
-    //const [resetKey, setResetKey] = useState(0);
     const resetKey = useRef(0);
     const [canContinue, setCanContinue] = useState<boolean | null>(false);
 
@@ -40,170 +80,100 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
     const submitAnswers = useSubmitExperimentAnswers();
     const hasSubmited = useRef(false);
 
+    const submittedKey = useRef("");
+
+    const studyReponseList = z.array(studyResponseSchema).length(config?.image_ids.length)
+
+    /** Helper Function to append study resonses when in auto mode  */
+    const autoAppendResponse = useCallback(() =>  {
+        const formValue = getFormData({ ref: formRef, formName: "experiment.scoringMethod" });
+        const submitted = !formValue ? -1 : Number(formValue);
+        resetKey.current++;
+
+        const responseTime = timerRef.current.length <= 0 ? 0 : timerRef.current.reduce((acc, val) => acc + val, 0);
+        appendStudyResponse({ ref: answersRef, imageID: sequenceData!.currentImage.id, answer: submitted, responseTime: responseTime })
+        timerRef.current = [];
+        console.log(answersRef.current);
+    },[formRef,resetKey,timerRef,answersRef, sequenceData]);
+
+    /** Helper Function to Submit Study Results*/
+    const submitResults = useCallback(() =>  {
+        const validateList = studyReponseList.safeParse(answersRef.current);
+        if (!validateList.success) console.error(validateList.error.format());
+
+        const studyID = localStorage.getItem("localStudyID")
+        const subjectID = localStorage.getItem("subjectID");
+
+        if (!subjectID || !studyID) throw new Error("Missing Required Information");
+        console.log(answersRef.current)
+        submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: answersRef.current }, {
+            onSuccess() {
+                sequenceData?.goToNextPhase();
+            }
+        })
+    },[studyReponseList, submitAnswers, sequenceData]);
+
+    /** Handles Appending Responses when in auto mode */
     useEffect(() => {
         if (!sequenceData?.pauseScreen) return
-        const form = formRef.current;
-        if (!form) return;
-        const formData = new FormData(form);
+        if (submittedKey.current === sequenceData?.currentImage.id) return
+        autoAppendResponse();
+        submittedKey.current = sequenceData?.currentImage.id;
 
-        const formValue = formData.get("experiment.scoringMethod");
-        let submitted = -1
-        if (formValue) {
-            submitted = Number(formData.get("experiment.scoringMethod"));
-        }
-        resetKey.current++;
-        // formRef.current?.reset();
-        // setResetKey(s => s + 1);
+    },[sequenceData?.currentImage.id, sequenceData?.pauseScreen, submittedKey, autoAppendResponse]);
 
-        let responseTime = 0;
-
-        if (timerRef.current.length <= 0) {
-            const end = performance.now();
-            responseTime = end - start;
-        }
-        else {
-            responseTime = timerRef.current.reduce((acc, val) => acc + val, 0);
-        }
-
-        const data = {
-            image_id: sequenceData?.currentImage.id,
-            answer: submitted,
-            response_time: responseTime
-        }
-
-        const validate = studyResponseSchema.safeParse(data);
-        if (!validate.success) return;
-
-        const next = [...answersRef.current, validate.data];
-        answersRef.current = next;
-        timerRef.current = [];
-
-    }), [sequenceData?.currentImage.id]
-
+    /** Gets Reaction Time for Multiple Answers */
     useEffect(() => {
         if (sequenceData?.isManual) return
         if (canContinue == false) return
 
-        const end = performance.now();
-        const responseTime = end - start;
-
+        const responseTime = endTimer(start);
         const next = [...timerRef.current, responseTime];
         timerRef.current = next;
 
         const now = performance.now();
         setStart(now);
 
-        console.log(timerRef.current)
         setCanContinue(false);
 
-    }), [canContinue]
+    },[sequenceData, sequenceData?.isManual, canContinue, start])
 
+    /** Handles Result Submission when in auto mode */
+    useEffect(() => {
+        if (!sequenceData?.complete) return
+        if (submittedKey.current === sequenceData?.currentImage.id) return
+        if (hasSubmited.current) return
+
+        autoAppendResponse();
+        submitResults();
+
+        hasSubmited.current = true;
+
+    },[sequenceData?.complete, sequenceData?.currentImage.id, submitResults, autoAppendResponse]);
+
+    /** Fires whenever the image is fully loaded */
     const handleLoad = () => {
         setIsLoaded(sequenceData!.currentImage.url);
         const now = performance.now();
         setStart(now);
+        submittedKey.current = "";
     }
 
-    useEffect(() =>{
-        if(!sequenceData?.complete) return
-        if (hasSubmited.current) return
-
-        const form = formRef.current;
-        if (!form) return;
-        const formData = new FormData(form);
-
-        const formValue = formData.get("experiment.scoringMethod");
-        let submitted = -1
-        if (formValue) {
-            submitted = Number(formData.get("experiment.scoringMethod"));
-        }
-        formRef.current?.reset();
-
-        let responseTime = 0;
-
-        if (timerRef.current.length <= 0) {
-            const end = performance.now();
-            responseTime = end - start;
-        }
-        else {
-            responseTime = timerRef.current.reduce((acc, val) => acc + val, 0);
-        }
-
-        const data = {
-            image_id: sequenceData?.currentImage.id,
-            answer: submitted,
-            response_time: responseTime
-        }
-
-        const validate = studyResponseSchema.safeParse(data);
-        if (!validate.success) return;
-
-        const next = [...answersRef.current, validate.data];
-        answersRef.current = next;
-        timerRef.current = [];
-
-        const validateList = studyReponseListSchema.safeParse(answersRef.current);
-
-        if (!validateList.success) console.error(validateList.error.format());
-
-        const studyID = localStorage.getItem("localStudyID")
-        const subjectID = localStorage.getItem("subjectID");
-
-        console.log(answersRef.current);
-
-        if (!subjectID || !studyID) throw new Error("Missing Required Information");
-        submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: answersRef.current },{
-            onSuccess(){
-                sequenceData.goToNextPhase();
-            }
-        })
-        hasSubmited.current = true;
-    }),[sequenceData?.complete]
-
+    /** Handles Study Responses when in manual mode */
     const handleClick = () => {
-        const form = formRef.current;
-        if (!form) return;
-        const formData = new FormData(form);
-
-        if (!start) return
-        const end = performance.now();
-        const responseTime = end - start;
-
-        const data = {
-            image_id: sequenceData?.currentImage.id,
-            answer: Number(formData.get("experiment.scoringMethod")),
-            response_time: responseTime
-        }
-        const validate = studyResponseSchema.safeParse(data);
-        if (!validate.success) return;
-
-        const next = [...answersRef.current, validate.data];
-        answersRef.current = next;
-
-        if (sequenceData?.isLastImage) {
-            const validate = studyReponseListSchema.safeParse(next);
-
-            if (!validate.success) console.error(validate.error.format());
-
-            const studyID = localStorage.getItem("localStudyID")
-            const subjectID = localStorage.getItem("subjectID");
-
-            if (!subjectID || !studyID) throw new Error("Missing Required Information");
-            console.log(next)
-            submitAnswers.mutate({ studyID: studyID, subjectID: subjectID, answers: next }, {
-                onSuccess() {
-                    // sequenceData?.handleNext?.();
-                    sequenceData.goToNextPhase();
-                }
-            })
-        }
-        else if (!sequenceData?.isLastImage) {
+        const formValue = getFormData({ ref: formRef, formName: "experiment.scoringMethod" });
+        const submitted = !formValue ? -1 : Number(formValue);
+        const responseTime = endTimer(start);
+        appendStudyResponse({ ref: answersRef, imageID: sequenceData!.currentImage.id, answer: submitted, responseTime: responseTime })
+        if (!sequenceData?.isLastImage) {
             setCanContinue(false);
             resetKey.current++;
-            // formRef.current?.reset();
-            // setResetKey(s => s + 1);
             sequenceData?.handleNext?.();
+            return
         }
+
+        submitResults();
+
     };
 
     if (!config?.images || !config) return (
@@ -233,25 +203,25 @@ export default function ImageDisplayComponent({ config, nextPhaseName, nextPhase
                         exit={{ opacity: 0 }}
                         decoding="async"
                         loading="eager"
-                        transition={{ duration: (fadeDuration/2)/100 }}
+                        transition={{ duration: (fadeDuration / 2) / 100 }}
                         className="w-[70vh] h-[60vh] object-contain"
                     />
                 )}
             </AnimatePresence>
 
             {config?.response_method &&
-            <AnimatePresence mode="wait">
-                <motion.div 
-                initial={{opacity:0}} 
-                animate={{ opacity: isLoaded === sequenceData!.currentImage.url ? 1 : 0 }}
-                >
-                    <ScoringComponent
-                        ref={formRef}
-                        response_method={config?.response_method}
-                        reset={resetKey.current}
-                        setCanContinue={setCanContinue}
-                    />
-                </motion.div>
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: isLoaded === sequenceData!.currentImage.url ? 1 : 0 }}
+                    >
+                        <ScoringComponent
+                            ref={formRef}
+                            response_method={config?.response_method}
+                            reset={resetKey.current}
+                            setCanContinue={setCanContinue}
+                        />
+                    </motion.div>
                 </AnimatePresence>}
 
             {sequenceData?.isManual && !sequenceData?.pauseScreen && (
