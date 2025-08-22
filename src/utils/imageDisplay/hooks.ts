@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type ImageItem = { id: string; url: string };
 
@@ -32,6 +32,8 @@ export function usePhaseSequence(
     const [complete, setComplete] = useState(false);
 
     const isManual = config?.display_duration === 0;
+
+    const displayTimeMs = config?.display_duration || 0;
     const waitTimeMs = config?.pause_duration || 0;
 
     // Shuffle image list if display method is random
@@ -49,9 +51,7 @@ export function usePhaseSequence(
     const handleNext = () => {
         if (currentIndex < orderedImageList.length - 1) {
             setCurrentIndex(prev => prev + 1);
-        }// else  {
-        //     goToNextPhase();
-        // }
+        }
     };
 
 
@@ -63,7 +63,7 @@ export function usePhaseSequence(
         let timer: NodeJS.Timeout;
 
         if (pauseScreen) {
-            timer = setTimeout(() => setPauseScreen(false), waitTimeMs+fadeDuration);
+            timer = setTimeout(() => setPauseScreen(false), waitTimeMs);
         } else {
             timer = setTimeout(() => {
                 if (currentIndex < orderedImageList?.length - 1) {
@@ -71,14 +71,12 @@ export function usePhaseSequence(
                     setCurrentIndex(prev => prev + 1);
                 } else if (orderedImageList?.length > 1) {
                     setComplete(true);
-                    // if (!success.current) return
-                    // goToNextPhase();
                 }
-            }, config?.display_duration);
+            }, displayTimeMs + fadeDuration);
         }
 
         return () => clearTimeout(timer);
-    }, [currentIndex, pauseScreen, isManual, waitTimeMs, orderedImageList,config?.display_duration,goToNextPhase]);
+    }, [currentIndex, pauseScreen, isManual, displayTimeMs, waitTimeMs, orderedImageList,config?.display_duration,goToNextPhase]);
 
     return orderedImageList?.length === 0 || !config
         ? null
