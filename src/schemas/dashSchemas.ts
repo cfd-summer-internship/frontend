@@ -8,9 +8,7 @@ const ImageDataSchema = z.object({
 })
 
 const ResearchConfigSchema = z.object({
-  study_code: z.string(),
-  subject_id: z.string(),
-  next_token: z.string().optional(),
+  study_codes: z.array(z.string())
 })
 
 const DataSchema = z.array(ImageDataSchema);

@@ -12,7 +12,7 @@ import ExportButton from '@/components/StudyConfig/ExportButton';
 export default function ResearcherResultsView() {
     const [uploading, setUploading] = useState(false);
     const researcher_id = ""; //Needs updating
-    const { data: rows= [], isLoading, isError, error} = useGetResearcherConfig(researcher_id);
+    const { data: rows= [], isLoading, isError, error} = useGetResearcherConfig();
     // const deleteFile = useDeleteFileMutation();
     const queryClient = useQueryClient();
     const token = useAtomValue(tokenAtom);

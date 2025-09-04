@@ -1,5 +1,5 @@
-export const getResearcherConfig = (async (token:string|undefined, researcher_id:string) => {
-  const res = await fetch(`/api/researchers/${researcher_id}/configs`, {
+export const getResearcherConfig = (async (token:string|undefined) => {
+  const res = await fetch(`/api/researcher/configurations`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`
@@ -11,7 +11,7 @@ export const getResearcherConfig = (async (token:string|undefined, researcher_id
     }
     const json = await res.json()
 
-    return json.files  
+    return json
 });
 
 export const deleteImage = (async (token:string|undefined,filename:string) => {

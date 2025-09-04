@@ -6,11 +6,11 @@ import { tokenAtom } from "@/utils/auth/store";
 import { ResearcherConfig } from "@/schemas/dashSchemas";
  
 
-export const useGetResearcherConfig = (researcher_id) => {
+export const useGetResearcherConfig = () => {
   const token = useAtomValue(tokenAtom)
-  const query = useQuery<ResearcherConfig[], Error>({
-    queryKey: ['config'],
-    queryFn: () => getResearcherConfig(token, researcher_id),
+  const query = useQuery<ResearcherConfig, Error>({
+    queryKey: ['configs'],
+    queryFn: () => getResearcherConfig(token),
   });
 
   return query;
