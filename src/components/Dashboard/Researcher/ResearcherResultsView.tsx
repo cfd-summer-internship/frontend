@@ -1,80 +1,143 @@
 "use client";
 
-import { Trash2, Pencil, Download } from 'lucide-react';
-import { useDeleteFileMutation, useGetResearcherConfig } from "@/utils/dash/researcher/hooks";
+import { Trash2, Pencil, Download, FileSpreadsheet } from "lucide-react";
+import {
+  useDeleteFileMutation,
+  useExportAllResults,
+  useExportResult,
+  useGetResearcherConfig,
+  useGetResearcherResults,
+} from "@/utils/dash/researcher/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
-import { useQueryClient } from "@tanstack/react-query";
-import React, { useState } from "react";
-import ExportButton from '@/components/StudyConfig/ExportButton';
+import { shouldThrowError, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
+export default function ResearcherConfigView() {
+  const [resultsID, setResultsID] = useState<string>("");
+  const {
+    data: rows = [],
+    isLoading,
+    isError,
+    error,
+  } = useGetResearcherResults();
 
-export default function ResearcherResultsView() {
-    const [uploading, setUploading] = useState(false);
-    const researcher_id = ""; //Needs updating
-    const { data: rows= [], isLoading, isError, error} = useGetResearcherConfig();
-    // const deleteFile = useDeleteFileMutation();
-    const queryClient = useQueryClient();
-    const token = useAtomValue(tokenAtom);
-    const [studyCode, setStudyCode] = useState<string>("");
+  const results = useExportResult(resultsID);
+  const allResults = useExportAllResults();
 
-    // const handleDelete = (async (filename: string) => {
-    //     deleteFile.mutate({ token: token, filename: filename }, {
-    //         onSuccess() {
-    //             queryClient.invalidateQueries({ queryKey: ['images'] })
-    //         }
-    //     });
+  //   const token = useAtomValue(tokenAtom);
 
+  // const deleteFile = useDeleteFileMutation();
+  // const queryClient = useQueryClient();
+
+  const handleDownload = async () => {};
+
+  const handleDelete = async (studyCode: string) => {
+    console.log(studyCode);
+
+    // deleteFile.mutate({ token: token, studyCode: studyCode
+    //         queryClient.invalidateQueries({ queryKey: ['images'] })
+    //     }
     // });
+  };
 
-    // if (isLoading) {
-    //     return (
-    //         <div className="flex h-screen justify-center items-center">
-    //             <span className="loader"></span>
-    //         </div>
-    //     );
-    // }
-    // if (isError) {
-    //     return (
-    //         <div className="flex text-center justify-center text-red-300">
-    //             {error.toString()}
-    //         </div>
-    //     );
-    // }
-    
+  const router = useRouter();
+
+  const getSafeTimestamp = (): string => {
+    const now = new Date();
+    const pad = (n: number) => n.toString().padStart(2, "0");
+
     return (
-        <>
-            <div className="flex flex-col text-center justify-center text-stone-300">
-                <span className="font-bold text-2xl pt-8">Results</span>
-                <span className="text-md pb-2">
-                    <p className="pb-4">Results of your studies.</p>
-                    <p className="text-sm italic">Please Note: To add another study, please visit your configuration page.
-                        <br /></p>
-                </span>
-            </div>
-            <div className="text-stone-300 pt-4">
-                <table className="min-w-full">
-                    <thead className="bg-stone-800">
-                        <tr>
-                            <th>Study Code</th>
-                            <th>Subject Id</th>
-                            <th>Download</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-center">
-                        <td>Results 1</td>
-                        <td>Results 2</td>
-                        <td><ExportButton studyCode={studyCode} /></td>
-                        <td><button className="hover:text-red-500 hover:cursor-pointer"><Pencil className="w-5"/></button></td>
-                        <td><button className="hover:text-red-500 hover:cursor-pointer"><Trash2 className="w-5" /></button></td>
-                    </tbody>
-                </table>
-            </div>
-            <div className='flex justify-center'>
-                <button type="button" className='bg-stone-800 hover:outline-1 outline-stone-700 rounded-sm text-stone-300 px-8 py-2 mt-21 ml-21'>Export All</button>
-            </div>
-        </>
+      `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}` +
+      `_${pad(now.getHours())}-${pad(now.getMinutes())}`
     );
+  };
+
+  useEffect(() => {
+    if (!results.data) return;
+
+    const a = document.createElement("a");
+    a.href = results.data;
+    a.download = `results-${resultsID.slice(-6)}.csv`;
+    a.click();
+
+    URL.revokeObjectURL(results.data);
+    setResultsID("");
+  }, [results.data, resultsID]);
+
+  useEffect(() => {
+    if (!allResults.data) return;
+
+    const a = document.createElement("a");
+    a.href = allResults.data;
+    a.download = `results-${getSafeTimestamp()}.csv`;
+    a.click();
+
+    URL.revokeObjectURL(allResults.data);
+  }, [allResults.data]);
+
+  return (
+    <>
+      <div className="flex flex-col text-center justify-center text-stone-300">
+        <span className="font-bold text-2xl pt-8">Results</span>
+        <span className="text-md pb-2">
+          <p className="pb-4">Study Results</p>
+        </span>
+      </div>
+      <div className="text-stone-300 pt-4">
+        <table className="min-w-full">
+          <thead className="bg-stone-800">
+            <tr>
+              <th>Study</th>
+              <th>Subject</th>
+              <th>Submitted</th>
+              <th>Download</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody className="text-center">
+            {rows.map((row) => (
+              <tr key={row.id}>
+                <td className="py-2">
+                  <div className="flex flew-row align-center justify-center gap-2">
+                    <FileSpreadsheet /> {row.config_id.slice(-6)}
+                  </div>
+                </td>
+                <td className="py-2">{row.subject_id.slice(-6)}</td>
+                <td className="py-2">
+                  {new Date(row.submitted).toLocaleString()}
+                </td>
+                <td className="py-2">
+                  <button
+                    className="hover:text-emerald-500 hover:cursor-pointer"
+                    onClick={() => setResultsID(row.id)}
+                  >
+                    <Download className="w-5" />
+                  </button>
+                </td>
+                <td className="py-2">
+                  <button
+                    className="hover:text-red-500 hover:cursor-pointer"
+                    onClick={() => handleDelete(row.id)}
+                  >
+                    <Trash2 className="w-5" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-center">
+        <button
+          type="button"
+          className="bg-stone-800 hover:outline-1 outline-stone-700 rounded-sm text-stone-300 px-8 py-2 mt-21 ml-21 hover:cursor-pointer"
+          onClick={() => allResults.refetch()}
+        >
+          Download All
+        </button>
+      </div>
+    </>
+  );
 }

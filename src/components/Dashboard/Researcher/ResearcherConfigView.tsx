@@ -58,7 +58,7 @@ export default function ResearcherConfigView() {
   return (
     <>
       <div className="flex flex-col text-center justify-center text-stone-300">
-        <span className="font-bold text-2xl pt-8">Researcher Dashboard</span>
+        <span className="font-bold text-2xl pt-8">Configurations</span>
         <span className="text-md pb-2">
           <p className="pb-4">Manage your Configuration Files</p>
         </span>
