@@ -108,7 +108,7 @@ export default function StudyConfigPage() {
                     {isSaved && <span className="text-md text-emerald-500 italic my-4">Study Configuration Saved Succesfully!</span>}
                     {/* Action Buttons */}
                     <div className="flex flex-row justify-end w-full mb-4">
-                        <button type="button" onClick={() => router.push("/")} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
+                        <button type="button" onClick={() => router.back()} className="bg-stone-700 hover:bg-stone-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Cancel</button>
                         <button type="submit" className="bg-emerald-700 hover:bg-emerald-800 rounded-lg px-4 py-2 text-stone-300 mx-2">Save</button>
                     </div>
                 </div>

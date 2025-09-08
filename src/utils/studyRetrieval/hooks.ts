@@ -7,6 +7,7 @@ export const useStudyCodeForID = (studyCode: string) =>{
     queryFn: async () => {
       return getStudyID(studyCode);
     },
+    enabled: !!studyCode
   });;
   return query;
 }

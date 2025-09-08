@@ -53,14 +53,14 @@ export default function WaitPhasePage() {
     return (
         <div className="min-h-screen flex flex-col justify-center items-center bg-neutral-900 text-white px-4">
             <div className="text-6xl font-bold mb-4">{minutes}:{seconds}</div>
-            <p className="text-sm mb-8 text-gray-300">
+            <p className="text-sm mb-8 text-stone-300">
                 You may continue when the timer reaches 0:00
             </p>
             <button
                 onClick={() => router.push("/study/experimentPhase")}
                 disabled={timeLeft !== 0}
-                className={`px-6 py-2 rounded bg-white text-black transition 
-                    ${timeLeft === 0 ? 'opacity-100 cursor-pointer' : 'opacity-30 cursor-not-allowed'}
+                className={`px-6 py-2 rounded text-stone-300 transition 
+                    ${timeLeft === 0 ? 'bg-emerald-700 opacity-100 cursor-pointer' : 'bg-stone-700 opacity-30 cursor-not-allowed'}
                 `}
             >
                 Continue
