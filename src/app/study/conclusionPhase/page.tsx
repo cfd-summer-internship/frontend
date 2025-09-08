@@ -1,5 +1,4 @@
 "use client";
-<<<<<<< HEAD
 import { useStudyID } from "@/utils/fileRetrieval/hooks";
 import { useConclusionPhase } from "@/utils/conclusionPhase/hooks";
 import ConclusionPhaseSurveyPage from "@/components/UserView/SurveyForm/SurveyPage";
@@ -20,17 +19,4 @@ export default function ConclusionPhasePage() {
     // } else {
     //     return <ThankYou />;
     // }
-=======
-
-import DisplayFile from "@/components/UserView/DisplayFile";
-
-export default function ConclusionPhasePage() {
-
-  
-  return (
-    <div className="flex flex-col min-h-screen w-screen">
-      <DisplayFile fileRequest="study_debrief" />
-    </div>
-  );
->>>>>>> dca28a9 (feat: binaryScoring)
 }
