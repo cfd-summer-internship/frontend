@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { z } from "zod";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 const genderOptions = [
     "Gender Fluid",
@@ -31,7 +31,7 @@ const surveySchema = z.object({
     raceOther: z.string().optional(),
 });
 
-export default function SurveyForm({ studyID }: { studyID: string }) {
+export default function SurveyForm({ subjectID }: { subjectID: string }) {
     const [form, setForm] = useState({
         age: "",
         gender: "",
@@ -48,12 +48,12 @@ export default function SurveyForm({ studyID }: { studyID: string }) {
         const result = surveySchema.safeParse(form);
 
         if (!result.success) {
-            toast.error("Please fill out all fields correctly.");
+            // toast.error("Please fill out all fields correctly.");
             return;
         }
 
         const payload = {
-            study_id: studyID,
+            subject_id: subjectID,
             age: String(result.data.age),
             sex: result.data.gender === "Other" ? result.data.genderOther : result.data.gender,
             race: result.data.race === "Other" ? result.data.raceOther : result.data.race,
@@ -66,9 +66,9 @@ export default function SurveyForm({ studyID }: { studyID: string }) {
         });
 
         if (!res.ok) {
-            toast.error("Submission failed");
+            console.error("Submission failed");
         } else {
-            toast.success("Survey submitted successfully!");
+            console.log("Survey submitted successfully!");
         }
     };
 

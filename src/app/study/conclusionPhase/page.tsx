@@ -8,12 +8,13 @@ import ConclusionPhaseSurveyPage from "@/components/UserView/SurveyForm/SurveyPa
 export default function ConclusionPhasePage() {
     const studyID = useStudyID();
     const { data, isLoading, isError } = useConclusionPhase(studyID);
+    const subjectID = localStorage.getItem("subjectID");
 
     if (isLoading) return <div className="text-white">Loading conclusion phase…</div>;
     if (isError || !data) return <div className="text-red-500">Failed to load conclusion config.</div>;
 
     if (data.has_survey) {
-        return <ConclusionPhaseSurveyPage studyID={studyID!} />;
+        return <ConclusionPhaseSurveyPage subjectID={subjectID!} />;
     } //else if (data.show_results) {
     //     return <DebriefSection studyID={studyID!} />;
     // } else {
