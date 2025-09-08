@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getAllStudyResults, getResearcherConfig, getResearcherResults, getStudyResults } from ".";
+import { deleteConfig, getAllStudyResults, getResearcherConfig, getResearcherResults, getStudyResults } from ".";
 import { deleteImage } from ".";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
@@ -49,14 +49,14 @@ export const useExportAllResults = () => {
   return query;
 }
 
-export const useDeleteFileMutation = () => {
+export const useDeleteConfigMutation = () => {
   return useMutation({
     mutationFn: async ({
       token,
-      filename,
+      studyCode,
     }: {
       token: string | undefined;
-      filename: string;
-    }) => await deleteImage(token, filename),
+      studyCode: string;
+    }) => await deleteConfig(token, studyCode),
   });
 };

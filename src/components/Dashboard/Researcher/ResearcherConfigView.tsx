@@ -2,7 +2,7 @@
 
 import { Trash2, Pencil, Download, FileSpreadsheet } from "lucide-react";
 import {
-  useDeleteFileMutation,
+  useDeleteConfigMutation,
   useGetResearcherConfig,
 } from "@/utils/dash/researcher/hooks";
 import { useAtomValue } from "jotai";
@@ -22,19 +22,18 @@ export default function ResearcherConfigView() {
   const studyID = useStudyCodeForID(studyCode);
   const config = useExportConfig(studyID.data);
 
-  // const deleteFile = useDeleteFileMutation();
-  // const queryClient = useQueryClient();
+  const deleteConfig = useDeleteConfigMutation();
+  const queryClient = useQueryClient();
 
   const token = useAtomValue(tokenAtom);
 
-  const handleDelete = async (studyCode: string) => {
-    console.log(studyCode);
-
-    // deleteFile.mutate({ token: token, studyCode: studyCode
-    //         queryClient.invalidateQueries({ queryKey: ['images'] })
-    //     }
-    // });
-  };
+    const handleDelete = (async (studyCode:string) => {
+        deleteConfig.mutate({ token: token, studyCode:studyCode }, {
+            onSuccess() {
+                queryClient.invalidateQueries({ queryKey: ['configs'] })
+            }
+        });
+    });
 
   const router = useRouter();
 
@@ -69,7 +68,7 @@ export default function ResearcherConfigView() {
             <tr>
               <th>Config</th>
               <th>Download</th>
-              <th>Edit</th>
+              {/* <th>Edit</th> */}
               <th>Delete</th>
             </tr>
           </thead>
@@ -85,11 +84,11 @@ export default function ResearcherConfigView() {
                     <Download className="w-5" />
                   </button>
                 </td>
-                <td className="py-2">
+                {/* <td className="py-2">
                   <button className="hover:text-stone-100 hover:cursor-pointer">
                     <Pencil className="w-5" />
                   </button>
-                </td>
+                </td> */}
                 <td className="py-2">
                   <button
                     className="hover:text-red-500 hover:cursor-pointer"

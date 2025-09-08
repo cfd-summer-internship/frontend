@@ -85,3 +85,18 @@ export const deleteImage = async (
 
   return json.files;
 };
+
+export const deleteConfig = async (token: string | undefined, study_code:string) => {
+  const res = await fetch(`/api/researcher/delete`, {
+    method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body:JSON.stringify({ study_code })
+    });
+
+  if (!res.ok) {
+    throw new Error("Unable to Delete File");
+  }
+};
