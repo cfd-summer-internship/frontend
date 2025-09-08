@@ -27,9 +27,7 @@ export function mapExperiment(formData: FormData) {
 //Map Conclusion Phase Settings
 export function mapConclusion(formData: FormData) {
     return {
-        results: Boolean(formData.get("conclusion.results")),
-        survey: Boolean(formData.get("conclusion.survey")),
-        surveyQuestions: formData.getAll("survey.question")
+        survey: Boolean(formData.get("conclusion.survey"))
     }
 }
 
