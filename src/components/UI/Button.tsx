@@ -1,4 +1,4 @@
-import React from 'react'
+"use client";
 
     // Reusable Button component with props
     const ReusableButton = ({

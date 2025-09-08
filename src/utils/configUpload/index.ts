@@ -39,13 +39,16 @@ function appendToFormData(formData: FormData, config: ConfigSettings) {
 }
 //Fetch Request to API endpoint
 //Sends as multipart/form-data
-export const uploadConfig = (async (config: ConfigSettings) => {
+export const uploadConfig = (async (config: ConfigSettings, token:string | undefined) => {
     const formData = new FormData();
     appendToFormData(formData, config);
 
     const res = await fetch(`/api/config/save`, {
         method: "POST",
-        body: formData
+        body: formData,
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
     });
 
     if (!res.ok) {

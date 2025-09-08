@@ -26,7 +26,9 @@ export default function Login() {
     onSuccess: async (res) => {
       store.set(tokenAtom, res.access_token);
       await Promise.resolve()
-      router.replace("/studyConfig")
+      // router.replace("/dash/staff")
+      router.replace("/dash/researcher")
+      // router.replace("/studyConfig")
     }
   });
 
