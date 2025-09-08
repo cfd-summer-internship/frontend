@@ -12,10 +12,12 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useExportConfig } from "@/utils/configUpload/hooks";
 import { useStudyCodeForID } from "@/utils/studyRetrieval/hooks";
+import { ConfirmAlert } from "../Confirm";
 
 export default function ResearcherConfigView() {
-  const [uploading, setUploading] = useState(false);
   const [studyCode, setStudyCode] = useState<string>("");
+  const [deleteRequest, setDeleteRequest] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
 
   const { data: rows, isLoading, isError, error } = useGetResearcherConfig();
 
@@ -27,13 +29,14 @@ export default function ResearcherConfigView() {
 
   const token = useAtomValue(tokenAtom);
 
-    const handleDelete = (async (studyCode:string) => {
-        deleteConfig.mutate({ token: token, studyCode:studyCode }, {
-            onSuccess() {
-                queryClient.invalidateQueries({ queryKey: ['configs'] })
-            }
-        });
+  const handleDelete = (async (studyCode: string) => {
+    deleteConfig.mutate({ token: token, studyCode: studyCode }, {
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: ['configs'] })
+        queryClient.invalidateQueries({ queryKey: ['results'] })
+      }
     });
+  });
 
   const router = useRouter();
 
@@ -92,10 +95,23 @@ export default function ResearcherConfigView() {
                 <td className="py-2">
                   <button
                     className="hover:text-red-500 hover:cursor-pointer"
-                    onClick={() => handleDelete(studyCode)}
+                    onClick={() => {
+                      setDeleteRequest(studyCode);
+                      setOpenAlert(true);
+                    }}
                   >
                     <Trash2 className="w-5" />
                   </button>
+                  <ConfirmAlert
+                    open={openAlert}
+                    onOpenChange={(v) => {
+                      setOpenAlert(v);
+                    }}
+                    onConfirm={() => {
+                      handleDelete(deleteRequest);
+                      setOpenAlert(false);
+                    }}
+                  />
                 </td>
               </tr>
             ))}

@@ -2,7 +2,7 @@
 
 import { Trash2, Pencil, Download, FileSpreadsheet } from "lucide-react";
 import {
-  useDeleteFileMutation,
+  useDeleteResultMutation,
   useExportAllResults,
   useExportResult,
   useGetResearcherConfig,
@@ -13,9 +13,12 @@ import { tokenAtom } from "@/utils/auth/store";
 import { shouldThrowError, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ConfirmAlert } from "../Confirm";
 
 export default function ResearcherConfigView() {
   const [resultsID, setResultsID] = useState<string>("");
+  const [deleteRequest, setDeleteRequest] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
   const {
     data: rows = [],
     isLoading,
@@ -26,21 +29,20 @@ export default function ResearcherConfigView() {
   const results = useExportResult(resultsID);
   const allResults = useExportAllResults();
 
-  //   const token = useAtomValue(tokenAtom);
+  const token = useAtomValue(tokenAtom);
 
-  // const deleteFile = useDeleteFileMutation();
-  // const queryClient = useQueryClient();
+  const deleteResult = useDeleteResultMutation();
+  const queryClient = useQueryClient();
 
-  const handleDownload = async () => {};
+  queryClient.refetchQueries
 
-  const handleDelete = async (studyCode: string) => {
-    console.log(studyCode);
-
-    // deleteFile.mutate({ token: token, studyCode: studyCode
-    //         queryClient.invalidateQueries({ queryKey: ['images'] })
-    //     }
-    // });
-  };
+  const handleDelete = (async (resultID: string) => {
+    deleteResult.mutate({ token: token, resultID: resultID }, {
+      onSuccess() {
+        queryClient.invalidateQueries({ queryKey: ['results'] })
+      }
+    });
+  });
 
   const router = useRouter();
 
@@ -119,10 +121,23 @@ export default function ResearcherConfigView() {
                 <td className="py-2">
                   <button
                     className="hover:text-red-500 hover:cursor-pointer"
-                    onClick={() => handleDelete(row.id)}
+                    onClick={() => {
+                      setDeleteRequest(row.id);
+                      setOpenAlert(true);
+                    }}
                   >
                     <Trash2 className="w-5" />
                   </button>
+                  <ConfirmAlert
+                    open={openAlert}
+                    onOpenChange={(v) => {
+                      setOpenAlert(v);
+                    }}
+                    onConfirm={() => {
+                      handleDelete(deleteRequest);
+                      setOpenAlert(false);
+                    }}
+                  />
                 </td>
               </tr>
             ))}

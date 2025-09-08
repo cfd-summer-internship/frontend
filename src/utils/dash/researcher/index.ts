@@ -87,7 +87,7 @@ export const deleteImage = async (
 };
 
 export const deleteConfig = async (token: string | undefined, study_code:string) => {
-  const res = await fetch(`/api/researcher/delete`, {
+  const res = await fetch(`/api/researcher/delete/config`, {
     method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
@@ -97,6 +97,21 @@ export const deleteConfig = async (token: string | undefined, study_code:string)
     });
 
   if (!res.ok) {
-    throw new Error("Unable to Delete File");
+    throw new Error("Unable to Delete Config");
+  }
+};
+
+export const deleteResult = async (token: string | undefined, result_id:string) => {
+  const res = await fetch(`/api/researcher/delete/result`, {
+    method: "DELETE",
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+        body:JSON.stringify({ result_id })
+    });
+
+  if (!res.ok) {
+    throw new Error("Unable to Delete Results");
   }
 };

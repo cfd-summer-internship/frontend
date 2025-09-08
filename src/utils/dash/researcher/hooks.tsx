@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { deleteConfig, getAllStudyResults, getResearcherConfig, getResearcherResults, getStudyResults } from ".";
+import { deleteConfig, deleteResult, getAllStudyResults, getResearcherConfig, getResearcherResults, getStudyResults } from ".";
 import { deleteImage } from ".";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
@@ -58,5 +58,17 @@ export const useDeleteConfigMutation = () => {
       token: string | undefined;
       studyCode: string;
     }) => await deleteConfig(token, studyCode),
+  });
+};
+
+export const useDeleteResultMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      token,
+      resultID,
+    }: {
+      token: string | undefined;
+      resultID: string;
+    }) => await deleteResult(token, resultID),
   });
 };
