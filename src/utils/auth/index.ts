@@ -23,7 +23,6 @@ export const getAuthToken = async ({
     }
 
     return loginResponseModel.parse(json);
-<<<<<<< HEAD
 };
 
 export const registerUser = async ({
@@ -54,6 +53,3 @@ export const registerUser = async ({
 
   return json;
 };
-=======
-};
->>>>>>> dca28a9 (feat: binaryScoring)
