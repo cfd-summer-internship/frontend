@@ -26,7 +26,6 @@ function AlertDialogPortal({
 }
 
 function AlertDialogOverlay({
-    className,
     ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
     return (
@@ -41,7 +40,6 @@ function AlertDialogOverlay({
 }
 
 function AlertDialogContent({
-    className,
     ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Content>) {
     return (
@@ -58,7 +56,6 @@ function AlertDialogContent({
 }
 
 function AlertDialogHeader({
-    className,
     ...props
 }: React.ComponentProps<"div">) {
     return (
@@ -71,7 +68,6 @@ function AlertDialogHeader({
 }
 
 function AlertDialogFooter({
-    className,
     ...props
 }: React.ComponentProps<"div">) {
     return (
@@ -85,7 +81,6 @@ function AlertDialogFooter({
 }
 
 function AlertDialogTitle({
-    className,
     ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
     return (
@@ -98,7 +93,6 @@ function AlertDialogTitle({
 }
 
 function AlertDialogDescription({
-    className,
     ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Description>) {
     return (
@@ -111,24 +105,22 @@ function AlertDialogDescription({
 }
 
 function AlertDialogAction({
-    className,
     ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action>) {
     return (
         <AlertDialogPrimitive.Action
-        className="bg-stone-700 py-2 px-4 rounded-md hover:bg-red-500"
+            className="bg-stone-700 py-2 px-4 rounded-md hover:bg-red-500"
             {...props}
         />
     )
 }
 
 function AlertDialogCancel({
-    className,
     ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Cancel>) {
     return (
         <AlertDialogPrimitive.Cancel
-        className="bg-stone-700 py-2 px-4 rounded-md hover:bg-stone-500"
+            className="bg-stone-700 py-2 px-4 rounded-md hover:bg-stone-500"
             {...props}
         />
     )

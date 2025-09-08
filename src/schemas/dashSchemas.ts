@@ -1,17 +1,17 @@
 import z from "zod";
 
-const ImageDataSchema = z.object({
+export const ImageDataSchema = z.object({
   filename: z.string(),
   last_modified: z.date(),
   size: z.number(),
   next_token: z.string().optional(),
 });
 
-const ResearchConfigSchema = z.object({
+export const ResearchConfigSchema = z.object({
   study_codes: z.array(z.string()),
 });
 
-const ResearcherResultSchema = z.object({
+export const ResearcherResultSchema = z.object({
   id: z.string(),
   study_id: z.string(),
   config_id: z.string(),
@@ -19,7 +19,7 @@ const ResearcherResultSchema = z.object({
   submitted: z.date()
 });
 
-const DataSchema = z.array(ImageDataSchema);
+export const DataSchema = z.array(ImageDataSchema);
 export type ImageData = z.infer<typeof ImageDataSchema>;
 export type ResearcherConfig = z.infer<typeof ResearchConfigSchema>;
 export type ResearcherResults = z.infer<typeof ResearcherResultSchema>;

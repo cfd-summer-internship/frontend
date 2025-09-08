@@ -1,13 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StaffImageView from "@/components/Dashboard/Staff/ImageView";
-import { isAuthenticatedAtom, tokenAtom } from "@/utils/auth/store";
+import { isAuthenticatedAtom } from "@/utils/auth/store";
 import { useAtomValue } from "jotai";
+import { useRouter } from "next/router";
 
 export default function StaffDashboard() {
+    const router = useRouter()
     const authenticated = useAtomValue(isAuthenticatedAtom)
     const [activeTab, setActiveTab] = useState<"images" | "researchers" | "data">("images");
+
+    useEffect(() => {
+        if (!authenticated) {
+            router.replace("/login");
+        }
+    }, [authenticated, router]);
+
+    if (!authenticated) {
+        return null;
+    }
 
     return (
         <div className="flex h-screen">

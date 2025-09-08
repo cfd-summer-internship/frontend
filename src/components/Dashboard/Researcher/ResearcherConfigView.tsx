@@ -1,6 +1,6 @@
 "use client";
 
-import { Trash2, Pencil, Download, FileSpreadsheet } from "lucide-react";
+import { Trash2, Download, FileSpreadsheet } from "lucide-react";
 import {
   useDeleteConfigMutation,
   useGetResearcherConfig,
@@ -15,6 +15,7 @@ import { useStudyCodeForID } from "@/utils/studyRetrieval/hooks";
 import { ConfirmAlert } from "../Confirm";
 
 export default function ResearcherConfigView() {
+  const router = useRouter();
   const [studyCode, setStudyCode] = useState<string>("");
   const [deleteRequest, setDeleteRequest] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
@@ -29,16 +30,14 @@ export default function ResearcherConfigView() {
 
   const token = useAtomValue(tokenAtom);
 
-  const handleDelete = (async (studyCode: string) => {
+  const handleDelete = async (studyCode: string) => {
     deleteConfig.mutate({ token: token, studyCode: studyCode }, {
       onSuccess() {
         queryClient.invalidateQueries({ queryKey: ['configs'] })
         queryClient.invalidateQueries({ queryKey: ['results'] })
       }
     });
-  });
-
-  const router = useRouter();
+  };
 
   useEffect(() => {
     if (!config.data || !studyID.data) return;
@@ -55,7 +54,22 @@ export default function ResearcherConfigView() {
 
     URL.revokeObjectURL(url);
     setStudyCode("");
-  }, [config.data, studyCode]);
+  }, [config.data, studyCode, studyID.data]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen justify-center items-center">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex text-center justify-center text-red-300">
+        {error.toString()}
+      </div>
+    );
+  }
 
   return (
     <>

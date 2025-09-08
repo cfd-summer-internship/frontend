@@ -1,14 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ResearcherConfigView from "@/components/Dashboard/Researcher/ResearcherConfigView";
-import { isAuthenticatedAtom, tokenAtom } from "@/utils/auth/store";
+import { isAuthenticatedAtom } from "@/utils/auth/store";
 import { useAtomValue } from "jotai";
 import ResearcherResultsView from "@/components/Dashboard/Researcher/ResearcherResultsView";
+import { useRouter } from "next/navigation";
 
 export default function ResearcherDashboard() {
+    const router = useRouter()
     const authenticated = useAtomValue(isAuthenticatedAtom)
     const [activeTab, setActiveTab] = useState<"config" | "results">("config");
+
+    useEffect(() => {
+        if (!authenticated) {
+            router.replace("/login");
+        }
+    }, [authenticated, router]);
+
+    if (!authenticated) {
+        return null;
+    }
 
     return (
         <div className="flex h-screen">

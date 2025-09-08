@@ -1,6 +1,5 @@
 "use client";
 
-import { z } from "zod";
 import { Trash2 } from 'lucide-react';
 import { useDeleteFileMutation, useGetImageData, useUploadImagesMutation } from "@/utils/dash/staff/hooks";
 import { useAtomValue } from "jotai";

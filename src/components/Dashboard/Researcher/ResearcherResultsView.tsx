@@ -1,18 +1,16 @@
 "use client";
 
-import { Trash2, Pencil, Download, FileSpreadsheet } from "lucide-react";
+import { Trash2, Download, FileSpreadsheet } from "lucide-react";
 import {
   useDeleteResultMutation,
   useExportAllResults,
   useExportResult,
-  useGetResearcherConfig,
   useGetResearcherResults,
 } from "@/utils/dash/researcher/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
-import { shouldThrowError, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ConfirmAlert } from "../Confirm";
 
 export default function ResearcherConfigView() {
@@ -34,17 +32,13 @@ export default function ResearcherConfigView() {
   const deleteResult = useDeleteResultMutation();
   const queryClient = useQueryClient();
 
-  queryClient.refetchQueries
-
-  const handleDelete = (async (resultID: string) => {
+  const handleDelete = async (resultID: string) => {
     deleteResult.mutate({ token: token, resultID: resultID }, {
       onSuccess() {
         queryClient.invalidateQueries({ queryKey: ['results'] })
       }
     });
-  });
-
-  const router = useRouter();
+  };
 
   const getSafeTimestamp = (): string => {
     const now = new Date();
@@ -78,6 +72,21 @@ export default function ResearcherConfigView() {
 
     URL.revokeObjectURL(allResults.data);
   }, [allResults.data]);
+
+    if (isLoading) {
+    return (
+      <div className="flex h-screen justify-center items-center">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+  if (isError) {
+    return (
+      <div className="flex text-center justify-center text-red-300">
+        {error.toString()}
+      </div>
+    );
+  }
 
   return (
     <>

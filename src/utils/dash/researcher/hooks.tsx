@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { deleteConfig, deleteResult, getAllStudyResults, getResearcherConfig, getResearcherResults, getStudyResults } from ".";
-import { deleteImage } from ".";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";

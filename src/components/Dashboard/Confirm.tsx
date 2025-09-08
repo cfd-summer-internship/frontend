@@ -7,9 +7,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
 } from "@/components/UI/alert-dialog"
-import { string } from "zod/v4";
 
 export function ConfirmAlert({
     open,
