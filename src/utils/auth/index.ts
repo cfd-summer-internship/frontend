@@ -24,3 +24,32 @@ export const getAuthToken = async ({
 
     return loginResponseModel.parse(json);
 };
+
+export const registerUser = async ({
+  email,
+  password,
+  confirmPassword,
+}: {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}) => {
+  const res = await fetch("/api/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password, confirmPassword }),
+  });
+
+  const json = await res.json();
+
+  if (!res.ok) {
+    if (res.status === 400) {
+      throw new Error("A user with this email already exists.");
+    }
+    throw new Error(`Registration failed`);
+  }
+
+  return json;
+};
