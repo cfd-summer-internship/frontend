@@ -22,11 +22,7 @@ function appendToFormData(formData: FormData, config: ConfigSettings) {
     formData.append("experiment.responseMethod", config.experimentPhase.scoringMethod);
 
     //CONCLUSION PHASE
-    formData.append("conclusion.showResults", config.conclusionPhase.results.toString());
     formData.append("conclusion.survey", config.conclusionPhase.survey.toString());
-    config.conclusionPhase.surveyQuestions?.forEach(question => {
-        formData.append("survey.questions", question);
-    });
 
     //UPLOAD FILES
     formData.append("configFiles.consentForm", config.uploadedFiles.consentForm);

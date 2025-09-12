@@ -73,9 +73,7 @@ export const experimentSchema = z.object({
 
 //Conclusion Phase Settings
 export const conclusionSchema = z.object({
-    results: z.boolean(),
-    survey: z.boolean(),
-    surveyQuestions: z.array(z.string()).optional(),
+    survey: z.boolean()
 });
 
 //Configuration Settings Wrapper

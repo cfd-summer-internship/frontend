@@ -40,6 +40,7 @@ export default function StudyConfigPage() {
 
     //Map Configuration Settings
     function mapConfig(formData: FormData) {
+        console.log(formData)
         return {
             uploadedFiles: parser.mapUploadedFiles(formData),
             learningPhase: parser.mapLearning(formData),

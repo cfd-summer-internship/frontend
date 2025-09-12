@@ -3,7 +3,6 @@
 import { useQuery } from "@tanstack/react-query";
 
 type ConclusionPhaseConfig = {
-    show_results: boolean;
     has_survey: boolean;
 };
 
