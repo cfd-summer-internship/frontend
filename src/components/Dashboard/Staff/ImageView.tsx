@@ -101,7 +101,7 @@ export default function StaffImageView() {
                                 <span className="spinner-loader w-5 h-5 animate-spin" />
                                 Uploading...
                             </div> : "Upload File"}
-                            <input
+                        <input
                             type="file"
                             onChange={handleUpload}
                             className="hidden"
@@ -126,8 +126,8 @@ export default function StaffImageView() {
                             className="hidden"
                             accept=".zip" />
                     </label> */}
-                    <ZipUloader />
                 </div>
+                <ZipUloader />
             </div>
         </>
     );
