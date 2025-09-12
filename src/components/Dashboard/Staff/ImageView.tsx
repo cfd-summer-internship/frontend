@@ -6,6 +6,7 @@ import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
+import ZipUloader from './ZipUpload';
 
 
 export default function StaffImageView() {
@@ -106,7 +107,7 @@ export default function StaffImageView() {
                             className="hidden"
                             accept=".jpg,.jpeg,.png" />
                     </label>
-                    <label
+                    {/* <label
                         className={`
                             text-center
                             w-30 py-2 
@@ -124,7 +125,8 @@ export default function StaffImageView() {
                             onChange={handleUpload}
                             className="hidden"
                             accept=".zip" />
-                    </label>
+                    </label> */}
+                    {/* <ZipUloader /> */}
                 </div>
             </div>
         </>

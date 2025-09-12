@@ -1,4 +1,4 @@
-export const getImageData = (async (token:string|undefined) => {
+export const getImageData = (async (token: string | undefined) => {
     const res = await fetch(`/api/images/get_file_page`, {
         method: "GET",
         headers: {
@@ -14,14 +14,14 @@ export const getImageData = (async (token:string|undefined) => {
     return json.files
 });
 
-export const deleteImage = (async (token:string|undefined,filename:string) => {
+export const deleteImage = (async (token: string | undefined, filename: string) => {
     const res = await fetch(`/api/images/delete_file`, {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         },
-        body:JSON.stringify({ filename })
+        body: JSON.stringify({ filename })
     });
 
     if (!res.ok) {
@@ -32,7 +32,7 @@ export const deleteImage = (async (token:string|undefined,filename:string) => {
     return json.files
 });
 
-export const uploadFile = (async (token:string|undefined,file:File) => {
+export const uploadFile = (async (token: string | undefined, file: File) => {
     const formData = new FormData();
     formData.append('file', file);;
 
@@ -41,7 +41,7 @@ export const uploadFile = (async (token:string|undefined,file:File) => {
         headers: {
             Authorization: `Bearer ${token}`
         },
-        body:formData
+        body: formData
     });
 
     if (!res.ok) {
