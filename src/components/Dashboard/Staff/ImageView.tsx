@@ -126,7 +126,7 @@ export default function StaffImageView() {
                             className="hidden"
                             accept=".zip" />
                     </label> */}
-                    {/* <ZipUloader /> */}
+                    <ZipUloader />
                 </div>
             </div>
         </>
