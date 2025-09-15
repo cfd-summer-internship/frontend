@@ -1,0 +1,10 @@
+/* .uppy-Dashboard-files { display: none !important; } */
+
+.uppy-Dashboard-browse { 
+  text-decoration: underline; 
+}
+.uppy-Dashboard-browse:hover {
+  text-decoration: underline;
+}
+
+.uppy-StatusBar { border-top: 2px solid #e5e7eb; }

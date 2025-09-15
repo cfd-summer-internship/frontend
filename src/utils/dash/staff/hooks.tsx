@@ -87,7 +87,7 @@ export const useAbortMPU = async ({ token, uploadId, key }: {
     uploadId: string | undefined;
     key: string;
 }) => {
-    const res = await fetch(`/api/s3-multipart/sign-part`, {
+    const res = await fetch(`/api/s3-multipart/abort`, {
         method: 'POST',
         headers: {
             'content-type': 'application/json',
