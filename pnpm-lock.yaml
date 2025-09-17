@@ -38,6 +38,9 @@ importers:
       '@uppy/status-bar':
         specifier: ^5.0.0
         version: 5.0.0(@uppy/core@5.0.1)
+      '@zip.js/zip.js':
+        specifier: ^2.8.2
+        version: 2.8.2
       framer-motion:
         specifier: ^12.23.6
         version: 12.23.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -1062,6 +1065,10 @@ packages:
     resolution: {integrity: sha512-BWxV0CWS8G3C8fFcugAjRSB9Dqb8HmCkmOjcjMQSXPhI1uyaHCMJ2HC90Xe0m2p+kyXrubT/S7BRBvU3KLlfyw==}
     peerDependencies:
       '@uppy/core': ^5.0.0
+
+  '@zip.js/zip.js@2.8.2':
+    resolution: {integrity: sha512-PI6UdgpSeVoGvzguKHmy2bwOqI3UYkntLZOCpyJSKIi7234c5aJmQYkJB/P4P2YUJkqhbqvu7iM2/0eJZ178nA==}
+    engines: {bun: '>=0.7.0', deno: '>=1.0.0', node: '>=16.5.0'}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -3404,6 +3411,8 @@ snapshots:
       '@uppy/provider-views': 5.0.1(@uppy/core@5.0.1)
       '@uppy/utils': 7.0.1
       preact: 10.27.1
+
+  '@zip.js/zip.js@2.8.2': {}
 
   acorn-jsx@5.3.2(acorn@8.15.0):
     dependencies:

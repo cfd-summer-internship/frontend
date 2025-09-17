@@ -19,6 +19,7 @@
     "@uppy/golden-retriever": "^5.0.0",
     "@uppy/react": "^5.0.2",
     "@uppy/status-bar": "^5.0.0",
+    "@zip.js/zip.js": "^2.8.2",
     "framer-motion": "^12.23.6",
     "jotai": "^2.13.1",
     "lucide-react": "^0.516.0",
