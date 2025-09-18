@@ -11,12 +11,11 @@ import { tokenAtom } from "@/utils/auth/store";
 import { useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import ZipUloader from "./ZipUpload";
-import { ImagePage } from "@/schemas/dashSchemas";
 
 export default function StaffImageView() {
-  const [uploading, setUploading] = useState(false);
+//   const [uploading, setUploading] = useState(false);
 
-  const uploadFile = useUploadImagesMutation();
+//   const uploadFile = useUploadImagesMutation();
   const deleteFile = useDeleteFileMutation();
   const queryClient = useQueryClient();
   const token = useAtomValue(tokenAtom);
@@ -57,20 +56,20 @@ export default function StaffImageView() {
     );
   };
 
-  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.currentTarget.files;
-    if (!files) return;
-    setUploading(true);
-    uploadFile.mutate(
-      { token: token, file: files[0] },
-      {
-        onSuccess() {
-          setUploading(false);
-          queryClient.invalidateQueries({ queryKey: ["images"] });
-        },
-      }
-    );
-  };
+//   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const files = e.currentTarget.files;
+//     if (!files) return;
+//     setUploading(true);
+//     uploadFile.mutate(
+//       { token: token, file: files[0] },
+//       {
+//         onSuccess() {
+//           setUploading(false);
+//           queryClient.invalidateQueries({ queryKey: ["images"] });
+//         },
+//       }
+//     );
+//   };
 
   if (isLoading) {
     return (

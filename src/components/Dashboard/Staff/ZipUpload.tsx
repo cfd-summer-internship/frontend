@@ -11,13 +11,12 @@ import {
 } from "@/utils/dash/staff/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
 import { Dashboard } from "@uppy/react";
 import { ZipReader, BlobReader, BlobWriter } from "@zip.js/zip.js";
 import "@/styles/uppy.css";
 import { useQueryClient } from "@tanstack/react-query";
 
-const S3_SINGLE_THRESHOLD = 100 * 2 ** 20; //100mb
 const MAX_FILES = 20_000;
 const MAX_UNCOMPRESSED = 10 * 1024 ** 3; //10gb
 const MAX_PER_FILE = 200 * 1024 ** 2; //200mb
@@ -128,9 +127,9 @@ export async function addZipEntriesToUppy(uppy: Uppy, zipBlob: Blob) {
       filesExtracted++;
       console.log(filesExtracted);
     }
-  } catch (err: any) {
+  } catch (err) {
     //uppy.info(err, 'error', 6000)
-    //console.error('zip read error:', err)
+    console.error('zip read error:', err)
   } finally {
     //Close reader
     await reader?.close().catch(() => {});
@@ -194,7 +193,7 @@ export default function ZipUloader() {
   }, [uppy]);
 
   useEffect(() => {
-    const onAddFiles = async (file: any) => {
+    const onAddFiles = async (file) => {
       const name = (file.name || "").toLowerCase();
       if (!name.endsWith(".zip")) return;
 
@@ -235,7 +234,7 @@ export default function ZipUloader() {
   }, [uppy]);
 
   useEffect(() => {
-    const onSuccess = (file: any, response) => {
+    const onSuccess = (file, response) => {
       const uploadedKey =
         response?.location || response?.uploadURL || file.meta?.uploadedKey;
       shrinkFile(uppy, file, { uploadedKey });
