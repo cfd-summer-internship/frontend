@@ -7,6 +7,7 @@ import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
 import ResearcherConfigView from "@/components/Dashboard/Researcher/ResearcherConfigView";
 import ResearcherResultsView from "@/components/Dashboard/Researcher/ResearcherResultsView";
+import StaffSearchView from "@/components/Dashboard/Staff/StaffSearchView";
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -15,9 +16,9 @@ export default function StaffDashboard() {
     "images"
   );
 
-  const [researcherTab, setResearcherTab] = useState<"config" | "results">(
-    "config"
-  );
+  const [researcherTab, setResearcherTab] = useState<
+    "search" | "config" | "results"
+  >("search");
 
   useEffect(() => {
     if (!authenticated) {
@@ -42,7 +43,15 @@ export default function StaffDashboard() {
           >
             Images
           </button>
-          <span>Researchers</span>
+          <button
+            onClick={() => {
+              setResearcherTab("search");
+              setActiveTab("researchers");
+            }}
+            className="hover:cursor-pointer text-left"
+          >
+            Researchers
+          </button>
           <div className="flex flex-col ml-4">
             <button
               onClick={() => {
@@ -76,13 +85,7 @@ export default function StaffDashboard() {
         {activeTab === "researchers" && (
           <div className="flex text-center justify-center">
             <div className="flex-1 overflow-auto">
-              <div className="pt-4">
-                <span className="text-stone-300 font-semibold text-xl">Search: </span>
-                <input
-                  placeholder="Email Address..."
-                  className="bg-stone-700 text-stone-200 px-8 py-2 rounded-lg placeholder:text-stone-500 focus:outline-none"
-                ></input>
-              </div>
+              {researcherTab === "search" && <StaffSearchView />}
               {researcherTab === "config" && <ResearcherConfigView />}
               {researcherTab === "results" && <ResearcherResultsView />}
             </div>
