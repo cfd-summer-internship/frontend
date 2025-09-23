@@ -66,3 +66,23 @@ export const uploadFile = async (token: string | undefined, file: File) => {
 
   return json.files;
 };
+
+export const getStaffResearcherResults = async (
+  token: string | undefined,
+  email: string
+) => {
+  const res = await fetch(`/api/staff/search`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) throw new Error("Unable to Find Researcher");
+
+  const json = await res.json();
+
+  return json;
+};

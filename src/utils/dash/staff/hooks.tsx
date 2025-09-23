@@ -1,8 +1,8 @@
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
-import { deleteImage, getImageData, uploadFile } from ".";
+import { deleteImage, getImageData, getStaffResearcherResults, uploadFile } from ".";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
-import { ImagePage } from "@/schemas/dashSchemas";
+import { ImagePage, ResearcherResults } from "@/schemas/dashSchemas";
 import { AwsS3Part } from "@uppy/aws-s3";
 
 export const useGetImageData = (next: string | null) => {
@@ -37,6 +37,18 @@ export const useUploadImagesMutation = () => {
       token: string | undefined;
       file: File;
     }) => await uploadFile(token, file),
+  });
+};
+
+export const useStaffSearchResultsMutation = () => {
+  return useMutation({
+    mutationFn: async ({
+      token,
+      email,
+    }: {
+      token: string | undefined;
+      email: string;
+    }) => await getStaffResearcherResults(token, email)
   });
 };
 
