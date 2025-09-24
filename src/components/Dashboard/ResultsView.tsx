@@ -91,7 +91,7 @@ export function ResultsView({rows, isLoading, isError, error}) {
       <div className="flex flex-col text-center justify-center text-stone-300">
         <span className="font-bold text-2xl pt-8">Results</span>
         <span className="text-md pb-2">
-          <p className="pb-4">Study Results</p>
+          <p className="pb-4">View, Export, and Delete Study Results.</p>
         </span>
       </div>
       <div className="text-stone-300 pt-4">

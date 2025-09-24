@@ -77,7 +77,7 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
       <div className="flex flex-col text-center justify-center text-stone-300">
         <span className="font-bold text-2xl pt-8">Configurations</span>
         <span className="text-md pb-2">
-          <p className="pb-4">Manage your Configuration Files</p>
+          <p className="pb-4">Create, View, Download, and Delete Configuration Files. </p>
         </span>
       </div>
       <div className="text-stone-300 pt-4">

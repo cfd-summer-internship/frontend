@@ -15,9 +15,9 @@ export default function StaffSearchView({ref, handleSubmit}) {
     <>
       <form ref={ref} onSubmit={handleSubmit}>
         <div className="flex flex-col text-center justify-center text-stone-300">
-          <span className="font-bold text-2xl pt-8">Researchers</span>
+          <span className="font-bold text-2xl pt-8">Search Records</span>
           <span className="text-md pb-2">
-            <p className="pb-4">Search</p>
+            <p className="pb-4">Provide an email to access configuration details and exportable result files.</p>
           </span>
         </div>
         <div className="pt-4">

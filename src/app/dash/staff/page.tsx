@@ -18,6 +18,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import ConfigView from "@/components/Dashboard/ConfigView";
 import { ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";
+import DropDown from "@/components/UI/dropDown";
+import { logout } from "@/utils/auth";
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -31,16 +33,18 @@ export default function StaffDashboard() {
   const [lastResults, setLastResults] = useState<ResearcherResults[]>();
   const [lastConfigs, setLastConfigs] = useState<ResearcherConfig[]>();
 
-  const [activeTab, setActiveTab] = useState<"images" | "researchers" | "data">(
+  const [activeTab, setActiveTab] = useState<"images" | "researchers">(
     "researchers"
   );
 
   const [researcherTab, setResearcherTab] = useState<
-    "search" | "config" | "results"
-  >("search");
+    "records" | "config" | "results"
+  >("records");
 
   const [defaultUser, setDefaultUser] = useState("");
   const [activeEmail, setActiveEmail] = useState("");
+
+  const [loginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
     if (!authenticated) {
@@ -87,6 +91,7 @@ export default function StaffDashboard() {
 
     const done = () => {
       formRef.current?.reset();
+      setLoginOpen(false);
       setActiveEmail(parsedEmail.data);
       setResearcherTab("results");
     };
@@ -132,7 +137,6 @@ export default function StaffDashboard() {
           },
         }
       );
-      // if (!resultsSearch.isSuccess || !configSearch.isSuccess) return;
       setActiveEmail(currentUserEmail);
       setDefaultUser(currentUserEmail);
       console.log(activeEmail);
@@ -150,7 +154,13 @@ export default function StaffDashboard() {
     setLastResults(defaultResults);
     setLastConfigs(defaultConfigs);
 
-    setResearcherTab("search");
+    setLoginOpen(false);
+    setResearcherTab("records");
+  }
+
+  async function handleLogout() {
+    await logout(token);
+    router.replace("/login");
   }
 
   return (
@@ -169,12 +179,12 @@ export default function StaffDashboard() {
           </button>
           <button
             onClick={() => {
-              setResearcherTab("search");
+              setResearcherTab("records");
               setActiveTab("researchers");
             }}
             className="hover:cursor-pointer hover:text-stone-200 text-left"
           >
-            Search
+            Records
           </button>
           <div className="flex flex-col ml-4">
             <button
@@ -196,25 +206,20 @@ export default function StaffDashboard() {
               Results
             </button>
           </div>
-          <button
-            onClick={() => setActiveTab("data")}
-            className="hover:cursor-pointer hover:text-stone-200 text-left"
-          >
-            Data
-          </button>
         </div>
       </div>
       <div className="flex-1 overflow-auto">
-        <div className="flex flex-row items-center text-stone-300 mt-2 ml-4 text-sm break-words w-fit p-3 rounded-3xl">
-          {activeEmail}
+        <div className="flex flex-row ml-auto items-center text-stone-300 mt-2 ml-4 text-sm w-fit p-3">
+          <DropDown
+            menuText={activeEmail}
+            onLogout={handleLogout}
+            open={loginOpen}
+            setOpen={setLoginOpen}
+          />
           {activeEmail !== defaultUser && (
             <button
               className="flex hover:cursor-pointer hover:text-stone-200"
-              onClick={() => {
-                // setActiveEmail(defaultUser);
-                // setResearcherTab("search");
-                handleClose();
-              }}
+              onClick={() => handleClose()}
             >
               <X className="mx-2 w-4" />
             </button>
@@ -224,7 +229,7 @@ export default function StaffDashboard() {
         {activeTab === "researchers" && (
           <div className="flex text-center justify-center">
             <div className="flex-1 overflow-auto">
-              {researcherTab === "search" && (
+              {researcherTab === "records" && (
                 <>
                   <StaffSearchView ref={formRef} handleSubmit={handleSubmit} />
                   {resultsSearch.isError && (
@@ -251,14 +256,6 @@ export default function StaffDashboard() {
                 />
               )}
             </div>
-          </div>
-        )}
-
-        {activeTab === "data" && (
-          <div className="flex text-center justify-center">
-            <span className="text-stone-300 font-bold text-2xl pt-8 pb-2">
-              Data
-            </span>
           </div>
         )}
       </div>
