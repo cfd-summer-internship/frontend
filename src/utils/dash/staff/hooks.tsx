@@ -2,7 +2,7 @@ import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { deleteImage, getImageData, getStaffResearcherConfigs, getStaffResearcherResults, uploadFile } from ".";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
-import { ImagePage, ResearcherResults } from "@/schemas/dashSchemas";
+import { ImagePage, ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";
 import { AwsS3Part } from "@uppy/aws-s3";
 
 export const useGetImageData = (next: string | null) => {
@@ -49,10 +49,10 @@ export const useStaffSearchResultsMutation = () =>
   });
 
   export const useStaffSearchConfigsMutation = () =>
-  useMutation<ResearcherResults[], Error, { token?: string; email: string }>({
+  useMutation<ResearcherConfig[], Error, { token?: string; email: string }>({
     mutationFn: async ({ token, email }) => {
       const res = await getStaffResearcherConfigs(token, email);
-      return res as ResearcherResults[];
+      return res as ResearcherConfig[];
     },
   });
 

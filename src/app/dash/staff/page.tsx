@@ -8,7 +8,10 @@ import { useRouter } from "next/navigation";
 import ResearcherConfigView from "@/components/Dashboard/Researcher/ResearcherConfigView";
 import ResearcherResultsView from "@/components/Dashboard/Researcher/ResearcherResultsView";
 import StaffSearchView from "@/components/Dashboard/Staff/StaffSearchView";
-import { useStaffSearchResultsMutation } from "@/utils/dash/staff/hooks";
+import {
+  useStaffSearchConfigsMutation,
+  useStaffSearchResultsMutation,
+} from "@/utils/dash/staff/hooks";
 import z from "zod";
 import { ResultsView } from "@/components/Dashboard/ResultsView";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -59,12 +62,12 @@ export default function StaffDashboard() {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { mutateAsync, data, error, status } = useStaffSearchResultsMutation();
+  // const { mutateAsync, data, error, status } = useStaffSearchResultsMutation();
+  const resultsSearch = useStaffSearchResultsMutation();
+  const configSearch = useStaffSearchConfigsMutation();
 
-  const isLoading = status === "pending";
-  const isError = status === "error";
-  const isSuccess = status === "success";
-  const rows = data ?? [];
+  const resultsRows = resultsSearch?.data ?? [];
+  const configRows = configSearch?.data ?? [];
 
   async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
     e.preventDefault();
@@ -76,7 +79,8 @@ export default function StaffDashboard() {
     const formData = new FormData(form);
     const parsedEmail = emailSchema.safeParse(formData.get("email"));
     if (!parsedEmail.success) return;
-    await mutateAsync({ token: token, email: parsedEmail.data });
+    await resultsSearch.mutateAsync({ token: token, email: parsedEmail.data });
+    await configSearch.mutateAsync({ token: token, email: parsedEmail.data });
     formRef.current?.reset();
     setActiveEmail(parsedEmail.data);
     setResearcherTab("results");
@@ -84,18 +88,20 @@ export default function StaffDashboard() {
 
   useEffect(() => {
     if (currentUserEmail && token) {
-      mutateAsync({ token: token, email: currentUserEmail });
+      resultsSearch.mutateAsync({ token: token, email: currentUserEmail });
+      configSearch.mutateAsync({ token: token, email: currentUserEmail });
       setActiveEmail(currentUserEmail);
       setDefaultUser(currentUserEmail);
     }
-  }, [currentUserEmail, token, mutateAsync, setActiveEmail]);
+  }, [currentUserEmail, token, resultsSearch.mutateAsync, setActiveEmail]);
 
   useEffect(() => {
     if (activeEmail === defaultUser) {
-      mutateAsync({ token: token, email: currentUserEmail });
+      resultsSearch.mutateAsync({ token: token, email: currentUserEmail });
+      configSearch.mutateAsync({ token: token, email: currentUserEmail });
       setActiveEmail(currentUserEmail);
     }
-  }, [activeEmail, setActiveEmail, token, mutateAsync]);
+  }, [activeEmail, setActiveEmail, token, resultsSearch.mutateAsync]);
 
   return (
     <div className="flex flex-wrap h-screen">
@@ -169,17 +175,17 @@ export default function StaffDashboard() {
               {researcherTab === "search" && (
                 <StaffSearchView ref={formRef} handleSubmit={handleSubmit} />
               )}
-              {researcherTab === "config" && isSuccess && (
+              {researcherTab === "config" && configSearch.isSuccess && (
                 <ConfigView
-                  rows={rows}
+                  rows={configRows}
                   isLoading={false}
                   isError={false}
                   error={undefined}
                 />
               )}
-              {researcherTab === "results" && isSuccess && (
+              {researcherTab === "results" && resultsSearch.isSuccess && (
                 <ResultsView
-                  rows={rows}
+                  rows={resultsRows}
                   isLoading={false}
                   isError={false}
                   error={undefined}
