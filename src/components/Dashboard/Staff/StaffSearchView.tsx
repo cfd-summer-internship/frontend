@@ -20,14 +20,6 @@ export default function StaffSearchView({ref, handleSubmit}) {
             <p className="pb-4">Search</p>
           </span>
         </div>
-        {/* {isSuccess && (
-          <ResultsView
-            rows={rows}
-            isLoading={false}
-            isError={false}
-            error={undefined}
-          />
-        )} */}
         <div className="pt-4">
           <input
             name="email"

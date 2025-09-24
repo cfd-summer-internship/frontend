@@ -17,6 +17,7 @@ import { ResultsView } from "@/components/Dashboard/ResultsView";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import ConfigView from "@/components/Dashboard/ConfigView";
+import { ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -24,8 +25,14 @@ export default function StaffDashboard() {
   const token = useAtomValue(tokenAtom);
   const queryClient = useQueryClient();
 
+  const [defaultResults, setDefaultResults] = useState<ResearcherResults[]>();
+  const [defaultConfigs, setDefaultConfigs] = useState<ResearcherConfig[]>();
+
+  const [lastResults, setLastResults] = useState<ResearcherResults[]>();
+  const [lastConfigs, setLastConfigs] = useState<ResearcherConfig[]>();
+
   const [activeTab, setActiveTab] = useState<"images" | "researchers" | "data">(
-    "images"
+    "researchers"
   );
 
   const [researcherTab, setResearcherTab] = useState<
@@ -66,9 +73,6 @@ export default function StaffDashboard() {
   const resultsSearch = useStaffSearchResultsMutation();
   const configSearch = useStaffSearchConfigsMutation();
 
-  const resultsRows = resultsSearch?.data ?? [];
-  const configRows = configSearch?.data ?? [];
-
   async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
     e.preventDefault();
 
@@ -77,31 +81,77 @@ export default function StaffDashboard() {
     //Take in Form Data
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
+
     const parsedEmail = emailSchema.safeParse(formData.get("email"));
     if (!parsedEmail.success) return;
-    await resultsSearch.mutateAsync({ token: token, email: parsedEmail.data });
-    await configSearch.mutateAsync({ token: token, email: parsedEmail.data });
-    formRef.current?.reset();
-    setActiveEmail(parsedEmail.data);
-    setResearcherTab("results");
+
+    const done = () => {
+      formRef.current?.reset();
+      setActiveEmail(parsedEmail.data);
+      setResearcherTab("results");
+    };
+
+    resultsSearch.mutate(
+      { token: token, email: parsedEmail.data },
+      {
+        onSuccess: (data) => {
+          setLastResults(data);
+          done();
+        },
+      }
+    );
+    configSearch.mutate(
+      { token: token, email: parsedEmail.data },
+      {
+        onSuccess: (data) => {
+          setLastConfigs(data);
+          done();
+        },
+      }
+    );
   }
 
+  //On Page Load
   useEffect(() => {
     if (currentUserEmail && token) {
-      resultsSearch.mutateAsync({ token: token, email: currentUserEmail });
-      configSearch.mutateAsync({ token: token, email: currentUserEmail });
+      resultsSearch.mutate(
+        { token: token, email: currentUserEmail },
+        {
+          onSuccess: (data) => {
+            setLastResults(data);
+            setDefaultResults(data);
+          },
+        }
+      );
+      configSearch.mutate(
+        { token: token, email: currentUserEmail },
+        {
+          onSuccess: (data) => {
+            setLastConfigs(data);
+            setDefaultConfigs(data);
+          },
+        }
+      );
+      // if (!resultsSearch.isSuccess || !configSearch.isSuccess) return;
       setActiveEmail(currentUserEmail);
       setDefaultUser(currentUserEmail);
+      console.log(activeEmail);
     }
-  }, [currentUserEmail, token, resultsSearch.mutateAsync, setActiveEmail]);
+  }, [
+    currentUserEmail,
+    token,
+    resultsSearch.mutateAsync,
+    configSearch.mutateAsync,
+    setActiveEmail,
+  ]);
 
-  useEffect(() => {
-    if (activeEmail === defaultUser) {
-      resultsSearch.mutateAsync({ token: token, email: currentUserEmail });
-      configSearch.mutateAsync({ token: token, email: currentUserEmail });
-      setActiveEmail(currentUserEmail);
-    }
-  }, [activeEmail, setActiveEmail, token, resultsSearch.mutateAsync]);
+  async function handleClose() {
+    setActiveEmail(defaultUser);
+    setLastResults(defaultResults);
+    setLastConfigs(defaultConfigs);
+
+    setResearcherTab("search");
+  }
 
   return (
     <div className="flex flex-wrap h-screen">
@@ -161,7 +211,9 @@ export default function StaffDashboard() {
             <button
               className="flex hover:cursor-pointer hover:text-stone-200"
               onClick={() => {
-                setActiveEmail(defaultUser);
+                // setActiveEmail(defaultUser);
+                // setResearcherTab("search");
+                handleClose();
               }}
             >
               <X className="mx-2 w-4" />
@@ -173,19 +225,26 @@ export default function StaffDashboard() {
           <div className="flex text-center justify-center">
             <div className="flex-1 overflow-auto">
               {researcherTab === "search" && (
-                <StaffSearchView ref={formRef} handleSubmit={handleSubmit} />
+                <>
+                  <StaffSearchView ref={formRef} handleSubmit={handleSubmit} />
+                  {resultsSearch.isError && (
+                    <div className="text-red-500 italic pt-4 text-center">
+                      Error: {resultsSearch.error.message}
+                    </div>
+                  )}
+                </>
               )}
-              {researcherTab === "config" && configSearch.isSuccess && (
+              {researcherTab === "config" && (
                 <ConfigView
-                  rows={configRows}
+                  rows={lastConfigs}
                   isLoading={false}
                   isError={false}
                   error={undefined}
                 />
               )}
-              {researcherTab === "results" && resultsSearch.isSuccess && (
+              {researcherTab === "results" && (
                 <ResultsView
-                  rows={resultsRows}
+                  rows={lastResults}
                   isLoading={false}
                   isError={false}
                   error={undefined}

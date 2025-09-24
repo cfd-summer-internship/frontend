@@ -80,7 +80,7 @@ export const getStaffResearcherResults = async (
     body: JSON.stringify({ email }),
   });
 
-  if (!res.ok) throw new Error("Unable to Find Researcher");
+  if (!res.ok) throw new Error("No Matching User Found");
 
   const json = await res.json();
 
@@ -100,7 +100,7 @@ export const getStaffResearcherConfigs= async (
     body: JSON.stringify({ email }),
   });
 
-  if (!res.ok) throw new Error("Unable to Find Researcher");
+  if (!res.ok) throw new Error("No Matching User Found");
 
   const json = await res.json();
 
