@@ -71,7 +71,7 @@ export const getStaffResearcherResults = async (
   token: string | undefined,
   email: string
 ) => {
-  const res = await fetch(`/api/staff/search`, {
+  const res = await fetch(`/api/staff/search/results`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

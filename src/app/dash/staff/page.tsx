@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import StaffImageView from "@/components/Dashboard/Staff/ImageView";
-import { isAuthenticatedAtom } from "@/utils/auth/store";
+import { isAuthenticatedAtom, tokenAtom } from "@/utils/auth/store";
 import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
 import ResearcherConfigView from "@/components/Dashboard/Researcher/ResearcherConfigView";
 import ResearcherResultsView from "@/components/Dashboard/Researcher/ResearcherResultsView";
 import StaffSearchView from "@/components/Dashboard/Staff/StaffSearchView";
+import { useStaffSearchResultsMutation } from "@/utils/dash/staff/hooks";
+import z from "zod";
+import { ResultsView } from "@/components/Dashboard/ResultsView";
+import { useQuery } from "@tanstack/react-query";
 
 export default function StaffDashboard() {
   const router = useRouter();
   const authenticated = useAtomValue(isAuthenticatedAtom);
+  const token = useAtomValue(tokenAtom);
+
   const [activeTab, setActiveTab] = useState<"images" | "researchers" | "data">(
     "images"
   );
@@ -19,6 +25,10 @@ export default function StaffDashboard() {
   const [researcherTab, setResearcherTab] = useState<
     "search" | "config" | "results"
   >("search");
+
+
+  const [defaultUser, setDefaultUser] = useState("");
+  const [activeEmail, setActiveEmail] = useState("");
 
   useEffect(() => {
     if (!authenticated) {
@@ -30,16 +40,68 @@ export default function StaffDashboard() {
     return null;
   }
 
+  const getCurrentUserEmail = async (token) => {
+    const res = await fetch("/api/auth/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return json.email as string;
+  };
+
+  const { data: currentUserEmail = "" } = useQuery({
+    queryKey: ["me", token],
+    queryFn: () => getCurrentUserEmail(token), // should resolve to a string
+    enabled: !!token,
+  });
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const { mutateAsync, data, error, status } = useStaffSearchResultsMutation();
+
+  const isLoading = status === "pending";
+  const isError = status === "error";
+  const isSuccess = status === "success";
+  const rows = data ?? [];
+
+  async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
+    e.preventDefault();
+
+    const emailSchema = z.string().email({ message: "Invalid email address" });
+
+    //Take in Form Data
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const parsedEmail = emailSchema.safeParse(formData.get("email"));
+    if (!parsedEmail.success) return;
+    await mutateAsync({ token: token, email: parsedEmail.data });
+    formRef.current?.reset();
+    setActiveEmail(parsedEmail.data);
+    setResearcherTab("results");
+  }
+
+  useEffect(() => {
+    if (currentUserEmail && token) {
+      mutateAsync({ token: token, email: currentUserEmail });
+      setActiveEmail(currentUserEmail);
+      setDefaultUser(currentUserEmail);
+    }
+  }, [currentUserEmail, token, mutateAsync, setActiveEmail]);
+
   return (
-    <div className="flex h-screen">
-      <div className="min-w-50 w-1/8 sticky top-0 bg-stone-800">
-        <div className="flex text-center justify-center text-stone-300 font-bold text-xl pt-8 pb-2 border-b-2 border-stone-600">
+    <div className="flex flex-wrap h-screen">
+      <div className="min-w-50 w-1/8 px-2 sticky top-0 bg-stone-800">
+        <div className="flex text-center justify-center text-stone-300 font-bold text-xl pt-4 pb-2">
           Staff Dashboard
         </div>
+        <div className="text-stone-300 text-center pt-2s text-sm break-words w-full">
+          {activeEmail}
+        </div>
+        <div className="border-b-2 border-stone-600"></div>
         <div className="flex flex-col text-stone-300 text-md px-4 py-1">
           <button
             onClick={() => setActiveTab("images")}
-            className="hover:cursor-pointer text-left"
+            className="hover:cursor-pointer hover:text-stone-200 text-left"
           >
             Images
           </button>
@@ -48,9 +110,9 @@ export default function StaffDashboard() {
               setResearcherTab("search");
               setActiveTab("researchers");
             }}
-            className="hover:cursor-pointer text-left"
+            className="hover:cursor-pointer hover:text-stone-200 text-left"
           >
-            Researchers
+            Search
           </button>
           <div className="flex flex-col ml-4">
             <button
@@ -58,7 +120,7 @@ export default function StaffDashboard() {
                 setResearcherTab("config");
                 setActiveTab("researchers");
               }}
-              className="hover:cursor-pointer text-left"
+            className="hover:cursor-pointer hover:text-stone-200 text-left"
             >
               Configuration
             </button>
@@ -67,14 +129,14 @@ export default function StaffDashboard() {
                 setResearcherTab("results");
                 setActiveTab("researchers");
               }}
-              className="hover:cursor-pointer text-left"
+            className="hover:cursor-pointer hover:text-stone-200 text-left"
             >
               Results
             </button>
           </div>
           <button
             onClick={() => setActiveTab("data")}
-            className="hover:cursor-pointer text-left"
+            className="hover:cursor-pointer hover:text-stone-200 text-left"
           >
             Data
           </button>
@@ -85,9 +147,18 @@ export default function StaffDashboard() {
         {activeTab === "researchers" && (
           <div className="flex text-center justify-center">
             <div className="flex-1 overflow-auto">
-              {researcherTab === "search" && <StaffSearchView />}
+              {researcherTab === "search" && (
+                <StaffSearchView ref={formRef} handleSubmit={handleSubmit} />
+              )}
               {researcherTab === "config" && <ResearcherConfigView />}
-              {researcherTab === "results" && <ResearcherResultsView />}
+              {researcherTab === "results" && isSuccess && (
+                <ResultsView
+                  rows={rows}
+                  isLoading={false}
+                  isError={false}
+                  error={undefined}
+                />
+              )}
             </div>
           </div>
         )}

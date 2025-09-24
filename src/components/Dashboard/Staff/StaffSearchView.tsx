@@ -5,44 +5,31 @@ import { tokenAtom } from "@/utils/auth/store";
 import { useStaffSearchResultsMutation } from "@/utils/dash/staff/hooks";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useRef, useState } from "react";
 import z from "zod";
 import ResearcherResultsView from "../Researcher/ResearcherResultsView";
+import { ResultsView } from "../ResultsView";
 
-export default function StaffSearchView() {
-  const token = useAtomValue(tokenAtom);
+export default function StaffSearchView({ref, handleSubmit}) {
   const queryClient = useQueryClient();
-  const searchResults = useStaffSearchResultsMutation();
-  const [results, setResults] = useState<ResearcherResults[]>();
-
-  async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
-    e.preventDefault();
-
-    const emailSchema = z.string().email({ message: "Invalid email address" });
-
-    //Take in Form Data
-    const form = e.target as HTMLFormElement;
-    const formData = new FormData(form);
-    const parsedEmail = emailSchema.safeParse(formData.get("email"));
-    if (!parsedEmail.success) return;
-    const results = await searchResults.mutateAsync({token:token, email:parsedEmail.data});
-
-  }
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form ref={ref} onSubmit={handleSubmit}>
         <div className="flex flex-col text-center justify-center text-stone-300">
           <span className="font-bold text-2xl pt-8">Researchers</span>
           <span className="text-md pb-2">
             <p className="pb-4">Search</p>
           </span>
         </div>
+        {/* {isSuccess && (
+          <ResultsView
+            rows={rows}
+            isLoading={false}
+            isError={false}
+            error={undefined}
+          />
+        )} */}
         <div className="pt-4">
-          {/* <select name="category">
-          <option value="Email">Email</option>
-          <option value="ID"> </option>
-        </select> */}
-          {/* <span className="text-stone-300 text-xl">Search: </span> */}
           <input
             name="email"
             placeholder="Email Address..."

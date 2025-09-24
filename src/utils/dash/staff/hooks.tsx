@@ -40,17 +40,13 @@ export const useUploadImagesMutation = () => {
   });
 };
 
-export const useStaffSearchResultsMutation = () => {
-  return useMutation({
-    mutationFn: async ({
-      token,
-      email,
-    }: {
-      token: string | undefined;
-      email: string;
-    }) => await getStaffResearcherResults(token, email)
+export const useStaffSearchResultsMutation = () =>
+  useMutation<ResearcherResults[], Error, { token?: string; email: string }>({
+    mutationFn: async ({ token, email }) => {
+      const res = await getStaffResearcherResults(token, email);
+      return res as ResearcherResults[];
+    },
   });
-};
 
 //S3-Multipart
 
