@@ -4,10 +4,10 @@ import Uppy from "@uppy/core";
 import AwsS3 from "@uppy/aws-s3";
 import GoldenRetriever from "@uppy/golden-retriever";
 import {
-  useAbortMPU,
-  useCompleteMPU,
-  useCreateMPU,
-  useSignPart,
+  abortMPU,
+  completeMPU,
+  createMPU,
+  signPart,
 } from "@/utils/dash/staff/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
@@ -171,7 +171,7 @@ export default function ZipUloader() {
         retryDelays: [0, 2000, 5000, 10000],
         shouldUseMultipart: () => true,
         createMultipartUpload: (file) =>
-          useCreateMPU(token, {
+          createMPU(token, {
             name: file.name ?? (file.data as File).name ?? "upload",
             type:
               file.type ??
@@ -179,15 +179,15 @@ export default function ZipUloader() {
               "application/octet-stream",
             size: file.size ?? (file.data as File).size,
           }),
-        signPart: (_file, { uploadId, key, partNumber, signal }) =>
-          useSignPart({ token, uploadId, key, partNumber }),
+        signPart: (_file, { uploadId, key, partNumber }) =>
+          signPart({ token, uploadId, key, partNumber }),
         completeMultipartUpload: (_file, { uploadId, key, parts }) =>
-          useCompleteMPU(
+          completeMPU(
             { size: _file.size ?? (_file.data as File).size },
             { token, uploadId, key, parts }
           ),
         abortMultipartUpload: (_file, { uploadId, key }) =>
-          useAbortMPU({ token, uploadId, key }),
+          abortMPU({ token, uploadId, key }),
       });
     }
   }, [uppy, token]);
