@@ -190,7 +190,7 @@ export default function ZipUloader() {
           useAbortMPU({ token, uploadId, key }),
       });
     }
-  }, [uppy]);
+  }, [uppy, token]);
 
   useEffect(() => {
     const onAddFiles = async (file) => {

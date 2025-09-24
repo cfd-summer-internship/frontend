@@ -5,8 +5,6 @@ import StaffImageView from "@/components/Dashboard/Staff/ImageView";
 import { isAuthenticatedAtom, tokenAtom } from "@/utils/auth/store";
 import { useAtomValue } from "jotai";
 import { useRouter } from "next/navigation";
-import ResearcherConfigView from "@/components/Dashboard/Researcher/ResearcherConfigView";
-import ResearcherResultsView from "@/components/Dashboard/Researcher/ResearcherResultsView";
 import StaffSearchView from "@/components/Dashboard/Staff/StaffSearchView";
 import {
   useStaffSearchConfigsMutation,
@@ -14,7 +12,7 @@ import {
 } from "@/utils/dash/staff/hooks";
 import z from "zod";
 import { ResultsView } from "@/components/Dashboard/ResultsView";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import ConfigView from "@/components/Dashboard/ConfigView";
 import { ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";
@@ -25,7 +23,6 @@ export default function StaffDashboard() {
   const router = useRouter();
   const authenticated = useAtomValue(isAuthenticatedAtom);
   const token = useAtomValue(tokenAtom);
-  const queryClient = useQueryClient();
 
   const [defaultResults, setDefaultResults] = useState<ResearcherResults[]>();
   const [defaultConfigs, setDefaultConfigs] = useState<ResearcherConfig[]>();
@@ -45,16 +42,6 @@ export default function StaffDashboard() {
   const [activeEmail, setActiveEmail] = useState("");
 
   const [loginOpen, setLoginOpen] = useState(false);
-
-  useEffect(() => {
-    if (!authenticated) {
-      router.replace("/login");
-    }
-  }, [authenticated, router]);
-
-  if (!authenticated) {
-    return null;
-  }
 
   const getCurrentUserEmail = async (token) => {
     const res = await fetch("/api/auth/me", {
@@ -139,14 +126,18 @@ export default function StaffDashboard() {
       );
       setActiveEmail(currentUserEmail);
       setDefaultUser(currentUserEmail);
-      console.log(activeEmail);
     }
   }, [
     currentUserEmail,
     token,
-    resultsSearch.mutateAsync,
-    configSearch.mutateAsync,
+    resultsSearch.mutate,
+    configSearch.mutate,
     setActiveEmail,
+    setDefaultUser,
+    setLastResults,
+    setDefaultResults,
+    setLastConfigs,
+    setDefaultConfigs,
   ]);
 
   async function handleClose() {
@@ -161,6 +152,16 @@ export default function StaffDashboard() {
   async function handleLogout() {
     await logout(token);
     router.replace("/login");
+  }
+
+  useEffect(() => {
+    if (!authenticated) {
+      router.replace("/login");
+    }
+  }, [authenticated, router]);
+
+  if (!authenticated) {
+    return null;
   }
 
   return (

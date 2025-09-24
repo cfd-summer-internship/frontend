@@ -4,7 +4,6 @@ import { Trash2 } from "lucide-react";
 import {
   useDeleteFileMutation,
   useGetImageData,
-  useUploadImagesMutation,
 } from "@/utils/dash/staff/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
@@ -13,9 +12,6 @@ import React, { useEffect, useState } from "react";
 import ZipUloader from "./ZipUpload";
 
 export default function StaffImageView() {
-//   const [uploading, setUploading] = useState(false);
-
-//   const uploadFile = useUploadImagesMutation();
   const deleteFile = useDeleteFileMutation();
   const queryClient = useQueryClient();
   const token = useAtomValue(tokenAtom);
@@ -25,7 +21,6 @@ export default function StaffImageView() {
 
   // current cursor for the hook
   const cursor = stack[stack.length - 1];
-  //const [next, setNext] = useState<string | undefined>(undefined);
   const { data, isLoading, isError, error, isFetching } =
     useGetImageData(cursor);
 
@@ -55,21 +50,6 @@ export default function StaffImageView() {
       }
     );
   };
-
-//   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const files = e.currentTarget.files;
-//     if (!files) return;
-//     setUploading(true);
-//     uploadFile.mutate(
-//       { token: token, file: files[0] },
-//       {
-//         onSuccess() {
-//           setUploading(false);
-//           queryClient.invalidateQueries({ queryKey: ["images"] });
-//         },
-//       }
-//     );
-//   };
 
   if (isLoading) {
     return (
@@ -156,34 +136,6 @@ export default function StaffImageView() {
         </div>
 
         <div className="flex flex-row gap-2 pt-3 justify-end">
-          {/* <label
-            className={`
-                            text-center
-                            w-30 py-2 
-                            bg-emerald-700 
-                            rounded-lg 
-                            cursor-pointer
-                    ${
-                      uploading
-                        ? "opacity-50 pointer-events-none"
-                        : "hover:bg-emerald-600"
-                    }`}
-          >
-            {uploading ? (
-              <div className="flex items-center">
-                <span className="spinner-loader w-5 h-5 animate-spin" />
-                Uploading...
-              </div>
-            ) : (
-              "Upload File"
-            )}
-            <input
-              type="file"
-              onChange={handleUpload}
-              className="hidden"
-              accept=".jpg,.jpeg,.png"
-            />
-          </label> */}
         </div>
         <div className="pb-4">
           <ZipUloader />

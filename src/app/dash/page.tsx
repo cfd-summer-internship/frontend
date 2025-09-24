@@ -1,27 +1,30 @@
 "use client";
 
-import { useUserRole } from "@/utils/dash/hooks";
+import { fetchUserRole } from "@/utils/dash/index";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 
 export default function Dash() {
-    const router = useRouter();
-    const token = useAtomValue(tokenAtom);
+  const router = useRouter();
+  const token = useAtomValue(tokenAtom);
 
-    useEffect(() => {
-    if (!token) { router.replace("/login"); return; }
+  useEffect(() => {
+    if (!token) {
+      router.replace("/login");
+      return;
+    }
 
-    useUserRole(token)
+    fetchUserRole(token)
       .then((role) => {
-        const path = role === "admin" ? "/dash/staff" : `/dash/${role}`
-        router.replace(path)
+        const path = role === "admin" ? "/dash/staff" : `/dash/${role}`;
+        router.replace(path);
       })
       .catch(() => {
         router.replace("/login");
       });
-    }, [token,  router]);
+  }, [token, router]);
 
-    return null;
+  return null;
 }

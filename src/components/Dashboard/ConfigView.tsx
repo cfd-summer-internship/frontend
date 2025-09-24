@@ -3,7 +3,6 @@
 import { Trash2, Download, FileSpreadsheet } from "lucide-react";
 import {
   useDeleteConfigMutation,
-  useGetResearcherConfig,
 } from "@/utils/dash/researcher/hooks";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";

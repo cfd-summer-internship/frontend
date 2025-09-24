@@ -1,4 +1,4 @@
-export const useUserRole = async (token: string | undefined) => {
+export const fetchUserRole = async (token: string | undefined) => {
     const res = await fetch(`/api/user/role`, {
         method: "GET",
         headers: {

@@ -1,15 +1,5 @@
 "use client";
 
-import { ResearcherResults } from "@/schemas/dashSchemas";
-import { tokenAtom } from "@/utils/auth/store";
-import { useStaffSearchResultsMutation } from "@/utils/dash/staff/hooks";
-import { useQueryClient } from "@tanstack/react-query";
-import { useAtomValue } from "jotai";
-import { SyntheticEvent, useRef, useState } from "react";
-import z from "zod";
-import ResearcherResultsView from "../Researcher/ResearcherResultsView";
-import { ResultsView } from "../ResultsView";
-
 export default function StaffSearchView({ref, handleSubmit}) {
   return (
     <>

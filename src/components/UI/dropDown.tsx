@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 export default function DropDown({ menuText, onLogout, open, setOpen }) {
   return (
     <div>
