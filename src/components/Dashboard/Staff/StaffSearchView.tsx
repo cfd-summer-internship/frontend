@@ -11,7 +11,6 @@ import ResearcherResultsView from "../Researcher/ResearcherResultsView";
 import { ResultsView } from "../ResultsView";
 
 export default function StaffSearchView({ref, handleSubmit}) {
-  const queryClient = useQueryClient();
   return (
     <>
       <form ref={ref} onSubmit={handleSubmit}>

@@ -11,12 +11,15 @@ import StaffSearchView from "@/components/Dashboard/Staff/StaffSearchView";
 import { useStaffSearchResultsMutation } from "@/utils/dash/staff/hooks";
 import z from "zod";
 import { ResultsView } from "@/components/Dashboard/ResultsView";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { X } from "lucide-react";
+import ConfigView from "@/components/Dashboard/ConfigView";
 
 export default function StaffDashboard() {
   const router = useRouter();
   const authenticated = useAtomValue(isAuthenticatedAtom);
   const token = useAtomValue(tokenAtom);
+  const queryClient = useQueryClient();
 
   const [activeTab, setActiveTab] = useState<"images" | "researchers" | "data">(
     "images"
@@ -25,7 +28,6 @@ export default function StaffDashboard() {
   const [researcherTab, setResearcherTab] = useState<
     "search" | "config" | "results"
   >("search");
-
 
   const [defaultUser, setDefaultUser] = useState("");
   const [activeEmail, setActiveEmail] = useState("");
@@ -88,14 +90,18 @@ export default function StaffDashboard() {
     }
   }, [currentUserEmail, token, mutateAsync, setActiveEmail]);
 
+  useEffect(() => {
+    if (activeEmail === defaultUser) {
+      mutateAsync({ token: token, email: currentUserEmail });
+      setActiveEmail(currentUserEmail);
+    }
+  }, [activeEmail, setActiveEmail, token, mutateAsync]);
+
   return (
     <div className="flex flex-wrap h-screen">
       <div className="min-w-50 w-1/8 px-2 sticky top-0 bg-stone-800">
         <div className="flex text-center justify-center text-stone-300 font-bold text-xl pt-4 pb-2">
           Staff Dashboard
-        </div>
-        <div className="text-stone-300 text-center pt-2s text-sm break-words w-full">
-          {activeEmail}
         </div>
         <div className="border-b-2 border-stone-600"></div>
         <div className="flex flex-col text-stone-300 text-md px-4 py-1">
@@ -120,7 +126,7 @@ export default function StaffDashboard() {
                 setResearcherTab("config");
                 setActiveTab("researchers");
               }}
-            className="hover:cursor-pointer hover:text-stone-200 text-left"
+              className="hover:cursor-pointer hover:text-stone-200 text-left"
             >
               Configuration
             </button>
@@ -129,7 +135,7 @@ export default function StaffDashboard() {
                 setResearcherTab("results");
                 setActiveTab("researchers");
               }}
-            className="hover:cursor-pointer hover:text-stone-200 text-left"
+              className="hover:cursor-pointer hover:text-stone-200 text-left"
             >
               Results
             </button>
@@ -143,6 +149,19 @@ export default function StaffDashboard() {
         </div>
       </div>
       <div className="flex-1 overflow-auto">
+        <div className="flex flex-row items-center text-stone-300 mt-2 ml-4 text-sm break-words w-fit p-3 rounded-3xl">
+          {activeEmail}
+          {activeEmail !== defaultUser && (
+            <button
+              className="flex hover:cursor-pointer hover:text-stone-200"
+              onClick={() => {
+                setActiveEmail(defaultUser);
+              }}
+            >
+              <X className="mx-2 w-4" />
+            </button>
+          )}
+        </div>
         {activeTab === "images" && <StaffImageView />}
         {activeTab === "researchers" && (
           <div className="flex text-center justify-center">
@@ -150,7 +169,14 @@ export default function StaffDashboard() {
               {researcherTab === "search" && (
                 <StaffSearchView ref={formRef} handleSubmit={handleSubmit} />
               )}
-              {researcherTab === "config" && <ResearcherConfigView />}
+              {researcherTab === "config" && isSuccess && (
+                <ConfigView
+                  rows={rows}
+                  isLoading={false}
+                  isError={false}
+                  error={undefined}
+                />
+              )}
               {researcherTab === "results" && isSuccess && (
                 <ResultsView
                   rows={rows}

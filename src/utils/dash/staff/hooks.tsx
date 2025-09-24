@@ -1,5 +1,5 @@
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
-import { deleteImage, getImageData, getStaffResearcherResults, uploadFile } from ".";
+import { deleteImage, getImageData, getStaffResearcherConfigs, getStaffResearcherResults, uploadFile } from ".";
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { ImagePage, ResearcherResults } from "@/schemas/dashSchemas";
@@ -47,6 +47,15 @@ export const useStaffSearchResultsMutation = () =>
       return res as ResearcherResults[];
     },
   });
+
+  export const useStaffSearchConfigsMutation = () =>
+  useMutation<ResearcherResults[], Error, { token?: string; email: string }>({
+    mutationFn: async ({ token, email }) => {
+      const res = await getStaffResearcherConfigs(token, email);
+      return res as ResearcherResults[];
+    },
+  });
+
 
 //S3-Multipart
 
