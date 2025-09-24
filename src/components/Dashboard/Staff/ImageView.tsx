@@ -36,7 +36,9 @@ export default function StaffImageView() {
     if (stack.length > 1) setStack((s) => s.slice(0, -1)); // pop
   };
 
-  useEffect(() => { console.log('cursor ->', cursor); }, [cursor]);
+  useEffect(() => {
+    console.log("cursor ->", cursor);
+  }, [cursor]);
 
   //
 
@@ -113,30 +115,28 @@ export default function StaffImageView() {
         </table>
 
         <div className="flex justify-end gap-2">
+          {!!hasPrev && (
+            <button
+              onClick={goPrev}
+              disabled={!hasPrev || isFetching}
+              className="hover:underline cursor-pointer"
+            >
+              Prev
+            </button>
+          )}
 
-        {!!hasPrev && (
-          <button
-            onClick={goPrev}
-            disabled={!hasPrev || isFetching}
-            className="hover:underline cursor-pointer"
-          >
-            Prev
-          </button>
-        )}
-
-        {!!hasNext && (
-          <button
-            onClick={goNext}
-            disabled={!hasNext || isFetching}
-            className="hover:underline cursor-pointer"
-          >
-            Next
-          </button>
-        )}
+          {!!hasNext && (
+            <button
+              onClick={goNext}
+              disabled={!hasNext || isFetching}
+              className="hover:underline cursor-pointer"
+            >
+              Next
+            </button>
+          )}
         </div>
 
-        <div className="flex flex-row gap-2 pt-3 justify-end">
-        </div>
+        <div className="flex flex-row gap-2 pt-3 justify-end"></div>
         <div className="pb-4">
           <ZipUloader />
         </div>

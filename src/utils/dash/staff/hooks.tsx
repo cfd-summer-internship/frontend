@@ -59,7 +59,7 @@ export const useStaffSearchResultsMutation = () =>
 
 //S3-Multipart
 
-export const useCreateMPU = async (
+export const createMPU = async (
   token: string | undefined,
   file: { name: string; type: string; size: number }
 ) => {
@@ -76,7 +76,7 @@ export const useCreateMPU = async (
   return { uploadId, key };
 };
 
-export const useSignPart = async ({
+export const signPart = async ({
   token,
   uploadId,
   key,
@@ -100,7 +100,7 @@ export const useSignPart = async ({
   return { url, headers };
 };
 
-export const useCompleteMPU = async (
+export const completeMPU = async (
   file: { size: number },
   {
     token,
@@ -127,7 +127,7 @@ export const useCompleteMPU = async (
   return { location };
 };
 
-export const useAbortMPU = async ({
+export const abortMPU = async ({
   token,
   uploadId,
   key,
