@@ -1,28 +1,28 @@
 import { LoginResponse, loginResponseModel } from "@/schemas/authSchemas";
 
 export const getAuthToken = async ({
-    username,
-    password,
+  username,
+  password,
 }: {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }): Promise<LoginResponse> => {
-    const formData = new FormData();
-    formData.append("username", username);
-    formData.append("password", password);
+  const formData = new FormData();
+  formData.append("username", username);
+  formData.append("password", password);
 
-    const res = await fetch("api/auth/jwt/login", {
-        method: "POST",
-        body: formData,
-    });
+  const res = await fetch("api/auth/jwt/login", {
+    method: "POST",
+    body: formData,
+  });
 
-    const json = await res.json()
+  const json = await res.json();
 
-    if (!res.ok) {
-        throw new Error("Invalid Username or Password");
-    }
+  if (!res.ok) {
+    throw new Error("Invalid Username or Password");
+  }
 
-    return loginResponseModel.parse(json);
+  return loginResponseModel.parse(json);
 };
 
 export const registerUser = async ({
@@ -52,4 +52,15 @@ export const registerUser = async ({
   }
 
   return json;
+};
+
+export const logout = async (token: string | undefined) => {
+  const res = await fetch("/api/auth/jwt/logout", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!res.ok) throw new Error(`Error Logging Out`);
 };

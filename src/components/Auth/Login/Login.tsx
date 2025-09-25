@@ -27,7 +27,7 @@ export default function Login() {
       store.set(tokenAtom, res.access_token);
       await Promise.resolve()
       // router.replace("/dash/staff")
-      router.replace("/dash/researcher")
+      router.replace("/dash/")
       // router.replace("/studyConfig")
     }
   });

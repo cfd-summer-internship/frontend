@@ -1,53 +1,108 @@
-export const getImageData = (async (token:string|undefined) => {
-    const res = await fetch(`/api/images/get_file_page`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    if (!res.ok) {
-        throw new Error("Unable to Find Image Data")
+export const getImageData = async (
+  token: string | undefined,
+  next: string | null
+) => {
+  const res = await fetch(
+    `/api/images/get_file_page${
+      next ? `?next_token=${encodeURIComponent(next)}` : ""
+    }`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }
-    const json = await res.json()
+  );
 
-    return json.files
-});
+  if (!res.ok) {
+    throw new Error("Unable to Find Image Data");
+  }
 
-export const deleteImage = (async (token:string|undefined,filename:string) => {
-    const res = await fetch(`/api/images/delete_file`, {
-        method: "DELETE",
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-        },
-        body:JSON.stringify({ filename })
-    });
+  // return ImagePageSchema.parse(await res.json());
+  const json = await res.json();
+  return {
+    images: json.images ?? json.files ?? [],
+    next_token: json.next_token ?? json.next ?? null,
+  };
+};
 
-    if (!res.ok) {
-        throw new Error("Unable to Delete File")
-    }
-    const json = await res.json()
+export const deleteImage = async (
+  token: string | undefined,
+  filename: string
+) => {
+  const res = await fetch(`/api/images/delete_file`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ filename }),
+  });
 
-    return json.files
-});
+  if (!res.ok) {
+    throw new Error("Unable to Delete File");
+  }
+  const json = await res.json();
 
-export const uploadFile = (async (token:string|undefined,file:File) => {
-    const formData = new FormData();
-    formData.append('file', file);;
+  return json.files;
+};
 
-    const res = await fetch(`/api/images/upload`, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${token}`
-        },
-        body:formData
-    });
+export const uploadFile = async (token: string | undefined, file: File) => {
+  const formData = new FormData();
+  formData.append("file", file);
 
-    if (!res.ok) {
-        throw new Error("Unable to Upload File")
-    }
-    const json = await res.json()
+  const res = await fetch(`/api/images/upload`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
 
-    return json.files
-});
+  if (!res.ok) {
+    throw new Error("Unable to Upload File");
+  }
+  const json = await res.json();
+
+  return json.files;
+};
+
+export const getStaffResearcherResults = async (
+  token: string | undefined,
+  email: string
+) => {
+  const res = await fetch(`/api/staff/search/results`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) throw new Error("No Matching User Found");
+
+  const json = await res.json();
+
+  return json;
+};
+
+export const getStaffResearcherConfigs= async (
+  token: string | undefined,
+  email: string
+) => {
+  const res = await fetch(`/api/staff/search/configs`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!res.ok) throw new Error("No Matching User Found");
+
+  const json = await res.json();
+
+  return json;
+};

@@ -15,6 +15,7 @@
     "@tanstack/react-query-devtools": "^5.80.7",
     "@uppy/aws-s3": "^5.0.0",
     "@uppy/core": "^5.0.1",
+    "@uppy/dashboard": "^5.0.1",
     "@uppy/drag-drop": "^5.0.1",
     "@uppy/golden-retriever": "^5.0.0",
     "@uppy/react": "^5.0.2",

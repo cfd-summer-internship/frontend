@@ -26,6 +26,9 @@ importers:
       '@uppy/core':
         specifier: ^5.0.1
         version: 5.0.1
+      '@uppy/dashboard':
+        specifier: ^5.0.1
+        version: 5.0.1(@uppy/core@5.0.1)
       '@uppy/drag-drop':
         specifier: ^5.0.1
         version: 5.0.1(@uppy/core@5.0.1)
