@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 // import toast from "react-hot-toast";
@@ -40,6 +41,8 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
         raceOther: "",
     });
 
+    const router = useRouter();
+
     const handleChange = (key: string, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
@@ -68,7 +71,8 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
         if (!res.ok) {
             console.error("Submission failed");
         } else {
-            console.log("Survey submitted successfully!");
+            //console.log("Survey submitted successfully!");
+            router.push("/study/conclusion/debrief");
         }
     };
 
