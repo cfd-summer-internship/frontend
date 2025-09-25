@@ -33,7 +33,7 @@ export default function WaitPhasePage() {
 
     if (isLoading || timeLeft === null) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-neutral-900 text-white">
+            <div className="min-h-screen flex items-center justify-center bg-stone-900 text-stone-300">
                 <p>Loading wait phase...</p>
             </div>
         );
@@ -41,7 +41,7 @@ export default function WaitPhasePage() {
 
     if (error) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-neutral-900 text-red-500">
+            <div className="min-h-screen flex items-center justify-center bg-stone-900 text-red-500">
                 <p>Error: {error.message}</p>
             </div>
         );
@@ -51,7 +51,7 @@ export default function WaitPhasePage() {
     const seconds = String(timeLeft % 60).padStart(2, '0');
 
     return (
-        <div className="min-h-screen flex flex-col justify-center items-center bg-neutral-900 text-white px-4">
+        <div className="min-h-screen flex flex-col justify-center items-center bg-stone-900 text-stone-300 px-4">
             <div className="text-6xl font-bold mb-4">{minutes}:{seconds}</div>
             <p className="text-sm mb-8 text-stone-300">
                 You may continue when the timer reaches 0:00
