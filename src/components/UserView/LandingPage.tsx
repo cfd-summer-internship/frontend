@@ -22,7 +22,7 @@ export default function LandingPage({
             {desc}
           </div>
           <div className="flex text-stone-300 text-center">
-            Click "Begin" When You Are Ready To Start.
+            {`Click "Begin" When You Are Ready To Start.`}
           </div>
           <div className="flex gap-4">
             <button

@@ -12,7 +12,7 @@ export default function LearningPhaseImages() {
   const studyID = useStudyID();
   const { data: config, isLoading: loadingConfig } =
     useLearningPhaseConfig(studyID);
-  const [phase, setPhase] = useState<Phase>("learning");
+  const [phase] = useState<Phase>("learning");
 
   if (loadingConfig)
     return (

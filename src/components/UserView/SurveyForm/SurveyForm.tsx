@@ -44,6 +44,7 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
 
     const router = useRouter();
 
+    const [isError, setIsError] = useState<boolean>(false);
     const handleChange = (key: string, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
@@ -70,12 +71,14 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
         });
 
         if (!res.ok) {
-            return <ErrorDisplay />;
+            setIsError(true);
         } else {
             //console.log("Survey submitted successfully!");
             router.push("/study/conclusion/debrief");
         }
     };
+
+    if (isError) return <ErrorDisplay />;
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-stone-900 text-white px-4 py-12">

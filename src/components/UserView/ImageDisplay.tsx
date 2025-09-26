@@ -111,6 +111,7 @@ export default function ImageDisplayComponent({
 
   /** Helper Function to append study resonses when in auto mode  */
   const autoAppendResponse = useCallback(() => {
+    if (currentPhase === "learning") return;
     const formValue = getFormData({
       ref: formRef,
       formName: "experiment.scoringMethod",
@@ -130,7 +131,7 @@ export default function ImageDisplayComponent({
     });
     timerRef.current = [];
     console.log(answersRef.current);
-  }, [formRef, resetKey, timerRef, answersRef, sequenceData]);
+  }, [formRef, resetKey, timerRef, answersRef, sequenceData, currentPhase]);
 
   /** Helper Function to Submit Study Results*/
   const submitResults = useCallback(() => {
@@ -154,7 +155,7 @@ export default function ImageDisplayComponent({
         },
       }
     );
-  }, [studyReponseList, submitAnswers, sequenceData]);
+  }, [studyReponseList, submitAnswers, sequenceData, currentPhase]);
 
   /** Handles Appending Responses when in auto mode */
   useEffect(() => {

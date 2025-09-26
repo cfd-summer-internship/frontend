@@ -12,7 +12,7 @@ export default function ExperimentPhaseImages() {
   const studyID = useStudyID();
   const { data: config, isLoading: loadingConfig } =
     useExperimentPhaseConfig(studyID);
-  const [phase, setPhase] = useState<Phase>("experiment");
+  const [phase] = useState<Phase>("experiment");
 
   if (loadingConfig)
     return (
