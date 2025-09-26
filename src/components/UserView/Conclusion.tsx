@@ -15,12 +15,12 @@ export default function ConclusionMessage() {
             If you have any questions please reach out to your study
             administrator.
           </div>
-                <button
-        className="py-2 px-12 bg-stone-700 text-stone-300 rounded-sm hover:bg-emerald-700 hover:cursor-pointer"
-        onClick={() => router.replace("/")}
-      >
-        Home
-      </button>
+          <button
+            className="py-2 px-12 bg-stone-700 text-stone-300 rounded-sm hover:bg-emerald-700 hover:cursor-pointer"
+            onClick={() => router.replace("/")}
+          >
+            Home
+          </button>
         </div>
       </div>
     </>
