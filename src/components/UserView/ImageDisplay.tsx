@@ -10,6 +10,7 @@ import {
 } from "@/schemas/studyResponseSchemas";
 import { useSubmitExperimentAnswers } from "@/utils/experimentPhase/hooks";
 import z from "zod";
+import ErrorDisplay from "./Error";
 
 type Phase = "learning" | "experiment";
 
@@ -239,12 +240,7 @@ export default function ImageDisplayComponent({
       </div>
     );
 
-  if (submitAnswers.isError)
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-red-500 px-4">
-        Error Submitting Results, please contact the administrator for help.
-      </div>
-    );
+  if (submitAnswers.isError) return <ErrorDisplay />;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900 text-white px-4">
