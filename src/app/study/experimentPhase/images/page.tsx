@@ -4,6 +4,7 @@ import { useExperimentPhaseConfig } from "@/utils/experimentPhase/hooks";
 import { useStudyID } from "@/utils/fileRetrieval/hooks";
 import ImageDisplayComponent from "@/components/UserView/ImageDisplay";
 import { useState } from "react";
+import ErrorDisplay from "@/components/UserView/Error";
 
 type Phase = "learning" | "experiment";
 
@@ -19,7 +20,7 @@ export default function ExperimentPhaseImages() {
         <span className="loader"></span>
       </div>
     );
-  if (!config) return <div className="text-red-500">Failed to load data.</div>;
+  if (!config) return <ErrorDisplay />;
 
   return (
     <ImageDisplayComponent

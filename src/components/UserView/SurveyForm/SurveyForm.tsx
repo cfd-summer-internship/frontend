@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import ErrorDisplay from "../Error";
 // import toast from "react-hot-toast";
 
 const genderOptions = [
@@ -59,7 +60,7 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
             subject_id: subjectID,
             age: String(result.data.age),
             sex: result.data.gender === "Other" ? result.data.genderOther : result.data.gender,
-            race: result.data.race === "Other" ? result.data.raceOther : result.data.race,
+            race: result.data.race === "Multiracial" ? result.data.raceOther : result.data.race,
         };
 
         const res = await fetch(`/api/survey/responses`, {
@@ -69,7 +70,7 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
         });
 
         if (!res.ok) {
-            console.error("Submission failed");
+            return <ErrorDisplay />;
         } else {
             //console.log("Survey submitted successfully!");
             router.push("/study/conclusion/debrief");
