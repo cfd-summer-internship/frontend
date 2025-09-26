@@ -8,7 +8,7 @@ export default function DropDown({ menuText, onLogout, open, setOpen }) {
           setOpen((o) => !o);
         }}
       >
-        {menuText}
+        <div className="hover:cursor-pointer hover:underline">{menuText}</div>
       </button>
       {open && (
         <>

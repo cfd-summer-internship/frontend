@@ -1,25 +1,13 @@
 "use client";
 
-import { useExperimentPhaseConfig } from "@/utils/experimentPhase/hooks";
-import { useStudyID } from "@/utils/fileRetrieval/hooks";
-import ImageDisplayComponent from "@/components/UserView/ImageDisplay";
+import LandingPage from "@/components/UserView/LandingPage";
 
-export default function ExperimentPhasePage() {
-    const studyID = useStudyID();
-    const { data: config, isLoading: loadingConfig } = useExperimentPhaseConfig(studyID);
-  
-    if (loadingConfig) return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-stone-900">
-            <span className="loader"></span>
-        </div>);
-    if (!config) return <div className="text-red-500">Failed to load data.</div>;
-
-
-    return (
-        <ImageDisplayComponent
-            config={config}
-            nextPhaseName={"Conclusion"}
-            nextPhaseRoute={"/study/conclusionPhase"}
-        />
-    );
+export default function ExperimentPhaseLanding() {
+  return (
+    <LandingPage
+      title="Testing Phase"
+      desc={`You will be shown a series of faces.\nTo the best of your ability try to accurately select if it was in the previous set.`}
+      nextPage="/study/experimentPhase/images"
+    />
+  );
 }
