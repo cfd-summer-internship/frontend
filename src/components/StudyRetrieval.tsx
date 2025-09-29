@@ -5,9 +5,10 @@ import { SyntheticEvent } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid"
+import { study_code_len } from "@/schemas/const";
 
 const codeFormModel = z.object({
-    studyCode: z.string().nonempty("Code Required").length(6)
+    studyCode: z.string().nonempty("Code Required").length(study_code_len)
 })
 
 export default function StudyRetrieval() {
@@ -52,7 +53,7 @@ export default function StudyRetrieval() {
     }
     return (
         <div className="flex flex-col items-center m-4">
-            <span className="text-stone-300 pb-4 font-semibold">Please Enter Your 6-Digit Study Code Below</span>
+            <span className="text-stone-300 pb-4 font-semibold">{`Please Enter Your ${study_code_len}-Digit Study Code Below`}</span>
             <form onSubmit={handleSubmit}>
                 <StudyRetrievalInput name="code" />
 
