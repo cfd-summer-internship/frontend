@@ -1,6 +1,5 @@
 "use client";
 
-import ConclusionMessage from "@/components/UserView/Conclusion";
 import { useRetrieveFile, useStudyID } from "@/utils/fileRetrieval/hooks";
 import { useRouter } from "next/navigation";
 
