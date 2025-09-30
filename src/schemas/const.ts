@@ -1,0 +1,1 @@
+export const study_code_len = 6;

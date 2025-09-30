@@ -6,11 +6,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
 import { z } from "zod";
+import { study_code_len } from "@/schemas/const";
 
 const registrationFormModel = z.object({
     email: z.string().nonempty("Email required").email(),
     password: z.string().nonempty("Password required"),
-    confirmPassword: z.string().nonempty("Confirm your password").min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().nonempty("Confirm your password").min(study_code_len, `Password must be at least ${study_code_len} characters`),
   }).refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],

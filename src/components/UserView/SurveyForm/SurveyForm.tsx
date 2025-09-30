@@ -1,7 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
+import ErrorDisplay from "../Error";
 // import toast from "react-hot-toast";
 
 const genderOptions = [
@@ -40,6 +42,9 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
         raceOther: "",
     });
 
+    const router = useRouter();
+
+    const [isError, setIsError] = useState<boolean>(false);
     const handleChange = (key: string, value: string) => {
         setForm((prev) => ({ ...prev, [key]: value }));
     };
@@ -56,7 +61,7 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
             subject_id: subjectID,
             age: String(result.data.age),
             sex: result.data.gender === "Other" ? result.data.genderOther : result.data.gender,
-            race: result.data.race === "Other" ? result.data.raceOther : result.data.race,
+            race: result.data.race === "Multiracial" ? result.data.raceOther : result.data.race,
         };
 
         const res = await fetch(`/api/survey/responses`, {
@@ -66,11 +71,14 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
         });
 
         if (!res.ok) {
-            console.error("Submission failed");
+            setIsError(true);
         } else {
-            console.log("Survey submitted successfully!");
+            //console.log("Survey submitted successfully!");
+            router.push("/study/conclusion/debrief");
         }
     };
+
+    if (isError) return <ErrorDisplay />;
 
     return (
         <div className="flex flex-col items-center min-h-screen bg-stone-900 text-white px-4 py-12">

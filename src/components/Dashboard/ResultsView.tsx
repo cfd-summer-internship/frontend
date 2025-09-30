@@ -11,6 +11,7 @@ import {
 import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { useQueryClient } from "@tanstack/react-query";
+import { study_code_len } from "@/schemas/const";
 
 
 
@@ -53,7 +54,7 @@ export function ResultsView({rows, isLoading, isError, error}) {
 
     const a = document.createElement("a");
     a.href = results.data;
-    a.download = `results-${resultsID.slice(-6)}.csv`;
+    a.download = `results-${resultsID.slice(-study_code_len)}.csv`;
     a.click();
 
     URL.revokeObjectURL(results.data);
@@ -109,10 +110,10 @@ export function ResultsView({rows, isLoading, isError, error}) {
               <tr key={row.id}>
                 <td className="py-2">
                   <div className="flex flew-row align-center justify-center gap-2">
-                    <FileSpreadsheet /> {row.config_id.slice(-6)}
+                    <FileSpreadsheet /> {row.config_id.slice(-study_code_len)}
                   </div>
                 </td>
-                <td className="py-2">{row.subject_id.slice(-6)}</td>
+                <td className="py-2">{row.subject_id.slice(-study_code_len)}</td>
                 <td className="py-2">
                   {new Date(row.submitted).toLocaleString()}
                 </td>
