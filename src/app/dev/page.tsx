@@ -1,6 +1,7 @@
 "use client";
 
 import ErrorDisplay from "@/components/UserView/Error";
+import { apiFetch } from "@/utils/api";
 import { useState } from "react";
 
 export default function TestPage() {
@@ -9,7 +10,7 @@ export default function TestPage() {
   const handleClick = async () => {
     setSent(true);
     const body = { post: "ok" };
-    const res = await fetch(`/api`, {
+    const res = await apiFetch(`/api`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

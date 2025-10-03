@@ -1,5 +1,7 @@
+import { apiFetch } from "../api";
+
 export const getStudyID = (async (studyCode: string) => {
-    const res = await fetch(`/api/study/study_id/${studyCode}`, {
+    const res = await apiFetch(`/api/study/study_id/${studyCode}`, {
         method: "GET",
     });
     if (!res.ok) {

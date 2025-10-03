@@ -1,6 +1,8 @@
+import { apiFetch } from "../api";
+
 //GET FILES
 export const getFile = (async (studyID:string, file:string) => {
-    const res = await fetch(`/api/study/${file}/${studyID}`, {
+    const res = await apiFetch(`/api/study/${file}/${studyID}`, {
         method: "GET"
 });
 
