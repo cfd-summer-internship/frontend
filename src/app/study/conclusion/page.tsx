@@ -4,11 +4,17 @@ import { useConclusionPhase } from "@/utils/conclusionPhase/hooks";
 import ConclusionPhaseSurveyPage from "@/components/UserView/SurveyForm/SurveyPage";
 import ErrorDisplay from "@/components/UserView/Error";
 import ConclusionMessage from "@/components/UserView/Conclusion";
+import { useEffect, useState } from "react";
 
 export default function ConclusionPhasePage() {
   const studyID = useStudyID();
   const { data, isLoading, isError } = useConclusionPhase(studyID);
-  const subjectID = localStorage.getItem("subjectID");
+  const [subjectID, setSubjectID] = useState<string | null >();
+
+  useEffect(() =>{
+    const localSubjectID = localStorage.getItem("subjectID");
+    setSubjectID(localSubjectID);
+  },[]);
 
   if (isLoading)
     return (
