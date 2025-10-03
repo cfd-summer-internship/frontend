@@ -12,7 +12,7 @@ export const getAuthToken = async ({
   formData.append("username", username);
   formData.append("password", password);
 
-  const res = await apiFetch("api/auth/jwt/login", {
+  const res = await apiFetch("/api/auth/jwt/login", {
     method: "POST",
     body: formData,
   });
