@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import ErrorDisplay from "../Error";
+import { apiFetch } from "@/utils/api";
 // import toast from "react-hot-toast";
 
 const genderOptions = [
@@ -64,7 +65,7 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
             race: result.data.race === "Multiracial" ? result.data.raceOther : result.data.race,
         };
 
-        const res = await fetch(`/api/survey/responses`, {
+        const res = await apiFetch(`/api/survey/responses`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),

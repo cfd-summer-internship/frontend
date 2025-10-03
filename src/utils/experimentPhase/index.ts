@@ -1,4 +1,5 @@
 import { StudyResponseList } from "@/schemas/studyResponseSchemas";
+import { apiFetch } from "../api";
 
 export const submitAnswers = (async (configID:string, subjectID:string, answers: StudyResponseList) => {
     const body={
@@ -8,7 +9,7 @@ export const submitAnswers = (async (configID:string, subjectID:string, answers:
         },
         "responses":answers
     }
-    const res = await fetch(`/api/results/responses`, {
+    const res = await apiFetch(`/api/results/responses`, {
         method: "POST",
         headers:{ "Content-Type": "application/json",},
         body: JSON.stringify(body)

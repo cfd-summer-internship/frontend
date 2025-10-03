@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import { tokenAtom } from "@/utils/auth/store";
 import { ImagePage, ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";
 import { AwsS3Part } from "@uppy/aws-s3";
+import { apiFetch } from "@/utils/api";
 
 export const useGetImageData = (next: string | null) => {
   const token = useAtomValue(tokenAtom);
@@ -63,7 +64,7 @@ export const createMPU = async (
   token: string | undefined,
   file: { name: string; type: string; size: number }
 ) => {
-  const res = await fetch(`/api/images/s3-multipart/create`, {
+  const res = await apiFetch(`/api/images/s3-multipart/create`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -87,7 +88,7 @@ export const signPart = async ({
   key: string;
   partNumber: number;
 }) => {
-  const res = await fetch(`/api/images/s3-multipart/sign-part`, {
+  const res = await apiFetch(`/api/images/s3-multipart/sign-part`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -114,7 +115,7 @@ export const completeMPU = async (
     parts: AwsS3Part[];
   }
 ) => {
-  const res = await fetch(`/api/images/s3-multipart/complete`, {
+  const res = await apiFetch(`/api/images/s3-multipart/complete`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -136,7 +137,7 @@ export const abortMPU = async ({
   uploadId: string | undefined;
   key: string;
 }) => {
-  const res = await fetch(`/api/images/s3-multipart/abort`, {
+  const res = await apiFetch(`/api/images/s3-multipart/abort`, {
     method: "POST",
     headers: {
       "content-type": "application/json",

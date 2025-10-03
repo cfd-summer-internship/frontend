@@ -1,4 +1,5 @@
 import { ConfigSettings } from "@/schemas/studyConfigSchemas";
+import { apiFetch } from "../api";
 
 //Flattens data and maps it to FastAPI Aliases
 function appendToFormData(formData: FormData, config: ConfigSettings) {
@@ -39,7 +40,7 @@ export const uploadConfig = (async (config: ConfigSettings, token:string | undef
     const formData = new FormData();
     appendToFormData(formData, config);
 
-    const res = await fetch(`/api/config/save`, {
+    const res = await apiFetch(`/api/config/save`, {
         method: "POST",
         body: formData,
         headers:{
@@ -55,7 +56,7 @@ export const uploadConfig = (async (config: ConfigSettings, token:string | undef
 });
 
 export const getStudyConfig = (async (studyID: string) => {
-    const res = await fetch(`/api/study/export/${studyID}`, {
+    const res = await apiFetch(`/api/study/export/${studyID}`, {
         method: "GET",
     });
     if (!res.ok) {

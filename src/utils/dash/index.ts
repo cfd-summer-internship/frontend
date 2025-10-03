@@ -1,5 +1,7 @@
+import { apiFetch } from "../api";
+
 export const fetchUserRole = async (token: string | undefined) => {
-    const res = await fetch(`/api/user/role`, {
+    const res = await apiFetch(`/api/user/role`, {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`

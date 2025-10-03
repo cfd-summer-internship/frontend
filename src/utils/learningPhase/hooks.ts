@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { apiFetch } from "../api";
 
 export function useLearningPhaseConfig(studyID: string) {
     return useQuery({
         queryKey: ["learningPhaseConfig", studyID],
         queryFn: async () => {
-            const res = await fetch(`/api/study/learning_phase/${studyID}`);
+            const res = await apiFetch(`/api/study/learning_phase/${studyID}`);
             if (!res.ok) throw new Error("Failed to fetch learning phase config");
 
             const config = await res.json();
