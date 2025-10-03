@@ -24,9 +24,9 @@
     "framer-motion": "^12.23.6",
     "jotai": "^2.13.1",
     "lucide-react": "^0.516.0",
-    "next": "15.3.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "next": "15.5.4",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
     "react-hot-toast": "^2.5.2",
     "uuid": "^11.1.0",
     "zod": "^3.25.62"
@@ -38,7 +38,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.3.3",
+    "eslint-config-next": "15.5.4",
     "eslint-config-prettier": "^10.1.5",
     "tailwindcss": "^4",
     "typescript": "^5"

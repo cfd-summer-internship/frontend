@@ -1,7 +1,7 @@
 "use client";
 import { z } from "zod";
 import StudyRetrievalInput from "./StudyRetrievalInput";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid"
@@ -14,7 +14,10 @@ const codeFormModel = z.object({
 export default function StudyRetrieval() {
     const router = useRouter();
     const queryClient = useQueryClient();
-    if (localStorage.getItem("localStudyID")) localStorage.removeItem("localStudyID")
+
+    useEffect(() =>{
+        if (localStorage.getItem("localStudyID")) localStorage.removeItem("localStudyID")
+    },[]);
 
     async function handleSubmit(e: SyntheticEvent<HTMLFormElement, SubmitEvent>) {
         e.preventDefault();
