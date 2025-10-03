@@ -1,7 +1,7 @@
 "use client";
 import { z } from "zod";
 import StudyRetrievalInput from "./StudyRetrievalInput";
-import { SyntheticEvent, useEffect, useState } from "react";
+import { SyntheticEvent, useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid"
