@@ -137,21 +137,21 @@ export function ResultsView({rows, isLoading, isError, error}) {
                   >
                     <Trash2 className="w-5" />
                   </button>
-                  <ConfirmAlert
-                    open={openAlert}
-                    onOpenChange={(v) => {
-                      setOpenAlert(v);
-                    }}
-                    onConfirm={() => {
-                      handleDelete(deleteRequest);
-                    }}
-                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      <ConfirmAlert
+        open={openAlert}
+        onOpenChange={(v) => {
+          setOpenAlert(v);
+        }}
+        onConfirm={() => {
+          handleDelete(deleteRequest);
+        }}
+      />
       <div className="flex justify-center">
         <button
           type="button"
