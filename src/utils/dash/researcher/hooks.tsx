@@ -9,6 +9,7 @@ export const useGetResearcherConfig = () => {
   const query = useQuery<ResearcherConfig, Error>({
     queryKey: ["configs"],
     queryFn: () => getResearcherConfig(token),
+    staleTime: 0,
   });
 
   return query;
@@ -19,6 +20,7 @@ export const useGetResearcherResults = () => {
   const query = useQuery<ResearcherResults[], Error>({
     queryKey: ["results"],
     queryFn: () => getResearcherResults(token),
+    staleTime: 0,
   });
 
   return query;

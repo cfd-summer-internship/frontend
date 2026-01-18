@@ -12,7 +12,9 @@ export default function ResearcherConfigView() {
       isLoading={isLoading}
       isError={isError}
       error={error}
-      onDelete={() => refetch()}
+      onDelete={async () => {
+        await refetch();
+      }}
     />
   );
 }
