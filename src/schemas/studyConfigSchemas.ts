@@ -25,7 +25,8 @@ export const uploadedFilesSchema = z.object({
         .refine(file => file.size > 0, {
             message: "File must not be empty",
         })
-        .refine(file => ["text/csv"]
+        .refine(file => file.name.toLowerCase().endsWith(".csv") ||
+            ["text/csv", "text/plain", "application/vnd.ms-excel"]
             .includes(file.type), {
             message: "Only CSV files are allowed"
         }),
