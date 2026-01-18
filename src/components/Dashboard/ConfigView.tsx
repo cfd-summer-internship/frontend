@@ -13,7 +13,7 @@ import { useExportConfig } from "@/utils/configUpload/hooks";
 import { useStudyCodeForID } from "@/utils/studyRetrieval/hooks";
 import { ConfirmAlert } from "./Confirm";
 
-export default function ConfigView({ rows, isLoading, isError, error }) {
+export default function ConfigView({ rows, isLoading, isError, error, onDelete }) {
   const router = useRouter();
   const [studyCode, setStudyCode] = useState<string>("");
   const [deleteRequest, setDeleteRequest] = useState("");
@@ -32,10 +32,11 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
       { token: token, studyCode: studyCode },
       {
         onSuccess: async () => {
-          await queryClient.invalidateQueries({ queryKey: ["configs"] });
-          await queryClient.invalidateQueries({ queryKey: ["results"] });
-          await queryClient.refetchQueries({ queryKey: ["configs"] });
-          await queryClient.refetchQueries({ queryKey: ["results"] });
+          // await queryClient.invalidateQueries({ queryKey: ["configs"] });
+          // await queryClient.invalidateQueries({ queryKey: ["results"] });
+          // await queryClient.refetchQueries({ queryKey: ["configs"] });
+          // await queryClient.refetchQueries({ queryKey: ["results"] });
+          onDelete?.(); // Call the parent's refetch
         },
       }
     );

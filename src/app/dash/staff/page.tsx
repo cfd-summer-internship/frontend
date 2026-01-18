@@ -247,6 +247,10 @@ export default function StaffDashboard() {
                   isLoading={false}
                   isError={false}
                   error={undefined}
+                  onDelete={() => {
+                    // Re-fetch the current active user's results
+                    configSearch.mutate({ token: token, email: activeEmail });
+                  }}
                 />
               )}
               {researcherTab === "results" && (
@@ -255,6 +259,10 @@ export default function StaffDashboard() {
                   isLoading={false}
                   isError={false}
                   error={undefined}
+                  onDelete={() => {
+                    // Re-fetch the current active user's results
+                    resultsSearch.mutate({ token: token, email: activeEmail });
+                  }}
                 />
               )}
             </div>

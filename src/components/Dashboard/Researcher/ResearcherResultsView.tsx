@@ -9,6 +9,7 @@ export default function ResearcherConfigView() {
     isLoading,
     isError,
     error,
+    refetch
   } = useGetResearcherResults();
 
   return (
@@ -17,6 +18,7 @@ export default function ResearcherConfigView() {
       isLoading={isLoading}
       isError={isError}
       error={error}
+      onDelete={() => refetch()}
     />
   );
 }
