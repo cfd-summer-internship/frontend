@@ -4,6 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
 import ErrorDisplay from "../Error";
+import { useConclusionPhase } from "@/utils/conclusionPhase/hooks";
+import { useStudyID } from "@/utils/fileRetrieval/hooks";
+import { useExportConfig } from "@/utils/configUpload/hooks";
+import ConclusionMessage from "../Conclusion";
 // import toast from "react-hot-toast";
 
 const genderOptions = [
@@ -34,6 +38,10 @@ const surveySchema = z.object({
 });
 
 export default function SurveyForm({ subjectID }: { subjectID: string }) {
+    const studyID = useStudyID();
+    const config = useExportConfig(studyID);
+
+
     const [form, setForm] = useState({
         age: "",
         gender: "",
@@ -74,7 +82,10 @@ export default function SurveyForm({ subjectID }: { subjectID: string }) {
             setIsError(true);
         } else {
             //console.log("Survey submitted successfully!");
-            router.push("/study/conclusion/debrief");
+            if (config.data.study_debrief)
+                router.push("/study/conclusion/debrief");
+            else
+                return <ConclusionMessage />
         }
     };
 
