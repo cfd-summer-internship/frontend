@@ -40,6 +40,13 @@ export default function ResearcherDashboard() {
   }
 
   useEffect(() => {
+    // Invalidate and refetch when page mounts
+    queryClient.invalidateQueries({ queryKey: ["configs"] });
+    queryClient.invalidateQueries({ queryKey: ["results"] });
+  }, [queryClient]);
+
+
+  useEffect(() => {
     if (!authenticated) {
       router.replace("/login");
     }
@@ -48,12 +55,6 @@ export default function ResearcherDashboard() {
   if (!authenticated) {
     return null;
   }
-
-  useEffect(() => {
-    // Invalidate and refetch when page mounts
-    queryClient.invalidateQueries({ queryKey: ["configs"] });
-    queryClient.invalidateQueries({ queryKey: ["results"] });
-  }, [queryClient]);
 
   return (
     <div className="flex h-screen">
