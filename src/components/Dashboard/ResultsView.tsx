@@ -32,10 +32,9 @@ export function ResultsView({rows, isLoading, isError, error}) {
     await deleteResult.mutateAsync(
       { token: token, resultID: resultID },
       {
-        onSuccess() {
-          queryClient.invalidateQueries({ queryKey: ["results"] });
-          queryClient.refetchQueries({ queryKey: ["results"] });
-          setOpenAlert(false);
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["results"] });
+          await queryClient.refetchQueries({ queryKey: ["results"] });
         },
       }
     );
@@ -148,8 +147,9 @@ export function ResultsView({rows, isLoading, isError, error}) {
         onOpenChange={(v) => {
           setOpenAlert(v);
         }}
-        onConfirm={() => {
-          handleDelete(deleteRequest);
+        onConfirm={ async () => {
+          await handleDelete(deleteRequest);
+          setOpenAlert(false);
         }}
       />
       <div className="flex justify-center">
