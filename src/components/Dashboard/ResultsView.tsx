@@ -15,7 +15,7 @@ import { study_code_len } from "@/schemas/const";
 
 
 
-export function ResultsView({rows, isLoading, isError, error}) {
+export function ResultsView({rows, isLoading, isError, error, onDelete }) {
   const [resultsID, setResultsID] = useState<string>("");
   const [deleteRequest, setDeleteRequest] = useState("");
   const [openAlert, setOpenAlert] = useState(false);
@@ -33,8 +33,9 @@ export function ResultsView({rows, isLoading, isError, error}) {
       { token: token, resultID: resultID },
       {
         onSuccess: async () => {
-          await queryClient.invalidateQueries({ queryKey: ["results"] });
-          await queryClient.refetchQueries({ queryKey: ["results"] });
+          // await queryClient.invalidateQueries({ queryKey: ["results"] });
+          // await queryClient.refetchQueries({ queryKey: ["results"] });
+          onDelete?.(); // Call the parent's refetch
         },
       }
     );
