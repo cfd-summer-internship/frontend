@@ -29,11 +29,12 @@ export function ResultsView({rows, isLoading, isError, error}) {
   const queryClient = useQueryClient();
 
   const handleDelete = async (resultID: string) => {
-    deleteResult.mutate(
+    deleteResult.mutateAsync(
       { token: token, resultID: resultID },
       {
         onSuccess() {
           queryClient.invalidateQueries({ queryKey: ["results"] });
+          setOpenAlert(false);
         },
       }
     );
@@ -142,7 +143,6 @@ export function ResultsView({rows, isLoading, isError, error}) {
                     }}
                     onConfirm={() => {
                       handleDelete(deleteRequest);
-                      setOpenAlert(false);
                     }}
                   />
                 </td>
