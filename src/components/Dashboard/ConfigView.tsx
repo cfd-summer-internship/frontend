@@ -31,12 +31,11 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
     await deleteConfig.mutateAsync(
       { token: token, studyCode: studyCode },
       {
-        onSuccess() {
-          queryClient.invalidateQueries({ queryKey: ["configs"] });
-          queryClient.invalidateQueries({ queryKey: ["results"] });
-          queryClient.refetchQueries({ queryKey: ["configs"] });
-          queryClient.refetchQueries({ queryKey: ["results"] });
-          setOpenAlert(false);
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: ["configs"] });
+          await queryClient.invalidateQueries({ queryKey: ["results"] });
+          await queryClient.refetchQueries({ queryKey: ["configs"] });
+          await queryClient.refetchQueries({ queryKey: ["results"] });
         },
       }
     );
@@ -134,8 +133,9 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
         onOpenChange={(v) => {
           setOpenAlert(v);
         }}
-        onConfirm={() => {
-          handleDelete(deleteRequest);
+       onConfirm={ async () => {
+          await handleDelete(deleteRequest);
+          setOpenAlert(false);
         }}
       />
       <div className="flex justify-center">
