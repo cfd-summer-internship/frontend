@@ -18,6 +18,9 @@ export function ConfirmAlert({
         onOpenChange: (v: boolean) => void;
         onConfirm: () => void | Promise<void>;
     }) {
+    const handleConfirm = async () => {
+        await onConfirm();
+    }
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent>
@@ -28,10 +31,10 @@ export function ConfirmAlert({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel className="bg-stone-700 hover:bg-stone-600 px-2 py-2">Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="bg-stone-700 hover:bg-stone-600 px-2 py-2 rounded-sm">Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        className="bg-stone-700 hover:bg-red-500 px-2 py-2"
-                        onClick={() => onConfirm()}
+                        className="bg-stone-700 hover:bg-red-500 px-2 py-2 rounded-sm"
+                        onClick={handleConfirm}
                         >
                         Continue
                     </AlertDialogAction>
