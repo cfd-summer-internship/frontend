@@ -34,6 +34,7 @@ export function ResultsView({rows, isLoading, isError, error}) {
       {
         onSuccess() {
           queryClient.invalidateQueries({ queryKey: ["results"] });
+          queryClient.refetchQueries({ queryKey: ["results"] });
           setOpenAlert(false);
         },
       }
