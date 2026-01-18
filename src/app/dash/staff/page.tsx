@@ -249,7 +249,15 @@ export default function StaffDashboard() {
                   error={undefined}
                   onDelete={() => {
                     // Re-fetch the current active user's results
-                    configSearch.mutate({ token: token, email: activeEmail });
+                    configSearch.mutate(
+                      { token: token, email: currentUserEmail },
+                      {
+                        onSuccess: (data) => {
+                          setLastConfigs(data);
+                          setDefaultConfigs(data);
+                        },
+                      }
+                    );
                   }}
                 />
               )}
@@ -261,7 +269,15 @@ export default function StaffDashboard() {
                   error={undefined}
                   onDelete={() => {
                     // Re-fetch the current active user's results
-                    resultsSearch.mutate({ token: token, email: activeEmail });
+                    resultsSearch.mutate(
+                      { token: token, email: currentUserEmail },
+                      {
+                        onSuccess: (data) => {
+                          setLastResults(data);
+                          setDefaultResults(data);
+                        },
+                      }
+                    );
                   }}
                 />
               )}
