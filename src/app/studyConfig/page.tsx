@@ -27,7 +27,6 @@ export default function StudyConfigPage() {
     const [studyCode, setStudyCode] = useState<string>("");
     //Reference to custom config upload hook
     const uploadConfig = useConfigUploadMutation();
-    const [isError, setErrorMsg] = useState<string>("");
 
     useEffect(() => {
         if (!authenticated) {
@@ -65,7 +64,6 @@ export default function StudyConfigPage() {
         //If there is an error display an error message
         if (!result.success) {
             setIncomplete(true);
-            setErrorMsg(result.error.issues.toString)
             console.log(result.error.issues);
         }
 
@@ -107,7 +105,7 @@ export default function StudyConfigPage() {
                     <ConclusionPhaseConfig header="Conclusion" />
 
                     {/* Incomplete Values Message */}
-                    {isIncomplete && <span className="text-md text-red-500 italic my-4">{isError}</span>}
+                    {isIncomplete && <span className="text-md text-red-500 italic my-4">An error occured, please try again. If the problem persists, please reach out to your administrator.</span>}
                     {isSaved && <span className="text-md text-emerald-500 italic my-4">Study Configuration Saved Succesfully!</span>}
                     {/* Action Buttons */}
                     <div className="flex flex-row justify-end w-full mb-4">

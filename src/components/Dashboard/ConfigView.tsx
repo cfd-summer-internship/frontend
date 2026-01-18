@@ -28,12 +28,13 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
   const token = useAtomValue(tokenAtom);
 
   const handleDelete = async (studyCode: string) => {
-    deleteConfig.mutate(
+    deleteConfig.mutateAsync(
       { token: token, studyCode: studyCode },
       {
         onSuccess() {
           queryClient.invalidateQueries({ queryKey: ["configs"] });
           queryClient.invalidateQueries({ queryKey: ["results"] });
+          setOpenAlert(false);
         },
       }
     );
@@ -127,7 +128,6 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
                     }}
                     onConfirm={() => {
                       handleDelete(deleteRequest);
-                      setOpenAlert(false);
                     }}
                   />
                 </td>
