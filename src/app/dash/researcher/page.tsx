@@ -7,7 +7,7 @@ import { useAtomValue } from "jotai";
 import ResearcherResultsView from "@/components/Dashboard/Researcher/ResearcherResultsView";
 import { useRouter } from "next/navigation";
 import DropDown from "@/components/UI/dropDown";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { logout } from "@/utils/auth";
 import { apiFetch } from "@/utils/api";
 
@@ -16,6 +16,7 @@ export default function ResearcherDashboard() {
   const authenticated = useAtomValue(isAuthenticatedAtom);
   const [activeTab, setActiveTab] = useState<"config" | "results">("config");
   const token = useAtomValue(tokenAtom);
+  const queryClient = useQueryClient();
 
   const [loginOpen, setLoginOpen] = useState(false);
 
@@ -38,6 +39,13 @@ export default function ResearcherDashboard() {
     await logout(token);
     router.replace("/login");
   }
+
+  useEffect(() => {
+    // Invalidate and refetch when page mounts
+    queryClient.invalidateQueries({ queryKey: ["configs"] });
+    queryClient.invalidateQueries({ queryKey: ["results"] });
+  }, [queryClient]);
+
 
   useEffect(() => {
     if (!authenticated) {
