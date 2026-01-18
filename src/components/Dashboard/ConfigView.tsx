@@ -34,6 +34,8 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
         onSuccess() {
           queryClient.invalidateQueries({ queryKey: ["configs"] });
           queryClient.invalidateQueries({ queryKey: ["results"] });
+          queryClient.refetchQueries({ queryKey: ["configs"] });
+          queryClient.refetchQueries({ queryKey: ["results"] });
           setOpenAlert(false);
         },
       }
