@@ -29,7 +29,7 @@ export function ResultsView({rows, isLoading, isError, error}) {
   const queryClient = useQueryClient();
 
   const handleDelete = async (resultID: string) => {
-    deleteResult.mutateAsync(
+    await deleteResult.mutateAsync(
       { token: token, resultID: resultID },
       {
         onSuccess() {

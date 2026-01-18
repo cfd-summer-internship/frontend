@@ -28,7 +28,7 @@ export default function ConfigView({ rows, isLoading, isError, error }) {
   const token = useAtomValue(tokenAtom);
 
   const handleDelete = async (studyCode: string) => {
-    deleteConfig.mutateAsync(
+    await deleteConfig.mutateAsync(
       { token: token, studyCode: studyCode },
       {
         onSuccess() {
