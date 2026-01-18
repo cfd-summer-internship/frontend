@@ -28,9 +28,9 @@ export function ConfirmAlert({
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                    <AlertDialogCancel className="bg-stone-700">Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className="bg-stone-700 hover:bg-stone-600 px-2 py-2">Cancel</AlertDialogCancel>
                     <AlertDialogAction
-                        className="bg-stone-700 hover:bg-red-500"
+                        className="bg-stone-700 hover:bg-red-500 px-2 py-2"
                         onClick={() => onConfirm()}
                         >
                         Continue
