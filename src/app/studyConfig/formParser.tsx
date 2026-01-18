@@ -33,12 +33,15 @@ export function mapConclusion(formData: FormData) {
 
 //Map Uploaded Files
 export function mapUploadedFiles(formData: FormData) {
-    const validateFile = (key:string) =>{
-        //FILTERS OUT DUMMY FILES
-        const file = formData.get(key);
-        return file instanceof File && file.type !== "application/octet-stream"
-        ? file
-        : undefined;
+  const validateFile = (key: string) => {
+    const file = formData.get(key);
+
+    // Filters out dummy / empty file inputs safely
+    if (!(file instanceof File)) return undefined;
+    if (file.size === 0) return undefined;
+    if (!file.name) return undefined;
+
+    return file;
 }
     return {
         consentForm: validateFile("files.consentForm"),
