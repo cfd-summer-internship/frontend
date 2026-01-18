@@ -1,4 +1,5 @@
 import { LoginResponse, loginResponseModel } from "@/schemas/authSchemas";
+import { apiFetch } from "../api";
 
 export const getAuthToken = async ({
   username,
@@ -11,7 +12,7 @@ export const getAuthToken = async ({
   formData.append("username", username);
   formData.append("password", password);
 
-  const res = await fetch("api/auth/jwt/login", {
+  const res = await apiFetch("/api/auth/jwt/login", {
     method: "POST",
     body: formData,
   });
@@ -34,7 +35,7 @@ export const registerUser = async ({
   password: string;
   confirmPassword: string;
 }) => {
-  const res = await fetch("/api/auth/register", {
+  const res = await apiFetch("/api/auth/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export const registerUser = async ({
 };
 
 export const logout = async (token: string | undefined) => {
-  const res = await fetch("/api/auth/jwt/logout", {
+  const res = await apiFetch("/api/auth/jwt/logout", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

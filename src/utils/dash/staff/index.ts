@@ -1,8 +1,10 @@
+import { apiFetch } from "@/utils/api";
+
 export const getImageData = async (
   token: string | undefined,
   next: string | null
 ) => {
-  const res = await fetch(
+  const res = await apiFetch(
     `/api/images/get_file_page${
       next ? `?next_token=${encodeURIComponent(next)}` : ""
     }`,
@@ -30,7 +32,7 @@ export const deleteImage = async (
   token: string | undefined,
   filename: string
 ) => {
-  const res = await fetch(`/api/images/delete_file`, {
+  const res = await apiFetch(`/api/images/delete_file`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -51,7 +53,7 @@ export const uploadFile = async (token: string | undefined, file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch(`/api/images/upload`, {
+  const res = await apiFetch(`/api/images/upload`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -71,7 +73,7 @@ export const getStaffResearcherResults = async (
   token: string | undefined,
   email: string
 ) => {
-  const res = await fetch(`/api/staff/search/results`, {
+  const res = await apiFetch(`/api/staff/search/results`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -91,7 +93,7 @@ export const getStaffResearcherConfigs= async (
   token: string | undefined,
   email: string
 ) => {
-  const res = await fetch(`/api/staff/search/configs`, {
+  const res = await apiFetch(`/api/staff/search/configs`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { v4 as uuidv4 } from "uuid"
 import { study_code_len } from "@/schemas/const";
+import { apiFetch } from "@/utils/api";
 
 const codeFormModel = z.object({
     studyCode: z.string().nonempty("Code Required").length(study_code_len)
@@ -33,7 +34,7 @@ export default function StudyRetrieval() {
 
         //If Succesfully Parsed
         if (result.success) {
-            const res = await fetch(`/api/study/study_id/${result.data.studyCode}`, { method: "GET" });
+            const res = await apiFetch(`/api/study/study_id/${result.data.studyCode}`, { method: "GET" });
             if (!res.ok)
                 throw new Error("Unable to Find Study")
 

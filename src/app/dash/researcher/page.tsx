@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import DropDown from "@/components/UI/dropDown";
 import { useQuery } from "@tanstack/react-query";
 import { logout } from "@/utils/auth";
+import { apiFetch } from "@/utils/api";
 
 export default function ResearcherDashboard() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function ResearcherDashboard() {
   const [loginOpen, setLoginOpen] = useState(false);
 
   const getCurrentUserEmail = async (token) => {
-    const res = await fetch("/api/auth/me", {
+    const res = await apiFetch("/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);

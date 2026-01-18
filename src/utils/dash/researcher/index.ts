@@ -1,5 +1,7 @@
+import { apiFetch } from "@/utils/api";
+
 export const getResearcherConfig = async (token: string | undefined) => {
-  const res = await fetch(`/api/researcher/configurations`, {
+  const res = await apiFetch(`/api/researcher/configurations`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -15,7 +17,7 @@ export const getResearcherConfig = async (token: string | undefined) => {
 };
 
 export const getResearcherResults = async (token: string | undefined) => {
-  const res = await fetch(`/api/researcher/results`, {
+  const res = await apiFetch(`/api/researcher/results`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -34,7 +36,7 @@ export const getStudyResults = async (
   token: string | undefined,
   resultsID: string
 ) => {
-  const res = await fetch(`/api/researcher/export/${resultsID}`, {
+  const res = await apiFetch(`/api/researcher/export/${resultsID}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -51,7 +53,7 @@ export const getStudyResults = async (
 export const getAllStudyResults = async (
   token: string | undefined
 ) => {
-  const res = await fetch(`/api/researcher/export_all`, {
+  const res = await apiFetch(`/api/researcher/export_all`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -69,7 +71,7 @@ export const deleteImage = async (
   token: string | undefined,
   filename: string
 ) => {
-  const res = await fetch(`/api/images/delete_file`, {
+  const res = await apiFetch(`/api/images/delete_file`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -87,7 +89,7 @@ export const deleteImage = async (
 };
 
 export const deleteConfig = async (token: string | undefined, study_code:string) => {
-  const res = await fetch(`/api/researcher/delete/config`, {
+  const res = await apiFetch(`/api/researcher/delete/config`, {
     method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
@@ -102,7 +104,7 @@ export const deleteConfig = async (token: string | undefined, study_code:string)
 };
 
 export const deleteResult = async (token: string | undefined, result_id:string) => {
-  const res = await fetch(`/api/researcher/delete/result`, {
+  const res = await apiFetch(`/api/researcher/delete/result`, {
     method: "DELETE",
         headers: {
             'Content-Type': 'application/json',

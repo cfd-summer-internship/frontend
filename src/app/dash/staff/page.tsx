@@ -18,6 +18,7 @@ import ConfigView from "@/components/Dashboard/ConfigView";
 import { ResearcherConfig, ResearcherResults } from "@/schemas/dashSchemas";
 import DropDown from "@/components/UI/dropDown";
 import { logout } from "@/utils/auth";
+import { apiFetch } from "@/utils/api";
 
 export default function StaffDashboard() {
   const router = useRouter();
@@ -44,7 +45,7 @@ export default function StaffDashboard() {
   const [loginOpen, setLoginOpen] = useState(false);
 
   const getCurrentUserEmail = async (token) => {
-    const res = await fetch("/api/auth/me", {
+    const res = await apiFetch("/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
